@@ -238,6 +238,20 @@ const productsDataDefault = [
     video: null,
     available: true
   },
+    { 
+    id: 12, 
+    code: "DC008",
+    name: "ديكور خشبي علي  كف", 
+    price: 75, 
+    discount: 0, 
+    img: "https://i.postimg.cc/0ND2gZ3m/photo-2025-09-04-22-20-43.jpg", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
+    images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
+    dimensions: "يختلف حسب الطلب",
+    video: null,
+    available: true
+  },
 ];
 let activeShareDropdown = null;
 let shareDocumentListenerAdded = false;
@@ -440,7 +454,7 @@ async function exportOrdersToPDF() {
   html2pdf().set(opt).from(container).save();
 }
 // Version control for products data لازم اعدله للتحديث
-const DATA_VERSION = "1.4";
+const DATA_VERSION = "1.3";
 let productsData;
 let cartData = JSON.parse(localStorage.getItem('mahfoor_cart')) || []; // Use the new cart's localStorage key
 let favoritesData = JSON.parse(localStorage.getItem('mahfourFavorites')) || [];
