@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="لوحة تحكم متجر MAHFOOR CNC">
+  <title>لوحة التحكم - MAHFOOR CNC</title>
+  <link rel="icon" href="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" type="image/x-icon">
+  <!-- Preload critical resources -->
+  <link rel="preload" href="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" as="image">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" as="style">
+  <link rel="preload" href="https://cdn.salla.network/fonts/dubai.css?v=2.0.5" as="style">
+  <link rel="preload" href="style.css" as="style">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.salla.network/fonts/dubai.css?v=2.0.5"/>
+  <link rel="stylesheet" href="https://cdn.salla.network/fonts/sallaicons.css?v=2.0.5"/>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
+  <style>
+    :root {
+      --admin-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --admin-bg-solid: #f0f2f5;
+      --admin-card-bg: #ffffff;
+      --admin-primary: #13352f;
+      --admin-secondary: #7c5e42;
+      --admin-text: #333;
+      --admin-text-light: #666;
+      --admin-border: #e0e0e0;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      --gradient-6: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+    }
+    body {
+      background: var(--admin-bg-solid);
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+      min-height: 100vh;
+    }
+    #admin-content {
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .admin-section {
+      background: var(--admin-card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .admin-section:hover {
+      box-shadow: 0 15px 50px rgba(0,0,0,0.12), 0 5px 15px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+      position: relative;
+    }
+    .section-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      right: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--gradient-1);
+      border-radius: 2px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.9em;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 25px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .stat-card:hover::before {
+      transform: scaleX(1);
+    }
+    .stat-card:nth-child(1)::before { background: var(--gradient-1); }
+    .stat-card:nth-child(2)::before { background: var(--gradient-2); }
+    .stat-card:nth-child(3)::before { background: var(--gradient-3); }
+    .stat-card:nth-child(4)::before { background: var(--gradient-4); }
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+    .stat-card .icon {
+      font-size: 2.5em;
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .stat-card:nth-child(1) .icon {
+      background: var(--gradient-1);
+      color: white;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    .stat-card:nth-child(2) .icon {
+      background: var(--gradient-2);
+      color: white;
+      box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    }
+    .stat-card:nth-child(3) .icon {
+      background: var(--gradient-3);
+      color: white;
+      box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    }
+    .stat-card:nth-child(4) .icon {
+      background: var(--gradient-4);
+      color: white;
+      box-shadow: 0 8px 20px rgba(67, 233, 123, 0.3);
+    }
+    .stat-card .stat-title {
+      font-size: 0.95em;
+      color: var(--admin-text-light);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .stat-card .stat-value {
+      font-size: 1.6em;
+      font-weight: 800;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card:nth-child(1) .stat-value {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-card:nth-child(2) .stat-value {
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-card:nth-child(3) .stat-value {
+      background: var(--gradient-3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .chart-card {
+      grid-column: 1 / -1;
+      padding: 25px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+    .chart-container {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.3s ease;
+    }
+    .chart-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .chart-container h3 {
+      margin: 0 0 20px 0;
+      font-size: 1.3em;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chart-wrapper {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .stats-panel {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .chart-wrapper {
+        height: 250px;
+      }
+      .admin-section {
+        padding: 20px;
+        border-radius: 16px;
+      }
+      .section-header h2 {
+        font-size: 1.5em;
+      }
+      .stat-card {
+        padding: 20px;
+      }
+      .stat-card .icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2em;
+      }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .stat-card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+    .chart-container {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .chart-container:nth-child(1) { animation-delay: 0.2s; }
+    .chart-container:nth-child(2) { animation-delay: 0.3s; }
+    .chart-container:nth-child(3) { animation-delay: 0.4s; }
+    .chart-container:nth-child(4) { animation-delay: 0.5s; }
+    .orders-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .orders-controls input {
+      flex-grow: 1;
+      min-width: 200px;
+      padding: 12px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    .orders-controls input:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .orders-controls .btn {
+      background: var(--gradient-1);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .orders-controls .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .orders-controls .btn:active {
+      transform: translateY(0);
+    }
+    .orders-table {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .orders-table th {
+      background: var(--gradient-1);
+      color: white;
+      padding: 15px;
+      font-weight: 600;
+      text-align: right;
+    }
+    .orders-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .orders-table tr:hover {
+      background: #f8f9fa;
+    }
+    .badge-count {
+      background: #e74c3c;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7em;
+      margin-right: 10px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .new-order-card {
+      background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+      border: 2px solid #e74c3c;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(231, 76, 60, 0.15);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .new-order-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      background: #e74c3c;
+    }
+    .new-order-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(231, 76, 60, 0.25);
+    }
+    .new-order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #fee;
+    }
+    .new-order-header h3 {
+      margin: 0;
+      color: #e74c3c;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .new-order-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .new-order-detail-item {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      border-right: 3px solid #e74c3c;
+    }
+    .new-order-detail-item strong {
+      display: block;
+      color: #e74c3c;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+    }
+    .new-order-detail-item span {
+      color: #333;
+      font-size: 1em;
+      word-break: break-word;
+    }
+    .new-order-products {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .new-order-products strong {
+      display: block;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+    .new-order-products ul {
+      margin: 0;
+      padding-right: 20px;
+      list-style: none;
+    }
+    .new-order-products li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+      color: #333;
+    }
+    .new-order-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .new-order-actions .btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-confirm-order {
+      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+      color: white;
+    }
+    .btn-confirm-order:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+    }
+    .btn-reject-order {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+    }
+    .btn-reject-order:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    }
+    .btn-view-details {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+    }
+    .btn-view-details:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    }
+    .admin-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+    }
+    .admin-product-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .admin-product-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    .admin-product-card .admin-product-stats {
+      background: #f9f9f9;
+      padding: 15px;
+      margin-top: auto;
+      border-top: 1px solid var(--admin-border);
+    }
+    .admin-product-card .admin-stat {
+      font-size: 0.9em;
+      color: var(--admin-text-light);
+      margin-bottom: 5px;
+    }
+    .admin-product-card .admin-stat strong {
+      color: var(--admin-primary);
+    }
+    .stats-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .stats-period-select {
+      padding: 10px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      background: white;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .stats-period-select:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .btn-refresh-stats, .btn-export-stats {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .btn-refresh-stats {
+      background: var(--gradient-3);
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    }
+    .btn-refresh-stats:hover {
+      transform: translateY(-2px) rotate(180deg);
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    }
+    .btn-export-stats {
+      background: var(--gradient-4);
+      box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+    }
+    .btn-export-stats:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+    }
+    .stat-card {
+      cursor: pointer;
+    }
+    .stat-card:hover .stat-value {
+      transform: scale(1.1);
+    }
+    .stat-card .stat-value {
+      transition: transform 0.3s ease;
+    }
+    .top-products-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .top-products-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    .top-product-item {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .top-product-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gradient-1);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+    .top-product-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .top-product-item:hover::before {
+      transform: scaleY(1);
+    }
+    .top-product-item:nth-child(1) {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+      border: 2px solid #f39c12;
+    }
+    .top-product-item:nth-child(1)::before {
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+    .top-product-item:nth-child(2) {
+      background: linear-gradient(135deg, #e8f4f8 0%, #ffffff 100%);
+      border: 2px solid #3498db;
+    }
+    .top-product-item:nth-child(2)::before {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+    .top-product-item:nth-child(3) {
+      background: linear-gradient(135deg, #f0e8f5 0%, #ffffff 100%);
+      border: 2px solid #9b59b6;
+    }
+    .top-product-item:nth-child(3)::before {
+      background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    }
+    .top-product-rank {
+      font-size: 1.8em;
+      font-weight: 800;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--gradient-1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .top-product-item:nth-child(1) .top-product-rank {
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+    }
+    .top-product-item:nth-child(2) .top-product-rank {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+    }
+    .top-product-item:nth-child(3) .top-product-rank {
+      background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+      box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+    }
+    .top-product-info {
+      flex: 1;
+    }
+    .top-product-name {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--admin-primary);
+      margin-bottom: 6px;
+    }
+    .top-product-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 0.9em;
+      color: var(--admin-text-light);
+    }
+    .top-product-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .top-product-stat i {
+      color: var(--admin-secondary);
+    }
+    .top-product-stat strong {
+      color: var(--admin-primary);
+      font-weight: 700;
+    }
+    @media (max-width: 768px) {
+      .stats-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .stats-period-select {
+        flex: 1;
+        min-width: 120px;
+      }
+      .btn-refresh-stats, .btn-export-stats {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+      }
+      .top-products-list {
+        grid-template-columns: 1fr;
+      }
+      .top-product-item {
+        padding: 15px;
+      }
+      .top-product-rank {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5em;
+      }
+      .top-product-stats {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="password-modal" class="password-modal">
+    <div class="password-brand-hero" aria-hidden="true">
+      <img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" alt="">
+      <span>MAHFOOR CNC</span>
+      <small>Precision Crafting</small>
+    </div>
+    <div class="password-modal-content">
+      <h2><i class="fas fa-lock"></i> الدخول إلى لوحة التحكم</h2>
+      <div class="password-input-wrapper">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password-input" placeholder="أدخل كلمة المرور" required>
+      </div>
+      <button class="btn" id="verify-password"><i class="fas fa-sign-in-alt"></i> تحقق</button>
+      <button class="btn" id="return-to-home"><i class="fas fa-home"></i> العودة للرئيسية</button>
+    </div>
+  </div>
+
+  <div id="admin-content" style="display: none;">
+    <div style="text-align: left; margin-bottom: 20px;">
+      <button class="btn" id="logout-btn" style="background-color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    </div>
+    <header>
+      <nav id="nav-menu">
+        <a href="index.html" aria-label="الرئيسية" title="الرئيسية"><i class="fas fa-home"></i></a>
+        <a href="index.html#products" aria-label="المنتجات" title="المنتجات"><i class="fas fa-box-open"></i></a>
+  <a href="https://wa.me/201033662370" target="_blank" aria-label="تواصل عبر واتساب" title="واتساب" class="nav-whatsapp"><i class="fab fa-whatsapp"></i></a>
+      </nav>
+      <div class="logo">
+        <a href="index.html" style="display: contents;"><img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" alt="لوجو MAHFOOR CNC" class="brand-logo">MAHFOOR CNC</a>
+      </div>
+      <button class="nav-toggle"><i class="fas fa-ellipsis-v"></i></button>
+    </header>
+
+    <div class="admin-container">
+      <section class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-line"></i> نظرة عامة</h2>
+          <div class="stats-controls">
+            <select id="stats-period" class="stats-period-select">
+              <option value="all">الكل</option>
+              <option value="today">اليوم</option>
+              <option value="week">هذا الأسبوع</option>
+              <option value="month">هذا الشهر</option>
+              <option value="year">هذه السنة</option>
+            </select>
+            <button class="btn btn-refresh-stats" id="refresh-stats-btn" title="تحديث الإحصائيات">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="btn btn-export-stats" id="export-stats-btn" title="تصدير الإحصائيات">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <div id="stats-panel" class="stats-panel">
+          <div class="stat-card">
+            <div class="icon"><i class="fas fa-box-open"></i></div>
+            <div>
+              <div class="stat-title">إجمالي الطلبات</div>
+              <div id="total-orders" class="stat-value">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><i class="fas fa-coins"></i></div>
+            <div>
+              <div class="stat-title">إجمالي المبيعات</div>
+              <div id="total-sales" class="stat-value">0 جنيه</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><i class="fas fa-star"></i></div>
+            <div>
+              <div class="stat-title">المنتج الأكثر طلبًا</div>
+              <div id="top-product" class="stat-value">لا يوجد</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <div>
+              <div class="stat-title">متوسط قيمة الطلب</div>
+              <div id="avg-order-value" class="stat-value">0 جنيه</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- قائمة أكثر المنتجات مبيعًا -->
+        <div class="top-products-section">
+          <h3 style="margin: 25px 0 15px 0; font-size: 1.4em; color: var(--admin-primary); display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-trophy" style="color: #f39c12;"></i> أكثر المنتجات مبيعًا
+          </h3>
+          <div id="top-products-detailed" class="top-products-list"></div>
+        </div>
+        
+        <div class="charts-grid">
+          <div class="chart-container">
+            <h3><i class="fas fa-chart-bar"></i> أعلى 5 منتجات مبيعًا</h3>
+            <div class="chart-wrapper">
+              <canvas id="top-products-chart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <h3><i class="fas fa-chart-pie"></i> توزيع الإيرادات</h3>
+            <div class="chart-wrapper">
+              <canvas id="revenue-chart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <h3><i class="fas fa-chart-line"></i> المبيعات خلال آخر 7 أيام</h3>
+            <div class="chart-wrapper">
+              <canvas id="sales-trend-chart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <h3><i class="fas fa-chart-area"></i> إجمالي المبيعات الشهرية</h3>
+            <div class="chart-wrapper">
+              <canvas id="monthly-sales-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم الطلبات الجديدة -->
+      <section class="admin-section" id="new-orders-section">
+        <div class="section-header">
+          <h2><i class="fas fa-bell"></i> الطلبات الجديدة <span id="new-orders-count" class="badge-count">0</span></h2>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn" id="toggle-new-orders-btn"><i class="fas fa-chevron-down"></i> عرض الطلبات</button>
+            <button class="btn" id="refresh-new-orders-btn"><i class="fas fa-sync-alt"></i> تحديث</button>
+          </div>
+        </div>
+        <div id="new-orders-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
+          <div id="new-orders-container" style="display: grid; gap: 20px;">
+            <!-- سيتم ملء الطلبات الجديدة هنا -->
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم الدردشة مع العملاء -->
+      <section class="admin-section" id="chat-section">
+        <div class="section-header">
+          <h2><i class="fas fa-comments"></i> رسائل العملاء</h2>
+        </div>
+        <div id="admin-chat-interface">
+          <div id="chat-sidebar">
+            <div id="chat-sidebar-header">
+              <h4>المحادثات</h4>
+            </div>
+            <ul id="chat-conversations-list">
+              <!-- قائمة المحادثات ستظهر هنا -->
+            </ul>
+          </div>
+          <div id="chat-main">
+            <div id="chat-main-header">
+              <h4 id="current-chat-user">اختر محادثة لبدء الدردشة</h4>
+            </div>
+            <div id="chat-messages-box">
+              <div class="no-chat-selected">
+                <i class="fas fa-comments"></i>
+                <p>اختر محادثة من القائمة على اليمين لعرض الرسائل والرد عليها.</p>
+              </div>
+            </div>
+            <div id="admin-chat-input-area" style="display: none;">
+              <input type="text" id="admin-chat-input" placeholder="اكتب ردك هنا...">
+              <button id="admin-chat-send-btn" class="btn"><i class="fas fa-paper-plane"></i> إرسال</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-shopping-bag"></i> إدارة الطلبات</h2>
+          <button class="btn" id="toggle-orders-btn"><i class="fas fa-chevron-down"></i> عرض السجل</button>
+        </div>
+        <div id="orders-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
+          <div class="orders-controls">
+            <input type="text" id="search-orders" placeholder="ابحث بالرقم، الاسم، أو المنتج...">
+            <button class="btn" id="export-xlsx-btn"><i class="fas fa-file-excel"></i> تصدير إكسيل</button>
+            <button class="btn" id="export-pdf-btn"><i class="fas fa-file-pdf"></i> تصدير PDF</button>
+            <button class="btn" id="create-invoice-btn" style="background-color: #27ae60;"><i class="fas fa-file-invoice"></i> إنشاء فاتورة</button>
+            <button class="btn" id="open-points-admin"><i class="fas fa-coins"></i> لوحة النقاط</button>
+            <button class="btn" id="clear-all-orders-btn" style="background-color: #c0392b;"><i class="fas fa-trash-alt"></i> مسح جميع الطلبات</button>
+          </div>
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>اسم العميل</th>
+                <th>المنتجات</th>
+                <th>الإجمالي</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="orders-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-cubes"></i> نظرة على المنتجات</h2>
+          <button id="toggle-admin-products" class="btn"><i class="fas fa-chevron-down"></i> عرض المنتجات</button>
+        </div>
+        <div id="admin-products-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
+          <p style="text-align:center; color: var(--admin-text-light); margin:12px 0;">قائمة بكل المنتجات مع إحصائيات المبيعات.</p>
+          <div id="admin-products-grid" class="admin-products-grid"></div>
+        </div>
+      </section>
+
+      <!-- Points pending list (hidden by default, toggled via admin button) -->
+      <div id="points-admin-panel" class="admin-section" style="display:none;">
+        <div class="section-header">
+          <h2><i class="fas fa-user-check"></i> نقاط العملاء (قيد الانتظار)</h2>
+        </div>
+        <p style="margin:6px 0 12px 0;">قانون التحويل: كل 1 جنيه = 1 نقطة. كل 100 نقطة = 3 جنيه.</p>
+        <div id="pending-points-list" style="max-height:260px; overflow:auto; border:1px solid #eee; padding:8px; border-radius:6px; margin-bottom: 15px;"></div>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button id="confirm-selected-points" class="btn success" style="background-color: var(--success);">تأكيد النقاط المحددة</button>
+          <button id="refresh-points-list" class="btn">تحديث القائمة</button>
+        </div>
+        <h4 style="margin-top:20px; border-top: 1px solid #eee; padding-top: 15px;">أرصدة النقاط للعملاء</h4>
+        <div id="points-balances" style="max-height:200px; overflow:auto; border:1px solid #fafafa; padding:8px; border-radius:6px;"></div>
+      </div>
+    </div>
+
+    <!-- Removed products management UI per request. The admin now focuses on orders only. -->
+
+    <footer>
+      <p><a href="index.html">©</a> 2025 MAHFOOR CNC. جميع الحقوق محفوظة.</p>
+      <p>created by Mohand Eldrandale web developer</p>
+      <div class="social-links">
+        <a href="https://www.facebook.com/profile.php?id=61579586090483&mibextid=ZbWKwL" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/ma7foorat_cnc?igsh=cXE4OHJ5Nmw3NTFy" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@mahfour0?is_from_webapp=1&sender_device=pc" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a>
+        <a href="https://wa.me/201033662370" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <!-- XLSX (SheetJS) for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+  <!-- jsPDF and autotable for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
+  <!-- html2pdf (uses html2canvas + jsPDF) for better Arabic rendering from DOM -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js" defer></script>
+  <script src="script.js" defer></script>
+
+  <!-- زر العودة للأعلى -->
+  <button id="back-to-top-btn" title="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+</body>
+</html>
