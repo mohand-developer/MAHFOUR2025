@@ -623,8 +623,7 @@ header nav a:hover i {
 }
 
 .hero .whatsapp-btn {
-  background: linear-gradient(135deg, var(--color-whatsapp) 0%, var(--color-whatsapp-dark) 100%);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  display: none; /* تم إخفاء زر الواتساب في الهيرو بناءً على الطلب */
 }
 
 .hero .whatsapp-btn:hover {
@@ -718,9 +717,6 @@ header nav a:hover i {
   top: 80px;
   align-self: flex-start;
   transition: all 0.3s ease;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .filters h3 {
@@ -765,89 +761,6 @@ header nav a:hover i {
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
-}
-
-.price-range-inputs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.price-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.price-field span {
-  font-size: 14px;
-  color: var(--color-sidebar-text);
-  flex-shrink: 0;
-}
-
-.price-field input {
-  flex: 1;
-}
-
-.filter-hint {
-  display: block;
-  margin-top: 6px;
-  font-size: 13px;
-  color: rgba(69, 40, 8, 0.75);
-}
-
-.availability-filter {
-  margin-bottom: 25px;
-}
-
-.availability-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 600;
-  color: var(--color-sidebar-text);
-  cursor: pointer;
-  user-select: none;
-}
-
-.availability-toggle input {
-  display: none;
-}
-
-.toggle-indicator {
-  position: relative;
-  width: 48px;
-  height: 26px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.6);
-  border: 1px solid rgba(109, 76, 65, 0.4);
-  transition: all 0.3s ease;
-}
-
-.toggle-indicator::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.availability-toggle input:checked + .toggle-indicator {
-  background: linear-gradient(135deg, #1d8f6f 0%, #13352f 100%);
-  border-color: rgba(19, 53, 47, 0.8);
-}
-
-.availability-toggle input:checked + .toggle-indicator::after {
-  transform: translateX(-22px);
-}
-
-.toggle-text {
-  font-size: 15px;
 }
 
 /* تصميم احترافي لزر إعادة تعيين الفلتر */
@@ -1671,227 +1584,61 @@ header nav a:hover i {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #050d0f;
-  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 
-.password-modal::before {
-  content: '';
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(64, 179, 150, 0.45) 0%, rgba(64, 179, 150, 0) 52%),
-    radial-gradient(circle at 78% 18%, rgba(102, 126, 234, 0.42) 0%, rgba(102, 126, 234, 0) 55%),
-    radial-gradient(circle at 82% 82%, rgba(118, 75, 162, 0.38) 0%, rgba(118, 75, 162, 0) 56%),
-    linear-gradient(140deg, #090f11 0%, #0d1f1b 48%, #153b34 100%);
-  filter: blur(12px);
-  opacity: 0.95;
-  pointer-events: none;
-}
-
-.password-modal::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(120deg, rgba(6, 14, 15, 0.92) 0%, rgba(6, 14, 15, 0.65) 48%, rgba(6, 14, 15, 0.55) 100%),
-    repeating-linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.04) 0,
-      rgba(255, 255, 255, 0.04) 1px,
-      transparent 1px,
-      transparent 26px
-    );
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-}
-
-.password-brand-hero {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.28);
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.password-brand-hero::before,
-.password-brand-hero::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(12px);
-  opacity: 0.9;
-}
-
-.password-brand-hero::before {
-  width: clamp(260px, 42vw, 420px);
-  height: clamp(260px, 42vw, 420px);
-  background: radial-gradient(circle, rgba(64, 179, 150, 0.42) 0%, rgba(64, 179, 150, 0) 70%);
-}
-
-.password-brand-hero::after {
-  width: clamp(190px, 32vw, 320px);
-  height: clamp(190px, 32vw, 320px);
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.35) 0%, rgba(102, 126, 234, 0) 72%);
-}
-
-.password-brand-hero img {
-  width: clamp(96px, 12vw, 140px);
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 24px;
-  box-shadow: 0 18px 35px rgba(6, 14, 15, 0.55);
-  position: relative;
-  z-index: 2;
-  opacity: 0.85;
-}
-
-.password-brand-hero span {
-  font-family: 'Dubai', 'Amiri', serif;
-  font-weight: 700;
-  font-size: clamp(14px, 2.2vw, 22px);
-  letter-spacing: 0.42em;
-  position: relative;
-  z-index: 2;
-}
-
-.password-brand-hero small {
-  font-family: 'Dubai', 'Amiri', serif;
-  font-weight: 500;
-  font-size: clamp(11px, 1.6vw, 16px);
-  letter-spacing: 0.4em;
-  opacity: 0.7;
-  position: relative;
-  z-index: 2;
-}
-
 .password-modal-content {
-  position: relative;
-  z-index: 3;
-  background: rgba(251, 253, 253, 0.94);
-  padding: 30px 32px 34px;
-  border-radius: 18px;
+  background: #d9c8a9;
+  padding: 20px;
+  border-radius: 10px;
   text-align: center;
-  max-width: 420px;
-  width: min(90%, 420px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow:
-    0 40px 90px rgba(8, 16, 18, 0.45),
-    0 20px 36px rgba(8, 16, 18, 0.32);
-  backdrop-filter: blur(12px);
-}
-
-.password-modal-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.16) 100%);
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
-.password-modal-content > * {
-  position: relative;
-  z-index: 1;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .password-modal-content h2 {
-  font-size: 26px;
-  margin-bottom: 24px;
-  color: var(--admin-primary, #13352f);
-  letter-spacing: 0.05em;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #452808;
 }
 
 .password-modal-content h2 i {
-  margin-left: 12px;
-  color: var(--admin-secondary, var(--color-accent));
+  margin-left: 10px;
+  color: var(--color-accent);
 }
 
 .password-input-wrapper {
   position: relative;
-  margin-bottom: 24px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 24px 48px rgba(19, 53, 47, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
 }
 
 .password-input-wrapper i {
   position: absolute;
-  right: 14px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(19, 53, 47, 0.6);
+  color: #6d4c41;
   font-size: 18px;
 }
 
 .password-modal-content input {
   width: 100%;
-  padding: 14px 48px 14px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(19, 53, 47, 0.15);
+  padding: 12px 35px 12px 12px;
+  border-radius: 6px;
+  border: 1px solid #6d4c41;
   font-size: 16px;
-  background: transparent;
-  color: #13352f;
-  box-shadow: inset 0 -3px 16px rgba(19, 53, 47, 0.08);
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-
-.password-modal-content input:focus {
-  outline: none;
-  border-color: rgba(102, 126, 234, 0.55);
-  box-shadow:
-    inset 0 -3px 20px rgba(102, 126, 234, 0.12),
-    0 0 0 4px rgba(102, 126, 234, 0.12);
+  background: #fff;
 }
 
 .password-modal-content .btn {
   width: 100%;
-  background: var(--admin-primary, var(--color-sidebar-bg));
-  margin-top: 12px;
-  border-radius: 12px;
-  box-shadow: 0 18px 30px rgba(19, 53, 47, 0.24);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--color-sidebar-bg);
 }
 
 .password-modal-content .btn:hover {
-  background: var(--admin-secondary, var(--color-accent));
-  transform: translateY(-1px);
-  box-shadow: 0 22px 36px rgba(118, 75, 162, 0.28);
-}
-
-.password-modal-content .btn:active {
-  transform: translateY(0);
-  box-shadow: 0 14px 24px rgba(19, 53, 47, 0.22);
-}
-
-@media (max-width: 640px) {
-  .password-brand-hero {
-    gap: 12px;
-    letter-spacing: 0.28em;
-  }
-
-  .password-brand-hero img {
-    width: clamp(82px, 28vw, 110px);
-  }
-
-  .password-modal-content {
-    padding: 26px 24px 30px;
-    border-radius: 16px;
-  }
+  background: var(--color-accent);
 }
 
 .product-details-container {
@@ -2102,443 +1849,19 @@ header nav a:hover i {
   flex-wrap: wrap;
 }
 
-.share-dropdown {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: stretch;
-  min-width: 0;
-  filter: drop-shadow(0 12px 25px rgba(8, 16, 18, 0.16));
-}
-
-.share-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #143b34 0%, #1b4f46 35%, #7c5e42 100%);
-  box-shadow: 0 14px 28px rgba(8, 16, 18, 0.22);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.share-toggle::after {
-  content: '';
-  position: absolute;
-  inset: -60%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.share-dropdown.open .share-toggle {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px rgba(19, 53, 47, 0.3);
-}
-
-.share-dropdown.open .share-toggle::after {
-  opacity: 1;
-  animation: shareToggleGlow 1.9s ease-out infinite;
-}
-
-.share-menu {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 220px;
-  padding: 14px 12px;
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 14px;
-  border: 1px solid rgba(19, 53, 47, 0.12);
-  box-shadow: 0 24px 50px rgba(8, 16, 18, 0.28);
-  z-index: 25;
-  direction: rtl;
-  transform-origin: top right;
-}
-
-.share-menu::before {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  right: 18px;
-  width: 14px;
-  height: 14px;
-  background: inherit;
-  border-right: 1px solid rgba(19, 53, 47, 0.12);
-  border-bottom: 1px solid rgba(19, 53, 47, 0.12);
-  transform: rotate(225deg);
-}
-
-.share-menu[hidden] {
-  display: none;
-}
-
-.share-dropdown.open .share-menu {
-  animation: shareMenuReveal 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.share-menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 249, 250, 0.9) 100%);
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #13352f;
-  cursor: pointer;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
-  box-shadow: 0 8px 18px rgba(8, 16, 18, 0.08);
-  position: relative;
-}
-
-.share-menu-item i {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 16px;
-  color: #fff;
-  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35), 0 10px 18px rgba(0, 0, 0, 0.18);
-}
-
-.share-menu-item:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 26px rgba(8, 16, 18, 0.18);
-  filter: brightness(1.05);
-}
-
-.share-menu-item:active {
-  transform: translateY(0);
-  box-shadow: 0 6px 12px rgba(8, 16, 18, 0.16);
-}
-
-.share-menu-item:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.85);
-  outline-offset: 3px;
-}
-
-.share-menu-item[data-channel="native"] {
-  background: linear-gradient(135deg, #4a90e2 0%, #2177cf 100%);
-  color: #fff;
-}
-
-.share-menu-item[data-channel="native"] i {
-  background: linear-gradient(135deg, #7ab6ff 0%, #4f8ad6 100%);
-}
-
-.share-menu-item[data-channel="whatsapp"] {
-  background: linear-gradient(135deg, #25d366 0%, #1ebe5d 100%);
-  color: #fff;
-}
-
-.share-menu-item[data-channel="whatsapp"] i {
-  background: linear-gradient(135deg, #4be680 0%, #1ebe5d 100%);
-}
-
-.share-menu-item[data-channel="facebook"] {
-  background: linear-gradient(135deg, #1877f2 0%, #0f62d6 100%);
-  color: #fff;
-}
-
-.share-menu-item[data-channel="facebook"] i {
-  background: linear-gradient(135deg, #4c97ff 0%, #1b6fe0 100%);
-}
-
-.share-menu-item[data-channel="instagram"] {
-  background: linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%);
-  color: #fff;
-}
-
-.share-menu-item[data-channel="instagram"] i {
-  background: linear-gradient(135deg, #ffd89b 0%, #f83600 40%, #b31217 100%);
-}
-
-.share-menu-item[data-channel="copy"] {
-  background: linear-gradient(135deg, #f5ede3 0%, #e7d4bc 100%);
-  color: #4b2f11;
-}
-
-.share-menu-item[data-channel="copy"] i {
-  color: #4b2f11;
-  background: linear-gradient(135deg, #fff6eb 0%, #f1dec3 100%);
-}
-
-@media (max-width: 600px) {
-  .share-menu {
-    position: static;
-    width: 100%;
-    min-width: 0;
-    border-radius: 12px;
-    box-shadow: 0 18px 40px rgba(8, 16, 18, 0.22);
-    margin-top: 10px;
-    transform-origin: center;
-  }
-
-  .share-menu::before {
-    display: none;
-  }
-
-  .share-dropdown.open .share-menu {
-    animation: shareMenuRevealDown 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-}
-
-@keyframes shareMenuReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(-18px) scale(0.98);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(3px) scale(1.01);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes shareMenuRevealDown {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.98);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-3px) scale(1.01);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes shareToggleGlow {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.85;
-  }
-  55% {
-    transform: scale(1.12);
-    opacity: 1;
-  }
-}
-
 .rating-section {
   text-align: center;
   margin-bottom: 20px;
-}
-
-.rating-section h3 {
-  font-size: 22px;
-  color: #452808;
-  margin-bottom: 12px;
 }
 
 .rating-section .stars {
   font-size: 24px;
   color: #ccc;
   cursor: pointer;
-  display: inline-flex;
-  gap: 6px;
-  transition: color 0.2s ease;
 }
 
 .rating-section .stars .fa-star.active {
   color: var(--color-accent);
-}
-
-.rating-section .stars .fa-star.selected {
-  color: var(--color-accent);
-}
-
-.rating-section .stars .fa-star.hovered {
-  color: #ffc870;
-}
-
-.rating-section .rating-summary {
-  margin: 10px 0 0;
-  font-size: 15px;
-  color: #6d4c41;
-}
-
-.rating-form {
-  margin-top: 18px;
-  text-align: right;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(109, 76, 65, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-.rating-form textarea {
-  width: 100%;
-  min-height: 110px;
-  resize: vertical;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(109, 76, 65, 0.35);
-  font-size: 15px;
-  line-height: 1.6;
-  color: #452808;
-  background: rgba(255, 255, 255, 0.95);
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-
-.rating-form textarea:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.12);
-}
-
-.rating-actions {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-#rating-hint {
-  font-size: 14px;
-  color: rgba(69, 40, 8, 0.75);
-}
-
-#submit-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-}
-
-.reviews-wrapper {
-  margin-top: 24px;
-  text-align: right;
-}
-
-.reviews-wrapper h4 {
-  font-size: 18px;
-  color: #452808;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.reviews-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.review-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,246,240,0.95) 100%);
-  border: 1px solid rgba(109, 76, 65, 0.15);
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  position: relative;
-}
-
-.review-card.review-self {
-  border-color: rgba(255, 152, 0, 0.5);
-  box-shadow: 0 10px 24px rgba(255, 152, 0, 0.18);
-}
-
-.review-card.review-self::after {
-  content: 'تقييمك';
-  position: absolute;
-  top: -10px;
-  left: 16px;
-  background: linear-gradient(135deg, #ff9800 0%, #e67e22 100%);
-  color: #fff;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 6px 15px rgba(255, 152, 0, 0.25);
-}
-
-.review-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.reviewer-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.reviewer-name {
-  font-weight: 700;
-  color: #13352f;
-  font-size: 15px;
-}
-
-.review-date {
-  font-size: 12px;
-  color: rgba(69, 40, 8, 0.6);
-}
-
-.review-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--color-accent);
-  font-size: 16px;
-}
-
-.review-rating .fa-star {
-  color: var(--color-accent);
-}
-
-.review-rating .far.fa-star {
-  color: rgba(69, 40, 8, 0.25);
-}
-
-.review-comment {
-  margin-top: 10px;
-  font-size: 15px;
-  line-height: 1.7;
-  color: rgba(26, 26, 26, 0.9);
-  white-space: pre-wrap;
-}
-
-.review-empty {
-  text-align: center;
-  padding: 18px;
-  color: rgba(69, 40, 8, 0.55);
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px dashed rgba(109, 76, 65, 0.3);
-  border-radius: 12px;
-}
-
-@media (max-width: 600px) {
-  .rating-actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #submit-rating {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 footer {
@@ -2551,150 +1874,6 @@ footer {
   animation: slideInUp 1s ease-out 0.5s both;
 }
 
-/* --- قسم الاشتراك في إشعارات المنتجات الجديدة --- */
-.newsletter-section {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-  padding: 40px 20px;
-  margin: -40px -20px 20px -20px;
-  border-radius: 0;
-}
-
-.newsletter-content {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.newsletter-content h3 {
-  color: #fff;
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.newsletter-content h3 i {
-  color: var(--color-accent);
-}
-
-.newsletter-content > p {
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 25px;
-  font-size: 1em;
-}
-
-.newsletter-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.newsletter-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.newsletter-inputs input {
-  padding: 12px 15px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: var(--font-main);
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-.newsletter-inputs input:focus {
-  outline: none;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
-  transform: translateY(-2px);
-}
-
-.newsletter-inputs input::placeholder {
-  color: #999;
-}
-
-.newsletter-options {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 5px 0;
-}
-
-.newsletter-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.95);
-  cursor: pointer;
-  font-size: 0.95em;
-  user-select: none;
-}
-
-.newsletter-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--color-accent);
-}
-
-.newsletter-checkbox:hover {
-  color: #fff;
-}
-
-.newsletter-submit-btn {
-  background: var(--color-accent);
-  color: #fff;
-  padding: 14px 30px;
-  font-size: 1.1em;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 5px;
-}
-
-.newsletter-submit-btn:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
-}
-
-.newsletter-submit-btn:active {
-  transform: translateY(0);
-}
-
-@media (max-width: 768px) {
-  .newsletter-section {
-    padding: 30px 15px;
-    margin: -40px -15px 20px -15px;
-  }
-  
-  .newsletter-content h3 {
-    font-size: 1.3em;
-  }
-  
-  .newsletter-options {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  
-  .newsletter-submit-btn {
-    width: 100%;
-  }
-}
-
 footer .social-links {
   margin-top: 15px;
   display: flex;
@@ -2704,13 +1883,38 @@ footer .social-links {
 
 footer .social-icon {
   font-size: 22px;
-  color: #ddd;
   transition: color 0.3s, transform 0.3s;
+  color: #ddd; /* لون افتراضي للأيقونات التي ليس لها لون محدد */
 }
 
 footer .social-icon:hover {
-  color: var(--color-accent);
   transform: scale(1.2);
+  filter: brightness(1.2); /* زيادة طفيفة في السطوع عند التمرير */
+}
+
+/* --- الألوان الحقيقية لوسائل التواصل الاجتماعي --- */
+footer .fa-facebook-f {
+  color: #1877F2; /* Facebook Blue */
+}
+
+footer .fa-twitter {
+  color: #1DA1F2; /* Twitter Blue */
+}
+
+footer .fa-instagram {
+  color: #C13584; /* Instagram - More accurate purple/pink */
+}
+
+footer .fa-whatsapp {
+  color: #25D366; /* WhatsApp Green */
+}
+
+footer .fa-youtube {
+  color: #FF0000; /* YouTube Red */
+}
+
+footer .fa-tiktok {
+  color: #000000; /* TikTok Black */
 }
 
 footer #admin-access-btn {
@@ -3017,313 +2221,65 @@ footer #admin-access-btn {
   }
 }
 
-/* --- تصميم نظام الدردشة المدمج --- */
+/* --- تحسينات صفحة تفاصيل المنتج على الموبايل --- */
+@media (max-width: 768px) { /* للأجهزة اللوحية والهواتف الكبيرة */
+  .product-details-container {
+    padding: 10px;
+    margin: 10px auto; /* تقليل الهامش الخارجي */
+  }
 
-/* حاوية الدردشة الرئيسية */
-#live-chat-container {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 1001;
-  direction: ltr; /* لضمان محاذاة العناصر بشكل صحيح */
-}
+  .product-details-content {
+    flex-direction: column; /* عرض العناصر فوق بعضها */
+    gap: 15px; /* تقليل المسافة بين العناصر */
+  }
 
-/* زر فتح/إغلاق الدردشة */
-#chat-toggle-btn {
-  width: 65px;
-  height: 65px;
-  background: linear-gradient(135deg, var(--color-primary), #1a4a41);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(19, 53, 47, 0.4);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-}
+  .main-image {
+    height: 250px; /* تقليل ارتفاع الصورة الرئيسية أكثر */
+  }
 
-#chat-toggle-btn:hover {
-  transform: translateY(-5px) scale(1.1);
-  box-shadow: 0 12px 35px rgba(19, 53, 47, 0.5);
-}
+  .product-title {
+    font-size: 22px; /* تصغير حجم عنوان المنتج أكثر */
+    margin-bottom: 10px; /* تعديل الهامش السفلي */
+  }
 
-/* شارة الرسائل غير المقروءة */
-.chat-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #e74c3c;
-  color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  border: 2px solid white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
+  .product-description {
+    font-size: 15px; /* تصغير حجم خط الوصف */
+    margin-bottom: 15px;
+  }
 
-/* نافذة الدردشة */
-#chat-window {
-  position: absolute;
-  bottom: 85px;
-  right: 0;
-  width: 350px;
-  max-width: 90vw;
-  height: 500px;
-  max-height: 70vh;
-  background: #f9f9f9;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  transform-origin: bottom right;
-}
+  .product-price {
+    font-size: 20px; /* تصغير حجم خط السعر */
+  }
 
-#chat-window.collapsed {
-  transform: scale(0);
-  opacity: 0;
-  pointer-events: none;
-}
+  .product-discount {
+    font-size: 18px; /* تصغير حجم خط الخصم */
+  }
 
-/* رأس نافذة الدردشة */
-#chat-header {
-  background: linear-gradient(135deg, var(--color-sidebar-bg), #6d4c41);
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-}
+  .quantity-control {
+    margin-bottom: 15px; /* تعديل الهامش السفلي */
+  }
 
-#chat-header h3 {
-  margin: 0;
-  font-size: 1.2em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .quantity-control span {
+    font-size: 18px; /* تصغير حجم خط الكمية */
+  }
 
-#close-chat-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: 0.2s;
-}
+  .product-actions {
+    flex-direction: column; /* جعل الأزرار تتكدس عمودياً */
+    gap: 10px; /* مسافة بين الأزرار المتكدسة */
+  }
 
-#close-chat-btn:hover {
-  opacity: 1;
-  transform: rotate(90deg);
-}
+  .product-actions .btn {
+    width: 100%; /* جعل الأزرار تأخذ عرض كامل */
+    flex-grow: unset; /* إزالة flex-grow لتجنب التمدد غير المرغوب فيه */
+  }
 
-/* منطقة عرض الرسائل */
-#chat-messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  direction: rtl; /* لضمان ظهور شريط التمرير على اليسار */
-  background-color: #f4f7f6;
-  background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-}
+  .thumbnail-container {
+    padding: 0; /* إزالة الهامش الداخلي إذا كان يسبب مشاكل */
+    justify-content: center; /* توسيط الصور المصغرة */
+  }
 
-/* تصميم فقاعات الرسائل */
-.chat-message {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-message p {
-  padding: 12px 18px;
-  border-radius: 20px;
-  max-width: 80%;
-  font-size: 15px;
-  line-height: 1.5;
-  word-wrap: break-word;
-}
-
-.chat-message .timestamp {
-  font-size: 11px;
-  color: #999;
-  margin-top: 4px;
-}
-
-/* رسائل المستخدم (العميل) */
-.chat-message.user {
-  align-items: flex-end;
-}
-.chat-message.user p {
-  background: var(--color-primary);
-  color: white;
-  border-bottom-right-radius: 5px;
-}
-.chat-message.user .timestamp {
-  margin-right: 10px;
-}
-
-/* رسائل الأدمن */
-.chat-message.admin {
-  align-items: flex-start;
-}
-.chat-message.admin p {
-  background: #ffffff;
-  color: #333;
-  border: 1px solid #e5e5e5;
-  border-bottom-left-radius: 5px;
-}
-.chat-message.admin .timestamp {
-  margin-left: 10px;
-}
-
-/* حقل إدخال الرسالة */
-#chat-input-container {
-  display: flex;
-  padding: 15px;
-  background: #fff;
-  border-top: 1px solid #e0e0e0;
-  flex-shrink: 0;
-}
-
-#chat-input {
-  flex: 1;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 25px;
-  font-size: 15px;
-  transition: 0.3s;
-  direction: rtl;
-}
-
-#chat-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(19, 53, 47, 0.1);
-}
-
-#chat-send-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: var(--color-primary);
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: 0.3s;
-}
-
-#chat-send-btn:hover {
-  background: var(--color-accent);
-  transform: scale(1.1);
-}
-
-/* --- تصميم واجهة الدردشة في صفحة الأدمن --- */
-#admin-chat-interface {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 20px;
-  height: 600px;
-  background: #f8f9fa;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid #e9ecef;
-}
-
-#chat-sidebar {
-  background: white;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#chat-sidebar-header {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: var(--admin-primary);
-}
-
-#chat-conversations-list {
-  list-style: none;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.conversation-item {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  cursor: pointer;
-  border-bottom: 1px solid #f5f5f5;
-  transition: 0.2s;
-  position: relative;
-}
-
-.conversation-item:hover, .conversation-item.active {
-  background: var(--cream-bg);
-}
-
-.conversation-item.active {
-  border-right: 4px solid var(--admin-primary);
-}
-
-.convo-info { flex: 1; }
-.convo-user { font-weight: 600; color: #333; display: block; margin-bottom: 4px; }
-.convo-preview { font-size: 0.9em; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-#chat-main {
-  background: white;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-}
-
-#chat-main-header {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: var(--admin-primary);
-}
-
-#chat-messages-box {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background-color: #f4f7f6;
-  background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-}
-
-.no-chat-selected { text-align: center; padding: 50px; color: #999; }
-.no-chat-selected i { font-size: 3em; margin-bottom: 15px; }
-
-#admin-chat-input-area {
-  padding: 15px;
-  border-top: 1px solid #eee;
-  display: flex;
-  gap: 10px;
-}
-
-#admin-chat-input { flex: 1; }
-
-.no-conversations {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
+  /* إخفاء خاصية تكبير الصورة على الموبايل لأنها غير عملية */
+  .img-zoom-result, .img-zoom-lens {
+    display: none !important;
+  }
 }

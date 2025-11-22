@@ -294,8 +294,8 @@
                     <input type="tel" id="client-phone" placeholder="+20 100 123 4567" required>
                 </div>
                 <div class="form-group">
-                    <label>الجهة (اختياري)</label>
-                    <input type="text" id="client-company" placeholder="الجهة">
+                    <label>اسم الشركة (اختياري)</label>
+                    <input type="text" id="client-company" placeholder="اسم الشركة">
                 </div>
             </div>
             <div class="form-group">
@@ -553,7 +553,7 @@
         const shipping = parseFloat(data.shipping) || 0;
         const grandTotal = subtotal + shipping - discountAmount;
 
-        let companyRow = data.clientCompany ? `<div class="info-row"><strong>الجهة:</strong> <span>${data.clientCompany}</span></div>` : '';
+        let companyRow = data.clientCompany ? `<div class="info-row"><strong>الشركة:</strong> <span>${data.clientCompany}</span></div>` : '';
 
         let subtotalRow = `<div class="total-row"><span>الإجمالي الفرعي :</span> <strong>${subtotal.toLocaleString()} ج.م</strong></div>`;
         let shippingRow = shipping > 0 ? `<div class="total-row"><span>الشحن :</span> <strong>${shipping.toLocaleString()} ج.م</strong></div>` : '';
@@ -646,11 +646,7 @@
     });
 
     window.onload = () => {
-        // Clear any existing product rows first if there's only one default row
-        const productsContainer = document.getElementById('products-container');
-        if (productsContainer.children.length === 1 && productsContainer.children[0].querySelector('.product-name').value === '') {
-            productsContainer.innerHTML = '';
-        }
+        addProductRow();
 
         // Set default dates
         const today = new Date();
@@ -659,76 +655,9 @@
         document.getElementById('issue-date').valueAsDate = today;
         document.getElementById('due-date').valueAsDate = dueDate;
 
-        // Check for pre-filled order data from admin panel
-        const storedOrderData = localStorage.getItem('invoiceOrderData');
-        if (storedOrderData) {
-            const order = JSON.parse(storedOrderData);
-            
-            // Extract details from order.details string
-            const details = order.details;
-            const nameMatch = details.match(/\*الاسم:\* (.+)/);
-            const phoneMatch = details.match(/\*رقم الهاتف:\* (.+)/);
-            const addressMatch = details.match(/\*العنوان:\* (.+)/);
-            const locationLinkMatch = details.match(/\* لوكيشن استلام الاوردر:\* (.+)/); // Optional
-            const productsTextMatch = details.match(/(?:\*المنتجات:\*|\*المنتج:\*)([\s\S]*?)(?:\n\n\*الإجمالي:|\n\n\*رقم الهاتف:)/);
-            const totalMatch = details.match(/\*الإجمالي:\* ([\d.]+) جنيه/);
-
-            document.getElementById('client-name').value = nameMatch ? nameMatch[1].trim() : '';
-            document.getElementById('client-phone').value = phoneMatch ? phoneMatch[1].trim() : '';
-            document.getElementById('ship-address').value = addressMatch ? addressMatch[1].trim() : '';
-            // Assuming city is part of address or can be left blank. If a separate city field is needed, more robust parsing is required.
-            // document.getElementById('ship-city').value = ... 
-            document.getElementById('payment-method').value = "الدفع عند الاستلام"; // Default, as not explicitly in order details
-            document.getElementById('invoice-status').value = order.status; // Set status from order
-            document.getElementById('invoice-num').value = order.id; // Use order ID as invoice number
-            document.getElementById('issue-date').valueAsDate = new Date(order.ts); // Use timestamp for issue date
-
-            // Populate products
-            productsContainer.innerHTML = ''; // Clear existing default product row
-            if (productsTextMatch && productsTextMatch[1]) {
-                const productsLines = productsTextMatch[1].trim().split(/\n(?=(?:\s*\- |كود المنتج:))/);
-                let currentProductName = '';
-                productsLines.forEach(line => {
-                    const productCodeMatch = line.match(/كود المنتج: (.+)/);
-                    if (productCodeMatch) {
-                        currentProductName = productCodeMatch[1].trim(); // Assuming product code is enough for name here, or find actual product name
-                    } else {
-                        const itemMatch = line.match(/\s*\-\s*(\d+)\s*×\s*([\d.]+)\s*جنيه\s*=\s*([\d.]+)\s*جنيه(?:\s*\((.+)\))?/);
-                        if (itemMatch) {
-                            const qty = parseInt(itemMatch[1]);
-                            const price = parseFloat(itemMatch[2]);
-                            const nameWithDetails = itemMatch[4] ? `${currentProductName} (${itemMatch[4]})` : currentProductName;
-                            addProductRow(nameWithDetails || currentProductName, qty, price);
-                        }
-                    }
-                });
-            } else if (totalMatch) {
-                // Fallback for single product orders or less detailed descriptions
-                const productName = nameMatch ? nameMatch[1].trim() : 'منتج غير محدد'; // Reuse client name if product name is not found
-                const total = parseFloat(totalMatch[1]);
-                // For simplicity, if only total is found and no product details, add a single row with total as price
-                addProductRow(productName, 1, total); 
-            }
-            if (productsContainer.children.length === 0) {
-                addProductRow(); // Add an empty row if no products were parsed
-            }
-
-            // Remove the stored data after use
-            localStorage.removeItem('invoiceOrderData');
-        } else {
-            addProductRow(); // Add default empty product row if no stored data
-            const currentNum = parseInt(document.getElementById('invoice-num').value) || 1000;
-            document.getElementById('invoice-num').value = currentNum + 1;
-        }
-
         updatePreview();
     };
 </script>
-
-<!-- زر واتساب العائم -->
-<a href="https://wa.me/201033662370" class="whatsapp-float" target="_blank" aria-label="تواصل عبر واتساب">
-  <i class="fab fa-whatsapp"></i>
-</a>
 
 </body>
 </html>
