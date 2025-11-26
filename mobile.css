@@ -363,3 +363,128 @@ header #favorites-btn .fas {
     width: 100%;
   }
 }
+
+/* --- Admin Page Responsive Styles --- */
+@media (max-width: 768px) {
+  .admin-page-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    padding: 10px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: static;
+    background: var(--admin-primary);
+  }
+
+  .admin-nav {
+    flex-direction: row;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    padding: 5px 10px;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+
+  /* Hide scrollbar for a cleaner look */
+  .admin-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .admin-nav {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .admin-nav-item {
+    flex: 0 0 auto; /* Prevent items from shrinking */
+    padding: 10px 15px;
+    font-size: 1em;
+    white-space: nowrap; /* Keep text on one line */
+  }
+
+  .admin-nav-item i {
+    font-size: 1.1em;
+  }
+
+  .admin-main-header {
+    padding: 10px 15px;
+    flex-wrap: nowrap;
+  }
+
+  .admin-logo {
+    font-size: 1.2em;
+  }
+
+  .admin-logo img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .admin-main-header .btn {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  .admin-main-content {
+    padding: 15px;
+  }
+
+  .admin-container {
+    padding: 0;
+  }
+
+  .admin-section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .section-header h2 {
+    font-size: 1.6em;
+  }
+
+  .stats-controls, .orders-controls {
+    width: 100%;
+  }
+
+  .stats-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Admin Chat Responsive */
+  #admin-chat-interface {
+    flex-direction: column;
+    height: 75vh; /* Adjust height for mobile */
+  }
+
+  #chat-conversations {
+    width: 100%;
+    height: auto;
+    max-height: 40%; /* Limit height of conversation list */
+    border-left: none;
+    border-bottom: 1px solid var(--admin-border);
+  }
+
+  #chat-main-panel.chat-hidden-mobile {
+    display: none;
+  }
+
+  #chat-conversations.chat-hidden-mobile {
+    display: none;
+  }
+
+  #admin-chat-back-btn {
+    display: block; /* Show back button on mobile */
+  }
+}

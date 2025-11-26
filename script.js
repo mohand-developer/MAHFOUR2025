@@ -333,6 +333,34 @@ const productsDataDefault = [
     video: null,
     available: true
   },
+  { 
+    id: 12, 
+    code: "DC009",
+    name: "صانية", 
+    price: 250, 
+    discount: 0, 
+    img: "https://i.postimg.cc/KjnrSKN9/6f3797fb-668f-4b86-b18c-9f677c9649a1.png", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
+    images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
+    dimensions: "يختلف حسب الطلب",
+    video: null,
+    available: true
+  },
+  { 
+    id: 13, 
+    code: "DC009",
+    name: "اباجورة", 
+    price: 450, 
+    discount: 0, 
+    img: "https://i.postimg.cc/Pxn0mDPJ/22.png", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
+    images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
+    dimensions: "يختلف حسب الطلب",
+    video: null,
+    available: true
+  },
 ];
 let activeShareDropdown = null;
 let shareDocumentListenerAdded = false;
@@ -535,7 +563,7 @@ async function exportOrdersToPDF() {
   html2pdf().set(opt).from(container).save();
 }
 // Version control for products data لازم اعدله للتحديث
-const DATA_VERSION = "1.4";
+const DATA_VERSION = "1.3";
 let productsData;
 let cartData = [];
 let favoritesData = [];
@@ -912,48 +940,84 @@ function sendNewOrderWhatsAppNotification(order) {
   }
 }
 
-function submitOrderNow() {
+function submitOrderNow(productId, quantity) {
   const fullName = document.getElementById('order-now-full-name')?.value.trim() || '';
   const phone = document.getElementById('order-now-phone-number')?.value.trim() || '';
   const address = document.getElementById('order-now-address')?.value.trim() || '';
   const locationLink = document.getElementById('order-now-location-link')?.value.trim() || '';
 
-  if (!fullName || !phone || !address || cartData.length === 0) {
-    Swal.fire('خطأ', 'يرجى ملء جميع الحقول وإضافة منتجات للسلة', 'error');
+  // 1. Validation for required fields
+  if (!fullName || !phone || !address) {
+    Swal.fire('بيانات غير مكتملة', 'يرجى ملء حقول الاسم والعنوان ورقم الهاتف.', 'error');
     return;
   }
 
-  const total = cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // 2. Phone number validation
+  if (!/^01[0-9]{9}$/.test(phone)) {
+    Swal.fire('رقم هاتف غير صحيح', 'يرجى إدخال رقم هاتف مصري صحيح مكون من 11 رقمًا ويبدأ بـ 01.', 'error');
+    return;
+  }
+
+  const product = productsData.find(p => p.id === productId);
+  if (!product) {
+    Swal.fire('خطأ', 'لم يتم العثور على المنتج المطلوب.', 'error');
+    return;
+  }
+
+  const effectivePrice = getProductEffectivePrice(product);
+  const total = effectivePrice * quantity;
+
+  let message = `*طلب جديد من متجر MAHFOOR CNC*\n\n`;
+  message += `*الاسم:* ${fullName}\n`;
+  message += `*العنوان:* ${address}\n`;
+  if (locationLink) message += `*رابط الموقع:* ${locationLink}\n`;
+  message += `*رقم الهاتف:* ${phone}\n\n`;
+  message += `*المنتج:*\n`;
+  message += `- ${quantity} × ${product.name} (${effectivePrice.toFixed(2)} جنيه) = ${total.toFixed(2)} جنيه\n`;
+  message += `كود المنتج: ${product.code}\n\n`;
+  message += `*الإجمالي:* ${total.toFixed(2)} جنيه`;
 
   const orderData = {
+    id: Date.now(),
     date: new Date().toLocaleString('ar-EG'),
-    customerName: fullName,
-    customerPhone: phone,
-    customerAddress: address + (locationLink ? ' | لوكيشن: ' + locationLink : ''),
-    products: cartData.map(p => ({ name: p.name, price: p.price, quantity: p.quantity })),
-    total: total,
-    status: 'جديد',
-    timestamp: Date.now()
+    ts: Date.now(),
+    details: message,
+    status: 'قيد الانتظار'
   };
 
-  db.ref('orders').push(orderData)
+  pushOrderToRealtime(orderData)
     .then(() => {
-  Swal.fire({
-    icon: 'success',
+      Swal.fire({
+        icon: 'success',
         title: 'تم إرسال الطلب بنجاح!',
-        text: 'شكرًا لك، سيتم التواصل معك قريبًا',
+        text: 'شكرًا لك، سيتم التواصل معك قريبًا.',
         timer: 3500,
         timerProgressBar: true
       });
-      cartData = [];
-      localStorage.setItem('mahfoor_cart', JSON.stringify(cartData));
-      updateCartCount();
-      document.getElementById('order-now-modal')?.remove();
+
+      // Close and reset the modal
+      const modal = document.getElementById('order-now-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('order-now-full-name').value = '';
+        document.getElementById('order-now-address').value = '';
+        document.getElementById('order-now-location-link').value = '';
+        document.getElementById('order-now-phone-number').value = '';
+      }
+
+      // Send WhatsApp notification
+      try {
+        if (typeof sendNewOrderWhatsAppNotification === 'function') {
+          sendNewOrderWhatsAppNotification(orderData);
+        }
+      } catch (e) {
+        console.warn('sendNewOrderWhatsAppNotification failed', e);
+      }
     })
     .catch(err => {
       console.error("Firebase Error:", err);
-      Swal.fire('خطأ', 'حدث خطأ مؤقت، حاول تاني بعد قليل', 'error');
-  });
+      Swal.fire('خطأ', 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.', 'error');
+    });
 }
 
 // Render new orders (pending orders)
@@ -1592,7 +1656,7 @@ function setupProductDetails() {
     const submitOrderNowBtn = document.getElementById('submit-order-now');
     const closeOrderNowBtn = document.getElementById('close-order-now');
     submitOrderNowBtn.onclick = () => {
-      submitOrderNow();
+      submitOrderNow(product.id, quantity);
       quantity = 1;
       quantitySpan.textContent = quantity;
     };
@@ -1610,7 +1674,7 @@ function setupProductDetails() {
     };
     document.getElementById('order-now-phone-number').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        submitOrderNow();
+        submitOrderNow(product.id, quantity);
         quantity = 1;
         quantitySpan.textContent = quantity;
       }
@@ -2444,6 +2508,9 @@ function updateStats(period = 'all') {
   const allOrders = getOrdersCache();
   const orders = filterOrdersByPeriod(allOrders, period);
   
+  // Filter for completed orders to calculate sales
+  const completedOrders = orders.filter(order => order.status === 'مكتمل');
+
   totalOrdersEl.textContent = orders.length;
   let totalSales = 0;
   const productCounts = {};
@@ -2470,25 +2537,24 @@ function updateStats(period = 'all') {
     ['rgba(250, 112, 154, 0.6)', 'rgba(254, 225, 64, 0.6)']
   ];
   
-  orders.forEach(order => {
+  completedOrders.forEach(order => {
     const totalMatch = order.details.match(/\*الإجمالي:\* ([\d.]+) جنيه/);
     if (totalMatch) {
       const orderTotal = parseFloat(totalMatch[1]);
       totalSales += orderTotal;
       // Track order date
-      if (order.date) {
-        orderDates.push({ date: order.date, total: orderTotal });
-      }
+      const orderTimestamp = order.ts || (order.date ? new Date(order.date).getTime() : 0);
+      if (orderTimestamp > 0) orderDates.push({ ts: orderTimestamp, total: orderTotal });
     }
     const lines = order.details.split('\n');
     let currentCode = null;
     lines.forEach(line => {
       const stripped = line.trim();
-      if (stripped.includes('كود المنتج:')) {
+      if (stripped.toLowerCase().startsWith('كود المنتج:')) {
         currentCode = stripped.split(':')[1].trim();
-      } else if (/^-?\s*(\d+) ×/.test(stripped)) {
-        const qtyMatch = stripped.match(/^-?\s*(\d+) × ([\d.]+) جنيه = ([\d.]+) جنيه/);
-        if (qtyMatch && currentCode) {
+      } else {
+        const qtyMatch = stripped.match(/^-?\s*(\d+)\s*×\s*(.+)\s*\(([\d.]+)\s*جنيه\)\s*=\s*([\d.]+)\s*جنيه/);
+        if (qtyMatch && currentCode && qtyMatch.length > 3) {
           const qty = parseInt(qtyMatch[1]);
           const revenue = parseFloat(qtyMatch[3]);
           productCounts[currentCode] = (productCounts[currentCode] || 0) + qty;
@@ -2502,7 +2568,7 @@ function updateStats(period = 'all') {
   totalSalesEl.textContent = totalSales.toFixed(2) + ' جنيه';
   
   // Calculate average order value
-  const avgOrderValue = orders.length > 0 ? (totalSales / orders.length).toFixed(2) : 0;
+  const avgOrderValue = completedOrders.length > 0 ? (totalSales / completedOrders.length).toFixed(2) : 0;
   const avgOrderEl = document.getElementById('avg-order-value');
   if (avgOrderEl) {
     avgOrderEl.textContent = avgOrderValue + ' جنيه';
@@ -2737,13 +2803,13 @@ function updateStats(period = 'all') {
       }
       
       orderDates.forEach(order => {
-        try {
-          const orderDate = new Date(order.date);
+        if (order.ts) {
+          const orderDate = new Date(order.ts);
           const daysAgo = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
           if (daysAgo >= 0 && daysAgo <= 6) {
             last7Days[6 - daysAgo].total += order.total;
           }
-        } catch (e) {
+        } else {
           // Skip invalid dates
         }
       });
@@ -2831,12 +2897,12 @@ function updateStats(period = 'all') {
       const monthlyData = new Array(12).fill(0);
       
       orderDates.forEach(order => {
-        try {
-          const orderDate = new Date(order.date);
+        if (order.ts) {
+          const orderDate = new Date(order.ts);
           if (orderDate.getFullYear() === now.getFullYear()) {
             monthlyData[orderDate.getMonth()] += order.total;
           }
-        } catch (e) {
+        } else {
           // Skip invalid dates
         }
       });
@@ -3217,166 +3283,189 @@ function setupFiltersSidebar() {
 
 // --- نظام الدردشة المدمج ---
 function setupLiveChat() {
-  const chatContainer = document.createElement('div');
-  chatContainer.id = 'live-chat-container';
-  chatContainer.innerHTML = `
-    <div id="chat-toggle-btn">
-      <i class="fas fa-comments"></i>
-      <span id="chat-unread-badge" class="chat-badge" style="display: none;"></span>
-    </div>
-    <div id="chat-window" class="collapsed">
-      <div id="chat-header">
-        <h3><i class="fas fa-headset"></i> تواصل معنا</h3>
-        <button id="close-chat-btn">&times;</button>
-      </div>
-      <div id="chat-messages"></div>
-      <div id="chat-input-container">
-        <input type="text" id="chat-input" placeholder="اكتب رسالتك هنا...">
-        <button id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(chatContainer);
+    const chatContainer = document.createElement('div');
+    chatContainer.id = 'live-chat-container';
+    chatContainer.innerHTML = `
+        <div id="chat-toggle-btn">
+            <i class="fas fa-comments"></i>
+            <span id="chat-unread-badge" class="chat-badge" style="display: none;"></span>
+        </div>
+        <div id="chat-window" class="collapsed">
+            <div id="chat-header">
+                <h3><i class="fas fa-headset"></i> تواصل معنا</h3>
+                <button id="close-chat-btn">&times;</button>
+            </div>
+            <div id="chat-messages"></div>
+            <div id="chat-input-container">
+                <input type="text" id="chat-input" placeholder="اكتب رسالتك هنا...">
+                <button id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(chatContainer);
 
-  const toggleBtn = document.getElementById('chat-toggle-btn');
-  const chatWindow = document.getElementById('chat-window');
-  const closeBtn = document.getElementById('close-chat-btn');
-  const sendBtn = document.getElementById('chat-send-btn');
-  const chatInput = document.getElementById('chat-input');
-  const messagesContainer = document.getElementById('chat-messages');
-  const unreadBadge = document.getElementById('chat-unread-badge');
+    const toggleBtn = document.getElementById('chat-toggle-btn');
+    const chatWindow = document.getElementById('chat-window');
+    const closeBtn = document.getElementById('close-chat-btn');
+    const sendBtn = document.getElementById('chat-send-btn');
+    const chatInput = document.getElementById('chat-input');
+    const messagesContainer = document.getElementById('chat-messages');
+    const unreadBadge = document.getElementById('chat-unread-badge');
 
-  let userId = localStorage.getItem('mahfourChatUserId');
-  if (!userId) {
-    userId = 'chat_user_' + Date.now() + Math.random().toString(36).substr(2, 5);
-    localStorage.setItem('mahfourChatUserId', userId);
-  }
+    let userId = localStorage.getItem('mahfourChatUserId');
+    if (!userId) {
+        userId = 'user_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        localStorage.setItem('mahfourChatUserId', userId);
+    }
 
-  const getAllChats = () => JSON.parse(localStorage.getItem('mahfourChats')) || {};
-  const getMyMessages = () => (getAllChats()[userId] || []);
+    const chatRef = db.ref('chats/' + userId);
 
-  const saveMyMessages = (messages) => {
-    const allChats = getAllChats();
-    allChats[userId] = messages;
-    localStorage.setItem('mahfourChats', JSON.stringify(allChats));
-    // Dispatch storage event for admin panel if open in same browser
-    window.dispatchEvent(new Event('storage'));
-  };
+    const renderMessages = (messages = []) => {
+        messagesContainer.innerHTML = '';
+        let unreadCount = 0;
+        messages.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${msg.sender}`; // 'user' or 'admin'
+            msgDiv.innerHTML = `<p>${escapeHtml(msg.text)}</p><span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</span>`;
+            messagesContainer.appendChild(msgDiv);
+            if (msg.sender === 'admin' && !msg.read) {
+                unreadCount++;
+            }
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-  const renderMessages = () => {
-    const messages = getMyMessages();
-    messagesContainer.innerHTML = '';
-    let unreadCount = 0;
-    messages.forEach(msg => {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `chat-message ${msg.sender}`; // 'user' or 'admin'
-      msgDiv.innerHTML = `<p>${escapeHtml(msg.text)}</p><span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</span>`;
-      messagesContainer.appendChild(msgDiv);
-      if (msg.sender === 'admin' && !msg.read) {
-        unreadCount++;
-      }
-    });
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    
-    if (chatWindow.classList.contains('collapsed') && unreadCount > 0) {
-        unreadBadge.style.display = 'flex';
-        unreadBadge.textContent = unreadCount;
-    } else {
+        if (chatWindow.classList.contains('collapsed') && unreadCount > 0) {
+            unreadBadge.style.display = 'flex';
+            unreadBadge.textContent = unreadCount;
+        } else {
+            unreadBadge.style.display = 'none';
+        }
+    };
+
+    const markMessagesAsRead = () => {
+        chatRef.once('value', snapshot => {
+            const messages = snapshot.val() || [];
+            let changed = false;
+            const updates = {};
+            messages.forEach((msg, index) => {
+                if (msg && msg.sender === 'admin' && !msg.read) {
+                    updates[index + '/read'] = true;
+                    changed = true;
+                }
+            });
+            if (changed) {
+                chatRef.update(updates);
+            }
+        });
         unreadBadge.style.display = 'none';
-    }
-  };
+    };
 
-  const markMessagesAsRead = () => {
-    const messages = getMyMessages();
-    let changed = false;
-    messages.forEach(msg => {
-      if (msg.sender === 'admin' && !msg.read) {
-        msg.read = true;
-        changed = true;
-      }
+    const sendMessage = () => {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        const newMessage = {
+            text,
+            sender: 'user',
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            readByAdmin: false
+        };
+
+        // Optimistic UI update: Add the new message to the current list and render
+        window.currentChatMessages = (window.currentChatMessages || []).concat(newMessage);
+        const currentMessages = window.currentChatMessages;
+        renderMessages(currentMessages);
+
+        chatRef.transaction(currentMessages => {
+            let messages = currentMessages || [];
+            if (!Array.isArray(messages)) {
+                messages = [];
+            }
+            messages.push(newMessage);
+            return messages;
+        }, (error, committed) => {
+            if (error) {
+                console.error('Transaction failed: ', error);
+            } else {
+                console.log('Message sent successfully.');
+            }
+        });
+        chatInput.value = '';
+    };
+
+    toggleBtn.addEventListener('click', () => {
+        chatWindow.classList.toggle('collapsed');
+        if (!chatWindow.classList.contains('collapsed')) {
+            markMessagesAsRead();
+        }
     });
-    if (changed) {
-      saveMyMessages(messages);
-    }
-    unreadBadge.style.display = 'none';
-  };
 
-  const sendMessage = () => {
-    const text = chatInput.value.trim();
-    if (!text) return;
+    closeBtn.addEventListener('click', () => chatWindow.classList.add('collapsed'));
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
 
-    const messages = getMyMessages();
-    messages.push({ text, sender: 'user', timestamp: Date.now() });
-    saveMyMessages(messages);
-    renderMessages();
-    chatInput.value = '';
-  };
-
-  toggleBtn.addEventListener('click', () => {
-    chatWindow.classList.toggle('collapsed');
-    if (!chatWindow.classList.contains('collapsed')) {
-      renderMessages();
-      markMessagesAsRead();
-    }
-  });
-
-  closeBtn.addEventListener('click', () => chatWindow.classList.add('collapsed'));
-  sendBtn.addEventListener('click', sendMessage);
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
-
-  // Listen for admin replies
-  window.addEventListener('storage', () => {
-    if (document.hidden) { // only re-render if tab is not active
-        renderMessages();
-    } else {
+    // Listen for new messages from Firebase
+    chatRef.on('value', snapshot => {
+        const data = snapshot.val();
+        window.currentChatMessages = []; // Reset for fresh data
+        let messages = [];
+        if (Array.isArray(data)) {
+            messages = data.filter(Boolean); // Filter out any null/undefined entries
+        } else if (data && typeof data === 'object') {
+            messages = Object.values(data).filter(Boolean);
+        }
+        window.currentChatMessages = messages; // Store the latest messages
         const wasScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
-        renderMessages();
+        renderMessages(messages);
         if (wasScrolledToBottom) {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-    }
-  });
-  
-  // Periodically check for new messages to update badge
-  setInterval(renderMessages, 5000);
-  renderMessages(); // Initial render for badge
+        if (!chatWindow.classList.contains('collapsed')) {
+            markMessagesAsRead();
+        }
+    });
 }
 
 function setupAdminChat() {
     const container = document.getElementById('admin-chat-interface');
-    if (!container) return;
+    if (!container || !hasRealtimeDb()) return;
 
     const conversationsList = container.querySelector('#chat-conversations-list');
     const chatBox = container.querySelector('#chat-messages-box');
     const chatInput = container.querySelector('#admin-chat-input');
     const chatSendBtn = container.querySelector('#admin-chat-send-btn');
     const currentChatUserEl = container.querySelector('#current-chat-user');
+    const notificationBadge = document.getElementById('chat-notification-badge');
+    const backBtn = document.getElementById('admin-chat-back-btn');
+    const newMsgSound = new Audio('https://cdn.jsdelivr.net/gh/scottschiller/SoundManager2@master/demo/audio/nav_mouseover.mp3');
 
     let currentChatId = null;
+    let chatsData = {};
 
-    const getAllChats = () => JSON.parse(localStorage.getItem('mahfourChats')) || {};
+    const chatsRef = db.ref('chats');
 
     const renderConversations = () => {
-        const allChats = getAllChats();
         conversationsList.innerHTML = '';
-        const sortedChats = Object.entries(allChats).sort(([, a], [, b]) => {
+        const sortedChats = Object.entries(chatsData).sort(([, a], [, b]) => {
             const lastMsgA = a[a.length - 1]?.timestamp || 0;
             const lastMsgB = b[b.length - 1]?.timestamp || 0;
             return lastMsgB - lastMsgA;
         });
 
         if (sortedChats.length === 0) {
-            conversationsList.innerHTML = '<div class="no-conversations">لا توجد محادثات حاليًا.</div>';
+            conversationsList.innerHTML = '<div class="no-conversations" style="padding: 20px; text-align: center; color: #888;">لا توجد محادثات حاليًا.</div>';
             return;
         }
 
+        let totalUnread = 0;
         sortedChats.forEach(([userId, messages]) => {
             const lastMessage = messages[messages.length - 1];
             if (!lastMessage) return;
 
             const unreadCount = messages.filter(m => m.sender === 'user' && !m.readByAdmin).length;
+            if (unreadCount > 0) totalUnread++;
 
             const li = document.createElement('li');
             li.className = 'conversation-item';
@@ -3385,7 +3474,7 @@ function setupAdminChat() {
 
             li.innerHTML = `
                 <div class="convo-info">
-                    <span class="convo-user"><i class="fas fa-user-circle"></i> ${userId.replace('chat_user_', 'زائر ')}</span>
+                    <span class="convo-user"><i class="fas fa-user-circle"></i> ${userId.replace('user_', 'زائر ')}</span>
                     <p class="convo-preview">${escapeHtml(lastMessage.text)}</p>
                 </div>
                 ${unreadCount > 0 ? `<span class="chat-badge">${unreadCount}</span>` : ''}
@@ -3393,11 +3482,15 @@ function setupAdminChat() {
             li.addEventListener('click', () => openConversation(userId));
             conversationsList.appendChild(li);
         });
+
+        if (notificationBadge) {
+            notificationBadge.textContent = totalUnread;
+            notificationBadge.style.display = totalUnread > 0 ? 'inline-block' : 'none';
+        }
     };
 
     const renderChatMessages = (userId) => {
-        const allChats = getAllChats();
-        const messages = allChats[userId] || [];
+        const messages = chatsData[userId] || [];
         chatBox.innerHTML = '';
         messages.forEach(msg => {
             const msgDiv = document.createElement('div');
@@ -3410,36 +3503,57 @@ function setupAdminChat() {
 
     const openConversation = (userId) => {
         currentChatId = userId;
-        currentChatUserEl.textContent = userId.replace('chat_user_', 'زائر ');
+        currentChatUserEl.textContent = userId.replace('user_', 'زائر ');
         document.getElementById('admin-chat-input-area').style.display = 'flex';
         renderChatMessages(userId);
 
-        // Mark messages as read by admin
-        const allChats = getAllChats();
+        // Mobile view: hide conversations, show chat panel
+        if (window.innerWidth <= 768) {
+            document.getElementById('chat-conversations').classList.add('chat-hidden-mobile');
+            document.getElementById('chat-main-panel').classList.remove('chat-hidden-mobile');
+            backBtn.style.display = 'inline-flex';
+        }
+
+        const updates = {};
         let changed = false;
-        allChats[userId].forEach(msg => {
+        (chatsData[userId] || []).forEach((msg, index) => {
             if (msg.sender === 'user' && !msg.readByAdmin) {
-                msg.readByAdmin = true;
+                updates[index + '/readByAdmin'] = true;
                 changed = true;
             }
         });
         if (changed) {
-            localStorage.setItem('mahfourChats', JSON.stringify(allChats));
+            db.ref('chats/' + userId).update(updates);
         }
-        renderConversations(); // Re-render to remove unread badge
     };
 
     const sendAdminMessage = () => {
         const text = chatInput.value.trim();
         if (!text || !currentChatId) return;
 
-        const allChats = getAllChats();
-        allChats[currentChatId].push({ text, sender: 'admin', timestamp: Date.now(), read: false });
-        localStorage.setItem('mahfourChats', JSON.stringify(allChats));
-        
-        renderChatMessages(currentChatId);
+        const newMessage = {
+            text,
+            sender: 'admin',
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            read: false
+        };
+
+        // Use a transaction to safely append the new message
+        db.ref('chats/' + currentChatId).transaction(currentMessages => {
+            let messages = currentMessages || [];
+            if (!Array.isArray(messages)) {
+                messages = [];
+            }
+            messages.push(newMessage);
+            return messages;
+        }, (error, committed) => {
+            if (error) {
+                console.error('Admin send message transaction failed: ', error);
+            } else {
+                console.log('Admin message sent successfully.');
+            }
+        });
         chatInput.value = '';
-        renderConversations(); // To update preview
     };
 
     chatSendBtn.addEventListener('click', sendAdminMessage);
@@ -3447,10 +3561,58 @@ function setupAdminChat() {
         if (e.key === 'Enter') sendAdminMessage();
     });
 
-    // Initial render and periodic refresh
-    renderConversations();
-    setInterval(renderConversations, 5000); // Refresh conversation list
-    window.addEventListener('storage', renderConversations); // Also refresh on storage change
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            currentChatId = null;
+            document.getElementById('chat-conversations').classList.remove('chat-hidden-mobile');
+            document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
+            currentChatUserEl.textContent = 'اختر محادثة';
+            backBtn.style.display = 'none';
+        });
+    }
+
+    chatsRef.on('value', snapshot => {
+        const oldData = { ...chatsData };
+        const rawData = snapshot.val() || {};
+        
+        // Ensure all conversations are arrays
+        chatsData = Object.entries(rawData).reduce((acc, [key, value]) => {
+            acc[key] = Array.isArray(value) ? value.filter(Boolean) : (value ? Object.values(value).filter(Boolean) : []);
+            return acc;
+        }, {});
+
+        // Check for new messages to play sound
+        let newMessagesArrived = false;
+        Object.keys(chatsData).forEach(userId => {
+            const newConversation = chatsData[userId] || [];
+            const oldConversation = oldData[userId] || [];
+            if (newConversation.length > oldConversation.length) {
+                const lastNewMsg = newConversation[newConversation.length - 1];
+                if (lastNewMsg && lastNewMsg.sender === 'user') {
+                    newMessagesArrived = true;
+                }
+            }
+        });
+
+        if (newMessagesArrived) {
+            newMsgSound.play().catch(e => console.warn("Audio notification failed:", e));
+        }
+
+        renderConversations();
+        if (currentChatId) {
+            // Ensure the currently open chat is re-rendered with new messages
+            const wasScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
+            renderChatMessages(currentChatId);
+            if (wasScrolledToBottom) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // Initial mobile view setup
+        if (window.innerWidth <= 768 && !currentChatId) {
+            document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
+        }
+    });
 }
 
 // Security: Enhanced HTML escaping for XSS protection
@@ -3849,7 +4011,7 @@ function initialize() {
       const submitOrderNowBtn = document.getElementById('submit-order-now');
       const closeOrderNowBtn = document.getElementById('close-order-now');
       submitOrderNowBtn.onclick = () => {
-        submitOrderNow();
+        submitOrderNow(product.id, quantity);
         quantitySpan.textContent = '1';
       };
       closeOrderNowBtn.onclick = () => {
@@ -3952,7 +4114,14 @@ function showAdminSection(sectionId) {
   document.querySelectorAll('.admin-nav-item').forEach(item => {
     item.classList.remove('active');
   });
-  document.querySelector(`.admin-nav-item[data-target="${sectionId}"]`).classList.add('active');
+  const activeNavItem = document.querySelector(`.admin-nav-item[data-target="${sectionId}"]`);
+  if (activeNavItem) {
+    activeNavItem.classList.add('active');
+  }
+  // Special handling for chat section
+  if (sectionId === 'admin-chat-section') {
+    setupAdminChat();
+  }
 
   // Special handling for sections that need rendering on display
   if (sectionId === 'orders-section') {
