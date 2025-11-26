@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المفضلة - MAHFOOR CNC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
     <style>
         :root {
@@ -19,200 +17,38 @@
             --shadow: rgba(107, 79, 75, 0.15);
             --accent-gold: #ff9800;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
+        .loading-spinner {
+            border: 5px solid #f3f3f3; border-top: 5px solid var(--wood-dark); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 40px auto;
+            display: none; /* Hidden by default */
         }
-
-        body {
-            background: linear-gradient(to bottom, #7c5e42, #d9c8a9);
-            color: #444;
-            min-height: 100vh;
-            padding: 20px 10px;
-            background-attachment: fixed;
-        }
-
-        .favorites-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px var(--shadow);
-            position: relative;
-        }
-
-        .header-bar {
-            background: linear-gradient(135deg, var(--wood-dark) 0%, #6d4c41 100%);
-            padding: 15px 30px;
-            color: white;
-            text-align: center;
-            border-bottom: 4px solid var(--wood-light);
-        }
-
-        .header-bar h1 {
-            margin: 0;
-            font-family: 'Amiri', serif;
-            font-size: 1.8em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .favorites-content {
-            padding: 30px;
-        }
-
-        .favorites-items {
-            margin-bottom: 25px;
-        }
-
-        .favorite-item {
-            display: flex;
-            align-items: center;
-            background: var(--white);
-            border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 18px;
-            border: 1px solid #E0D4B5;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            animation: cardFadeIn 0.5s ease-out forwards;
-            opacity: 0;
-        }
-
-        .favorite-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .item-image {
-            width: 90px;
-            height: 90px;
-            border-radius: 12px;
-            object-fit: cover;
-            margin-left: 25px;
-            border: 2px solid var(--wood-light);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .item-details {
-            flex: 1;
-            padding: 0 15px;
-        }
-
-        .item-details h3 {
-            color: var(--wood-dark);
-            font-size: 1.3em;
-            margin-bottom: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .item-details h3:hover {
-            color: var(--accent-gold);
-        }
-
-        .item-details .price {
-            color: var(--wood-dark);
-            font-weight: 800;
-            font-size: 1.2em;
-            margin: 8px 0;
-        }
-
-        .remove-btn {
-            background: transparent;
-            color: #D9534F;
-            border: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            font-size: 1.6em;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .remove-btn:hover {
-            background: #FBEAE9;
-            transform: scale(1.1);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 16px;
-            font-size: 1.2em;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .continue-shopping {
-            background: var(--wood-light);
-            color: var(--wood-dark);
-            border: 2px solid var(--wood-dark) !important;
-        }
-
-        .continue-shopping:hover {
-            background: var(--wood-dark);
-            color: white;
-        }
-
-        .clear-favorites-btn {
-            background: #D9534F;
-            color: white;
-            flex: 0.5;
-        }
-
-        .clear-favorites-btn:hover {
-            background: #c9302c;
-            box-shadow: 0 8px 20px rgba(217, 83, 79, 0.4);
-        }
-
-        .empty-favorites {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--wood-dark);
-            font-size: 1.3em;
-        }
-
-        .empty-favorites i {
-            font-size: 4em;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        @keyframes cardFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: linear-gradient(to bottom, #7c5e42, #d9c8a9); color: #444; min-height: 100vh; padding: 20px 10px; background-attachment: fixed; }
+        .favorites-container { max-width: 900px; margin: 0 auto; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px var(--shadow); position: relative; }
+        .header-bar { background: linear-gradient(135deg, var(--wood-dark) 0%, #6d4c41 100%); padding: 15px 30px; color: white; text-align: center; border-bottom: 4px solid var(--wood-light); }
+        .header-bar h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.8em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .favorites-content { padding: 30px; }
+        .favorites-items { margin-bottom: 25px; }
+        .favorite-item { display: flex; align-items: center; background: var(--white); border-radius: 15px; padding: 18px; margin-bottom: 18px; border: 1px solid #E0D4B5; transition: all 0.3s ease; overflow: hidden; animation: cardFadeIn 0.5s ease-out forwards; opacity: 0; }
+        .favorite-item:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); }
+        .item-image { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; margin-left: 25px; border: 2px solid var(--wood-light); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .item-details { flex: 1; padding: 0 15px; }
+        .item-details h3 { color: var(--wood-dark); font-size: 1.3em; margin-bottom: 6px; font-weight: 600; cursor: pointer; }
+        .item-details h3:hover { color: var(--accent-gold); }
+        .item-details .price { color: var(--wood-dark); font-weight: 800; font-size: 1.2em; margin: 8px 0; }
+        .remove-btn { background: transparent; color: #D9534F; border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 1.6em; cursor: pointer; transition: all 0.3s; margin-right: 10px; font-weight: bold; }
+        .remove-btn:hover { background: #FBEAE9; transform: scale(1.1); }
+        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .btn { flex: 1; padding: 16px; font-size: 1.2em; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .continue-shopping { background: var(--wood-light); color: var(--wood-dark); border: 2px solid var(--wood-dark) !important; }
+        .continue-shopping:hover { background: var(--wood-dark); color: white; }
+        .clear-favorites-btn { background: #D9534F; color: white; flex: 0.5; }
+        .clear-favorites-btn:hover { background: #c9302c; box-shadow: 0 8px 20px rgba(217, 83, 79, 0.4); }
+        .empty-favorites { text-align: center; padding: 60px 20px; color: var(--wood-dark); font-size: 1.3em; }
+        .empty-favorites i { font-size: 4em; margin-bottom: 20px; opacity: 0.3; }
+        @keyframes cardFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-
 <body>
 
     <div class="favorites-container">
@@ -222,72 +58,77 @@
 
         <div class="favorites-content">
             <div class="favorites-items">
-                <!-- المنتجات المفضلة تُضاف ديناميكيًا -->
+                <div class="loading-spinner" id="favorites-loader"></div>
             </div>
 
             <div class="action-buttons">
+                <button class="btn continue-shopping" onclick="window.location.href='index.html'">العودة للتسوق</button>
+                <button class="btn clear-favorites-btn" onclick="clearFavorites()">مسح الكل</button>
+            </div>
+        </div>
+    </div>
 
-                if (favorites.length === 0) {
-                favoritesItems.innerHTML = `
-                <div class="empty-favorites">
-                    <i class="fas fa-heart-broken"></i>
-                    <p>قائمة المفضلة فارغة</p>
-                    <p style="font-size: 0.9em; margin-top: 10px; color: #777;">
-                        أضف المنتجات التي تعجبك لتبقى على اطلاع بها.
-                    </p>
-                </div>`;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    
+    
+    
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="script.js" defer></script>
+    <script>
+        // Global renderFavorites function (defined in script.js)
+        // This will be called by the Firebase listener in script.js
+        window.renderFavorites = function() {
+            const favoritesItemsContainer = document.querySelector('.favorites-items');
+            const favoritesLoader = document.getElementById('favorites-loader');
+
+            if (favoritesLoader) favoritesLoader.style.display = 'block';
+            favoritesItemsContainer.innerHTML = ''; // Clear previous items
+
+            if (favoritesData.length === 0) {
+                favoritesItemsContainer.innerHTML = `
+                    <div class="empty-favorites">
+                        <i class="fas fa-heart-broken"></i>
+                        <p>قائمة المفضلة فارغة</p>
+                        <p style="font-size: 0.9em; margin-top: 10px; color: #777;">
+                            أضف المنتجات التي تعجبك لتبقى على اطلاع بها.
+                        </p>
+                    </div>`; 
+                if (favoritesLoader) favoritesLoader.style.display = 'none';
                 return;
-                }
+            }
 
-                favorites.forEach((item, index) => {
+            favoritesData.forEach((item, index) => {
                 const animationDelay = `${index * 0.1}s`;
                 const price = parseFloat(item.price);
 
                 const div = document.createElement('div');
                 div.className = 'favorite-item';
                 div.style.animationDelay = animationDelay;
+                // Ensure item.id is passed to removeFavoriteItem
                 div.innerHTML = `
-                <img src="${item.img || 'https://via.placeholder.com/90?text=خشب'}" alt="${item.name}"
-                    class="item-image">
-                <div class="item-details">
-                    <h3 onclick="location.href='product-details.html?id=${item.id}'">${item.name}</h3>
-                    <p class="price">${price.toFixed(2)} جنيه</p>
-                </div>
-                <button class="remove-btn" onclick="removeItem(${index})" title="إزالة من المفضلة"><i
-                        class="fas fa-trash-alt"></i></button>
+                    <img src="${item.img || 'https://via.placeholder.com/90?text=خشب'}" alt="${item.name}" class="item-image">
+                    <div class="item-details">
+                        <h3 onclick="location.href='product-details.html?id=${item.id}'">${item.name}</h3>
+                        <p class="price">${price.toFixed(2)} جنيه</p>
+                    </div>
+                    <button class="remove-btn" onclick="removeFavoriteItem(${item.id})" title="إزالة من المفضلة"><i class="fas fa-trash-alt"></i></button>
                 `;
-                favoritesItems.appendChild(div);
-                });
-                localStorage.setItem('mahfourFavorites', JSON.stringify(favorites));
-                }
+                favoritesItemsContainer.appendChild(div);
+            });
+            if (favoritesLoader) favoritesLoader.style.display = 'none';
+        };
 
-                function removeItem(index) {
-                Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "سيتم حذف هذا المنتج من المفضلة!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#7c5e42',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'نعم، احذفه!',
-                cancelButtonText: 'إلغاء'
-                }).then((result) => {
-                if (result.isConfirmed) {
-                favorites.splice(index, 1);
-                localStorage.setItem('mahfourFavorites', JSON.stringify(favorites)); // حفظ التغيير
-                renderFavorites(); // إعادة رسم القائمة
-                Swal.fire(
-                'تم الحذف!',
-                'تم حذف المنتج من المفضلة.',
-                'success'
-                )
-                }
-                })
-                }
-
-                function clearFavorites() {
-                if (favorites.length === 0) return;
-                Swal.fire({
+        // Global clearFavorites function (defined in script.js)
+        window.clearFavorites = function() {
+            // Use favoritesData from Firebase listener
+            if (!window.favoritesData) {
+                window.favoritesData = []; // Ensure it's initialized
+            }
+            if (favoritesData.length === 0) return;
+            Swal.fire({
                 title: 'هل أنت متأكد؟',
                 text: "سيتم حذف جميع المنتجات من المفضلة!",
                 icon: 'warning',
@@ -296,23 +137,72 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'نعم، امسح الكل!',
                 cancelButtonText: 'إلغاء'
-                }).then((result) => {
+            }).then((result) => {
                 if (result.isConfirmed) {
-                favorites = [];
-                localStorage.setItem('mahfourFavorites', JSON.stringify(favorites)); // حفظ التغيير
-                renderFavorites(); // إعادة رسم القائمة
-                Swal.fire(
-                'تم المسح!',
-                'أصبحت قائمة المفضلة فارغة الآن.',
-                'success'
-                )
+                    clearFavorites(); // Call the global clearFavorites function (Firebase integrated)
+                    // renderFavorites will be called by the Firebase listener
+                    Swal.fire(
+                        'تم المسح!',
+                        'أصبحت قائمة المفضلة فارغة الآن.',
+                        'success'
+                    )
                 }
-                })
-                }
+            })
+        };
 
-                document.addEventListener('DOMContentLoaded', renderFavorites);
-                </script>
+        // Initial render is handled by Firebase listener in script.js
+        // The `window.renderFavorites` function will be called by the listener.
 
+        // Ensure script.js is loaded and initialized
+        document.addEventListener('DOMContentLoaded', () => {
+            // No need to call renderFavorites here, Firebase listener in script.js will do it
+        });
+    </script>
 </body>
+</html>
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، احذفه!',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    favorites.splice(index, 1);
+                    localStorage.setItem('mahfourFavorites', JSON.stringify(favorites)); // حفظ التغيير
+                    renderFavorites(); // إعادة رسم القائمة
+                    Swal.fire(
+                        'تم الحذف!',
+                        'تم حذف المنتج من المفضلة.',
+                        'success'
+                    )
+                }
+            })
+        }
 
+        function clearFavorites() {
+            if (favorites.length === 0) return;
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "سيتم حذف جميع المنتجات من المفضلة!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'نعم، امسح الكل!',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    favorites = [];
+                    localStorage.setItem('mahfourFavorites', JSON.stringify(favorites)); // حفظ التغيير
+                    renderFavorites(); // إعادة رسم القائمة
+                    Swal.fire(
+                        'تم المسح!',
+                        'أصبحت قائمة المفضلة فارغة الآن.',
+                        'success'
+                    )
+                }
+            })
+        }
+
+        document.addEventListener('DOMContentLoaded', renderFavorites);
+    </script>
+</body>
 </html>

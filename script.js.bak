@@ -918,19 +918,19 @@ function submitOrderNow() {
   const address = document.getElementById('order-now-address')?.value.trim() || '';
   const locationLink = document.getElementById('order-now-location-link')?.value.trim() || '';
 
-  if (!fullName || !phone || !address || cartData.length === 0) {
+  if (!fullName || !phone || !address || cart.length === 0) {
     Swal.fire('خطأ', 'يرجى ملء جميع الحقول وإضافة منتجات للسلة', 'error');
     return;
   }
 
-  const total = cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const orderData = {
     date: new Date().toLocaleString('ar-EG'),
     customerName: fullName,
     customerPhone: phone,
     customerAddress: address + (locationLink ? ' | لوكيشن: ' + locationLink : ''),
-    products: cartData.map(p => ({ name: p.name, price: p.price, quantity: p.quantity })),
+    products: cart.map(p => ({ name: p.name, price: p.price, quantity: p.quantity })),
     total: total,
     status: 'جديد',
     timestamp: Date.now()
@@ -945,8 +945,8 @@ function submitOrderNow() {
         timer: 3500,
         timerProgressBar: true
       });
-      cartData = [];
-      localStorage.setItem('mahfoor_cart', JSON.stringify(cartData));
+      cart = [];
+      localStorage.setItem('mahfoor_cart', JSON.stringify(cart));
       updateCartCount();
       document.getElementById('order-now-modal')?.remove();
     })
@@ -3986,8 +3986,3 @@ document.getElementById('submit-order-now')?.addEventListener('click', submitOrd
 function pushOrderToRealtime(order){
     return firebase.database().ref("orders").push(order);
 }
-
-// submit checkout binding
-
-const _submitCheckoutBtn = document.getElementById('submit-checkout');
-if(_submitCheckoutBtn){ _submitCheckoutBtn.addEventListener('click', submitOrderNow); } else { console.warn('submit-checkout button not found in DOM'); }

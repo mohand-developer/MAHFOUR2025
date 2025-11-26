@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء فاتورة - MAHFOOR CNC</title>
+    <title>إنشاء/تعديل فاتورة - MAHFOOR CNC</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -26,7 +26,7 @@
         }
 
         body {
-            font-family:'Cairo', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
             color: var(--accent);
             line-height: 1.6;
@@ -294,8 +294,8 @@
                     <input type="tel" id="client-phone" placeholder="+20 100 123 4567" required>
                 </div>
                 <div class="form-group">
-                    <label>اسم الشركة (اختياري)</label>
-                    <input type="text" id="client-company" placeholder="اسم الشركة">
+                    <label>الجهة (اختياري)</label>
+                    <input type="text" id="client-company" placeholder="الجهة">
                 </div>
             </div>
             <div class="form-group">
@@ -386,6 +386,14 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
+    
+    
+    
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="script.js"></script>
+
 <script>
     const invoiceTemplate = `
 <!DOCTYPE html>
@@ -437,7 +445,7 @@
                 </div>
                 <div class="invoice-meta">
                     <h2>فاتورة رسمية</h2>
-                    <div class="meta-item"><span>رقم الفاتورة:</span> <span>#{{invoiceNum}}</span></div>
+                    <div class="meta-item"><span>رقم الفاتورة:</span> <span>{{invoiceNum}}</span></div>
                     <div class="meta-item"><span>تاريخ الإصدار:</span> <span>{{issueDate}}</span></div>
                     <div class="meta-item"><span>تاريخ الاستحقاق:</span> <span>{{dueDate}}</span></div>
                     <div class="meta-item"><span>الحالة:</span> <span style="color:{{statusColor}};font-weight:700;">{{status}} <i class="fas fa-check-circle"></i></span></div>
@@ -487,7 +495,6 @@
             <p>شكراً لثقتكم بـ <strong>MAHFOOR CNC</strong></p>
             <p>+201033662370 | support
             <div class="social-links">
-                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
             </div>
@@ -553,7 +560,7 @@
         const shipping = parseFloat(data.shipping) || 0;
         const grandTotal = subtotal + shipping - discountAmount;
 
-        let companyRow = data.clientCompany ? `<div class="info-row"><strong>الشركة:</strong> <span>${data.clientCompany}</span></div>` : '';
+        let companyRow = data.clientCompany ? `<div class="info-row"><strong>الجهة:</strong> <span>${data.clientCompany}</span></div>` : '';
 
         let subtotalRow = `<div class="total-row"><span>الإجمالي الفرعي :</span> <strong>${subtotal.toLocaleString()} ج.م</strong></div>`;
         let shippingRow = shipping > 0 ? `<div class="total-row"><span>الشحن :</span> <strong>${shipping.toLocaleString()} ج.م</strong></div>` : '';
@@ -646,7 +653,11 @@
     });
 
     window.onload = () => {
-        addProductRow();
+        // Clear any existing product rows first if there's only one default row
+        const productsContainer = document.getElementById('products-container');
+        if (productsContainer.children.length === 1 && productsContainer.children[0].querySelector('.product-name').value === '') {
+            productsContainer.innerHTML = '';
+        }
 
         // Set default dates
         const today = new Date();
@@ -654,6 +665,36 @@
         dueDate.setDate(today.getDate() + 7);
         document.getElementById('issue-date').valueAsDate = today;
         document.getElementById('due-date').valueAsDate = dueDate;
+
+        // Check for pre-filled order data from URL
+        const params = new URLSearchParams(window.location.search);
+        const orderDetailsParam = params.get('details');
+
+        if (orderDetailsParam) {
+            const order = JSON.parse(decodeURIComponent(orderDetailsParam));
+            document.getElementById('invoice-num').value = `ORD-${order.id}`;
+            document.getElementById('issue-date').valueAsDate = new Date(order.date);
+            document.getElementById('client-name').value = order.customerName;
+            document.getElementById('client-phone').value = order.customerPhone;
+            document.getElementById('ship-address').value = order.customerAddress;
+            // Assuming city is part of address or can be left blank. If a separate city field is needed, more robust parsing is required.
+            // document.getElementById('ship-city').value = ... 
+            document.getElementById('payment-method').value = "الدفع عند الاستلام"; // Default, as not explicitly in order details
+            document.getElementById('invoice-status').value = "مدفوعة"; // Default to paid for existing orders
+
+            // Populate products
+            productsContainer.innerHTML = ''; // Clear existing default product row
+            order.products.forEach(product => {
+                addProductRow(product.name, product.qty, product.price);
+            });
+
+            document.getElementById('shipping').value = "0"; // Assume 0 or fetch if available
+            document.getElementById('discount-value').value = "0"; // Assume 0 or fetch if available
+        } else {
+            addProductRow(); // Add default empty product row if no stored data
+            const currentNum = parseInt(document.getElementById('invoice-num').value) || 1000;
+            document.getElementById('invoice-num').value = currentNum + 1;
+        }
 
         updatePreview();
     };
