@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء/تعديل فاتورة - MAHFOOR CNC</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5A2B;
+            --secondary: #D4A574;
+            --accent: #4A3728;
+            --light: #F9F5F0;
+            --border: #C0A080;
+            --success: #27ae60;
+            --danger: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+            color: var(--accent);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.07);
+            border: 1px solid var(--border);
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139,90,43,0.15);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .products-list {
+            margin-top: 20px;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            background: #fdfaf7;
+        }
+
+        .product-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .product-item input {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-product {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .totals-inputs {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
+        .totals-inputs .row {
+            margin-bottom: 12px;
+        }
+
+        .totals-inputs label {
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6B4630;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #eee;
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+        }
+
+        .preview-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.07);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .preview-title {
+            text-align: center;
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        #invoice-preview {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            transform: scale(0.85);
+            transform-origin: top center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        @media print {
+            body, .container { padding: 0; margin: 0; }
+            .form-panel, .preview-panel { display: none; }
+            #invoice-preview { transform: scale(1) !important; box-shadow: none; border: none; }
+        }
+
+        @media (max-width: 992px) {
+            .container { grid-template-columns: 1fr; }
+            #invoice-preview { transform: scale(0.95); }
+        }
+
+        @media (max-width: 576px) {
+            .product-item { grid-template-columns: 1fr; }
+            .product-item input { margin-bottom: 8px; }
+            .remove-btn { width: 36px; height: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- نموذج الإدخال -->
+    <div class="form-panel">
+        <h2 class="form-title">
+            <img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" alt="Logo" style="width:40px;height:40px;border-radius:50%;object-fit:contain;">
+            إنشاء فاتورة جديدة
+        </h2>
+
+        <form id="invoice-form">
+            <!-- معلومات الفاتورة -->
+            <div class="row">
+                <div class="form-group">
+                    <label>رقم الفاتورة</label>
+                    <input type="text" id="invoice-num" value="1001" required>
+                </div>
+                <div class="form-group">
+                    <label>الحالة</label>
+                    <select id="invoice-status">
+                        <option value="مدفوعة">مدفوعة</option>
+                        <option value="معلقة">معلقة</option>
+                        <option value="ملغاة">ملغاة</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>تاريخ الإصدار</label>
+                    <input type="date" id="issue-date" required>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الاستحقاق</label>
+                    <input type="date" id="due-date" required>
+                </div>
+            </div>
+
+            <!-- معلومات العميل -->
+            <div class="row">
+                <div class="form-group">
+                    <label>رقم الجوال</label>
+                    <input type="tel" id="client-phone" placeholder="+20 100 123 4567" required>
+                </div>
+                <div class="form-group">
+                    <label>الجهة (اختياري)</label>
+                    <input type="text" id="client-company" placeholder="الجهة">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>اسم العميل</label>
+                <input type="text" id="client-name" placeholder="أحمد محمد السيد" required>
+            </div>
+            <div class="form-group">
+                <label>عنوان الشحن</label>
+                <input type="text" id="ship-address" placeholder="القاهرة - مدينة نصر - شارع مصطفى النحاس" required>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>المدينة</label>
+                    <input type="text" id="ship-city" placeholder="القاهرة" required>
+                </div>
+                <div class="form-group">
+                    <label>طريقة الدفع</label>
+                    <select id="payment-method">
+                        <option>الدفع عند الاستلام</option>
+                        <option>تحويل بنكي</option>
+                        <option>فودافون كاش</option>
+                        <option>بطاقة ائتمان</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- المنتجات -->
+            <div class="form-group">
+                <label>المنتجات</label>
+                <div class="products-list" id="products-container">
+                    <div class="product-item">
+                        <input type="text" placeholder="اسم المنتج" class="product-name">
+                        <input type="number" placeholder="الكمية" class="product-qty" min="1" value="1">
+                        <input type="number" placeholder="السعر" class="product-price" min="0" step="0.01">
+                        <button type="button" class="remove-btn" onclick="this.parentElement.remove(); updatePreview();">×</button>
+                    </div>
+                </div>
+                <button type="button" class="add-product" onclick="addProductRow()">
+                    <i class="fas fa-plus"></i> إضافة منتج
+                </button>
+            </div>
+
+            <!-- الإجماليات (اختياري) -->
+            <div class="totals-inputs">
+                <div class="row">
+                    <div class="form-group">
+                        <label>الشحن والتوصيل (ج.م)</label>
+                        <input type="number" id="shipping" placeholder="150" min="0" step="0.01" value="">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <div style="flex-grow: 1;">
+                            <label>الخصم</label>
+                            <input type="number" id="discount-value" placeholder="0" min="0" step="0.01" value="">
+                        </div>
+                        <select id="discount-type" style="width: 120px; flex-shrink: 0;">
+                            <option value="amount">مبلغ (ج.م)</option>
+                            <option value="percent">نسبة (%)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                    <i class="fas fa-eraser"></i> مسح الكل
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updatePreview()">
+                    <i class="fas fa-eye"></i> معاينة
+                </button>
+                <button type="button" class="btn btn-primary" onclick="printInvoice()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+                <button type="button" class="btn btn-primary" onclick="downloadInvoicePdf()" style="background-color: #2980b9;">
+                    <i class="fas fa-file-pdf"></i> تحميل PDF
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- معاينة الفاتورة -->
+    <div class="preview-panel">
+        <h3 class="preview-title">معاينة الفاتورة</h3>
+        <div id="invoice-preview">
+            <!-- سيتم ملؤها بالـ JavaScript -->
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    
+    
+    
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="script.js"></script>
+
+<script>
+    const invoiceTemplate = `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {--primary:#8B5A2B;--secondary:#D4A574;--accent:#4A3728;--light:#F9F5F0;--border:#C0A080;--success:#27ae60;}
+        body{font-family:'Cairo',sans-serif;background:white;color:var(--accent);padding:0;margin:0;}
+        .invoice-container{max-width:900px;margin:0 auto;background:white;overflow:hidden;}
+        .invoice-header{background:linear-gradient(135deg,var(--primary),#6B4630);color:white;padding:30px 40px;position:relative;}
+        .invoice-header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url('https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg') center/contain no-repeat;opacity:0.15;}
+        .header-content{position:relative;display:flex;justify-content:space-between;align-items:center;}
+        .brand{display:flex;align-items:center;gap:15px;}
+        .logo{width:90px;height:90px;border-radius:50%;border:4px solid rgba(255,255,255,0.3);object-fit:contain;background:white;padding:5px;}
+        .brand-text h1{font-size:28px;font-weight:900;margin-bottom:5px;}
+        .brand-text p{font-size:16px;opacity:0.9;}
+        .invoice-meta h2{font-size:24px;margin-bottom:12px;}
+        .meta-item{display:flex;justify-content:space-between;margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted rgba(255,255,255,0.2);}
+        .invoice-body{padding:40px;}
+        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-bottom:30px;}
+        .info-card{background:var(--light);padding:20px;border-radius:12px;border-left:5px solid var(--primary);}
+        .info-card h3{font-size:17px;color:var(--primary);margin-bottom:12px;}
+        .info-row{display:flex;justify-content:space-between;margin-bottom:8px;}
+        .products-table{width:100%;border-collapse:collapse;margin-top:15px;background:white;border-radius:12px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+        .products-table th{background:linear-gradient(135deg,var(--primary),#6B4630);color:white;padding:16px 12px;text-align:center;font-weight:700;}
+        .products-table td{padding:16px 12px;text-align:center;border-bottom:1px solid #eee;}
+        .products-table .product-name{text-align:right;font-weight:600;color:var(--accent);}
+        .products-table .price,.products-table .total{font-weight:700;color:var(--primary);}
+        .totals{margin-left:auto;width:fit-content;background:var(--light);padding:20px;border-radius:12px;border:2px solid var(--border);margin-top:25px;}
+        .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:16px;}
+        .grand-total{border-top:3px double var(--primary);padding-top:12px;margin-top:8px;color:var(--primary);font-size:20px !important;font-weight:900 !important;}
+        .invoice-footer{background:linear-gradient(135deg,#f8f3ed,var(--light));padding:25px 40px;text-align:center;border-top:1px solid var(--border);}
+        .social-links{display:flex;justify-content:center;gap:20px;margin-top:15px;}
+        .social-links a{color:var(--primary);font-size:20px;}
+        @media print {.no-print{display:none;}}
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <header class="invoice-header">
+            <div class="header-content">
+                <div class="brand">
+                    <img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" alt="Logo" class="logo">
+                    <div class="brand-text">
+                        <h1>MAHFOOR CNC</h1>
+                        <p>Nature Tells Your Story</p>
+                    </div>
+                </div>
+                <div class="invoice-meta">
+                    <h2>فاتورة رسمية</h2>
+                    <div class="meta-item"><span>رقم الفاتورة:</span> <span>{{invoiceNum}}</span></div>
+                    <div class="meta-item"><span>تاريخ الإصدار:</span> <span>{{issueDate}}</span></div>
+                    <div class="meta-item"><span>تاريخ الاستحقاق:</span> <span>{{dueDate}}</span></div>
+                    <div class="meta-item"><span>الحالة:</span> <span style="color:{{statusColor}};font-weight:700;">{{status}} <i class="fas fa-check-circle"></i></span></div>
+                </div>
+            </div>
+        </header>
+
+        <section class="invoice-body">
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>معلومات العميل</h3>
+                    <div class="info-row"><strong>الاسم:</strong> <span>{{clientName}}</span></div>
+                    <div class="info-row"><strong>رقم الجوال:</strong> <span>{{clientPhone}}</span></div>
+                    {{companyRow}}
+                </div>
+                <div class="info-card">
+                    <h3>عنوان الشحن</h3>
+                    <div class="info-row"><strong>العنوان:</strong> <span>{{shipAddress}}</span></div>
+                    <div class="info-row"><strong>المدينة:</strong> <span>{{shipCity}}</span></div>
+                    <div class="info-row"><strong>طريقة الدفع:</strong> <span style="color:var(--success);font-weight:600;">{{paymentMethod}}</span></div>
+                </div>
+            </div>
+
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>الكمية</th>
+                        <th>سعر القطعة</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{productsRows}}
+                </tbody>
+            </table>
+
+            <div class="totals">
+                {{subtotalRow}}
+                {{shippingRow}}
+                {{discountRow}}
+                <div class="total-row grand-total"><span>الإجمالي :</span> <strong>{{grandTotal}} ج.م</strong></div>
+            </div>
+        </section>
+
+        <footer class="invoice-footer">
+            <p>شكراً لثقتكم بـ <strong>MAHFOOR CNC</strong></p>
+            <p>+201033662370 | support
+            <div class="social-links">
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            </div>
+            <p style="margin-top:15px;font-size:13px;">موقعنا: <a href="https://mahfour71-coder.github.io/MA7FOORAT//">mahfoorcnc.com</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+    `;
+
+    function addProductRow(name = '', qty = 1, price = '') {
+        const container = document.getElementById('products-container');
+        const div = document.createElement('div');
+        div.className = 'product-item';
+        div.innerHTML = `
+            <input type="text" placeholder="اسم المنتج" class="product-name" value="${name}">
+            <input type="number" placeholder="الكمية" class="product-qty" min="1" value="${qty}">
+            <input type="number" placeholder="السعر" class="product-price" min="0" step="0.01" value="${price}">
+            <button type="button" class="remove-btn" onclick="this.parentElement.remove(); updatePreview();">×</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function updatePreview() {
+        const data = collectFormData();
+        let html = invoiceTemplate;
+
+        const formatDate = (dateString) => {
+            if (!dateString) return 'غير محدد';
+            return new Date(dateString).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        const statusColor = data.status === 'مدفوعة' ? '#27ae60' : data.status === 'معلقة' ? '#f39c12' : '#e74c3c';
+
+        let productsRows = '';
+        let subtotal = 0;
+        document.querySelectorAll('.product-item').forEach(item => {
+            const name = item.querySelector('.product-name').value || 'منتج';
+            const qty = parseFloat(item.querySelector('.product-qty').value) || 0;
+            const price = parseFloat(item.querySelector('.product-price').value) || 0;
+            const total = qty * price;
+            subtotal += total;
+            if (name && qty > 0 && price > 0) {
+                productsRows += `
+                    <tr>
+                        <td class="product-name">${name}</td>
+                        <td>${qty}</td>
+                        <td class="price">${price.toLocaleString()} ج.م</td>
+                        <td class="total">${total.toLocaleString()} ج.م</td>
+                    </tr>
+                `;
+            }
+        });
+
+        let discountAmount = parseFloat(data.discountValue) || 0;
+        let discountLabel = "الخصم:";
+
+        if (data.discountType === 'percent') {
+            discountLabel = `الخصم (${data.discountValue}%):`;
+            discountAmount = (subtotal * discountAmount) / 100;
+        }
+
+        const shipping = parseFloat(data.shipping) || 0;
+        const grandTotal = subtotal + shipping - discountAmount;
+
+        let companyRow = data.clientCompany ? `<div class="info-row"><strong>الجهة:</strong> <span>${data.clientCompany}</span></div>` : '';
+
+        let subtotalRow = `<div class="total-row"><span>الإجمالي الفرعي :</span> <strong>${subtotal.toLocaleString()} ج.م</strong></div>`;
+        let shippingRow = shipping > 0 ? `<div class="total-row"><span>الشحن :</span> <strong>${shipping.toLocaleString()} ج.م</strong></div>` : '';
+        let discountRow = discountAmount > 0 ? `<div class="total-row"><span>${discountLabel}</span> <strong style="color:var(--success);">- ${discountAmount.toLocaleString()} ج.م</strong></div>` : '';
+
+        html = html.replace(/{{invoiceNum}}/g, data.invoiceNum)
+                   .replace(/{{issueDate}}/g, formatDate(data.issueDate))
+                   .replace(/{{dueDate}}/g, formatDate(data.dueDate))
+                   .replace(/{{status}}/g, data.status)
+                   .replace(/{{statusColor}}/g, statusColor)
+                   .replace(/{{clientName}}/g, data.clientName)
+                   .replace(/{{clientPhone}}/g, data.clientPhone)
+                   .replace(/{{companyRow}}/g, companyRow)
+                   .replace(/{{shipAddress}}/g, data.shipAddress)
+                   .replace(/{{shipCity}}/g, data.shipCity)
+                   .replace(/{{paymentMethod}}/g, data.paymentMethod)
+                   .replace(/{{productsRows}}/g, productsRows || '<tr><td colspan="4" style="text-align:center;color:#999;">لا توجد منتجات</td></tr>')
+                   .replace(/{{subtotalRow}}/g, subtotalRow)
+                   .replace(/{{shippingRow}}/g, shippingRow)
+                   .replace(/{{discountRow}}/g, discountRow)
+                   .replace(/{{grandTotal}}/g, grandTotal.toLocaleString());
+
+        document.getElementById('invoice-preview').innerHTML = html;
+    }
+
+    function collectFormData() {
+        return {
+            invoiceNum: document.getElementById('invoice-num').value,
+            status: document.getElementById('invoice-status').value,
+            issueDate: document.getElementById('issue-date').value,
+            dueDate: document.getElementById('due-date').value,
+            clientName: document.getElementById('client-name').value,
+            clientPhone: document.getElementById('client-phone').value,
+            clientCompany: document.getElementById('client-company').value,
+            shipAddress: document.getElementById('ship-address').value,
+            shipCity: document.getElementById('ship-city').value,
+            paymentMethod: document.getElementById('payment-method').value,
+            shipping: document.getElementById('shipping').value,
+            discountValue: document.getElementById('discount-value').value,
+            discountType: document.getElementById('discount-type').value
+        };
+    }
+
+    function printInvoice() {
+        updatePreview();
+        setTimeout(() => {
+            const printWindow = window.open('', '', 'width=900,height=800');
+            printWindow.document.write(document.getElementById('invoice-preview').innerHTML);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    }
+
+    function downloadInvoicePdf() {
+        updatePreview(); // Ensure the preview is up-to-date
+        setTimeout(() => {
+            const element = document.getElementById('invoice-preview');
+            const invoiceNum = document.getElementById('invoice-num').value;
+            const opt = {
+                margin: 10,
+                filename: `فاتورة_${invoiceNum}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }, 300); // Small delay to ensure preview is fully rendered
+    }
+    function resetForm() {
+        if (confirm('هل تريد مسح جميع البيانات؟')) {
+            document.getElementById('invoice-form').reset();
+            document.getElementById('products-container').innerHTML = `
+                <div class="product-item">
+                    <input type="text" placeholder="اسم المنتج" class="product-name">
+                    <input type="number" placeholder="الكمية" class="product-qty" min="1" value="1">
+                    <input type="number" placeholder="السعر" class="product-price" min="0" step="0.01">
+                    <button type="button" class="remove-btn" onclick="this.parentElement.remove(); updatePreview();">×</button>
+                </div>
+            `;
+            const currentNum = parseInt(document.getElementById('invoice-num').value) || 1000;
+            document.getElementById('invoice-num').value = currentNum + 1;
+            updatePreview();
+        }
+    }
+
+    document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', updatePreview);
+    });
+
+    window.onload = () => {
+        // Clear any existing product rows first if there's only one default row
+        const productsContainer = document.getElementById('products-container');
+        if (productsContainer.children.length === 1 && productsContainer.children[0].querySelector('.product-name').value === '') {
+            productsContainer.innerHTML = '';
+        }
+
+        // Set default dates
+        const today = new Date();
+        const dueDate = new Date();
+        dueDate.setDate(today.getDate() + 7);
+        document.getElementById('issue-date').valueAsDate = today;
+        document.getElementById('due-date').valueAsDate = dueDate;
+
+        // Check for pre-filled order data from URL
+        const params = new URLSearchParams(window.location.search);
+        const orderDetailsParam = params.get('details');
+
+        if (orderDetailsParam) {
+            const order = JSON.parse(decodeURIComponent(orderDetailsParam));
+            document.getElementById('invoice-num').value = `ORD-${order.id}`;
+            document.getElementById('issue-date').valueAsDate = new Date(order.date);
+            document.getElementById('client-name').value = order.customerName;
+            document.getElementById('client-phone').value = order.customerPhone;
+            document.getElementById('ship-address').value = order.customerAddress;
+            // Assuming city is part of address or can be left blank. If a separate city field is needed, more robust parsing is required.
+            // document.getElementById('ship-city').value = ... 
+            document.getElementById('payment-method').value = "الدفع عند الاستلام"; // Default, as not explicitly in order details
+            document.getElementById('invoice-status').value = "مدفوعة"; // Default to paid for existing orders
+
+            // Populate products
+            productsContainer.innerHTML = ''; // Clear existing default product row
+            order.products.forEach(product => {
+                addProductRow(product.name, product.qty, product.price);
+            });
+
+            document.getElementById('shipping').value = "0"; // Assume 0 or fetch if available
+            document.getElementById('discount-value').value = "0"; // Assume 0 or fetch if available
+        } else {
+            addProductRow(); // Add default empty product row if no stored data
+            const currentNum = parseInt(document.getElementById('invoice-num').value) || 1000;
+            document.getElementById('invoice-num').value = currentNum + 1;
+        }
+
+        updatePreview();
+    };
+</script>
+
+</body>
+</html>
