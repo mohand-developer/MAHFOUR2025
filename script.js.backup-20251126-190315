@@ -11,22 +11,108 @@ if (typeof db === 'undefined') {
   console.error("خطأ: Firebase غير متصل! تأكد من تحميل firebase-init.js قبل script.js");
 }
 
+const FIREBASE_ORDERS_PATH = 'orders';
+let ordersCache = [];
+let ordersListenerAttached = false;
+let ordersRefInstance = null;
 
-// Firebase variables and functions are now in js/firebase-manager.js
+function hasRealtimeDb() {
+  return typeof db !== 'undefined' && db && typeof db.ref === 'function';
+}
 
+function getOrdersCache() {
+  return Array.isArray(ordersCache) ? ordersCache : [];
+}
 
+function handleOrdersDataChange() {
+  try { renderNewOrders(); } catch (err) { /* ignore on non-admin pages */ }
+  try {
+    const searchTerm = document.getElementById('search-orders')?.value?.trim().toLowerCase();
+    if (searchTerm) {
+      const filtered = getOrdersCache().filter(order => {
+        const details = (order.details || '').toLowerCase();
+        const status = (order.status || '').toLowerCase();
+        const idMatch = order.id?.toString().includes(searchTerm);
+        return idMatch || details.includes(searchTerm) || status.includes(searchTerm);
+      });
+      renderOrders(filtered);
+    } else {
+      renderOrders();
+    }
+  } catch (err) { /* ignore */ }
+  try {
+    const currentPeriod = document.getElementById('stats-period')?.value || 'all';
+    updateStats(currentPeriod);
+  } catch (err) { /* ignore */ }
+  try { renderAdminProducts(); } catch (err) { /* ignore */ }
+}
+
+function initOrdersRealtimeListener() {
+  if (ordersListenerAttached) return;
+  if (!hasRealtimeDb()) {
+    setTimeout(initOrdersRealtimeListener, 800);
+    return;
+  }
+  ordersRefInstance = db.ref(FIREBASE_ORDERS_PATH);
+  ordersRefInstance.on('value', (snapshot) => {
+    const data = snapshot.val() || {};
+    const parsed = Object.entries(data).map(([key, value]) => ({
+      ...value,
+      firebaseKey: key
+    }));
+    parsed.sort((a, b) => {
+      const aTs = Number(a.ts || a.id || 0);
+      const bTs = Number(b.ts || b.id || 0);
+      return bTs - aTs;
+    });
+    ordersCache = parsed;
+    handleOrdersDataChange();
+  }, (error) => {
+    console.error('Failed to listen for orders:', error);
+  });
+  ordersListenerAttached = true;
+}
+
+function pushOrderToRealtime(order) {
+  if (!hasRealtimeDb()) {
+    return Promise.reject(new Error('Firebase Realtime Database is not available'));
+  }
+  const payload = { ...order };
+  if (!payload.ts) {
+    payload.ts = Date.now();
+  }
+  return db.ref(FIREBASE_ORDERS_PATH).push(payload);
+}
+
+function updateOrderStatusInRealtime(orderId, status) {
+  if (!hasRealtimeDb()) {
+    return Promise.reject(new Error('Firebase Realtime Database is not available'));
+  }
+  const target = getOrdersCache().find(order => Number(order.id) === Number(orderId));
+  if (!target || !target.firebaseKey) {
+    return Promise.reject(new Error('Order not found'));
+  }
+  return db.ref(`${FIREBASE_ORDERS_PATH}/${target.firebaseKey}`).update({ status });
+}
+
+function removeAllOrdersFromRealtime() {
+  if (!hasRealtimeDb()) {
+    return Promise.reject(new Error('Firebase Realtime Database is not available'));
+  }
+  return db.ref(FIREBASE_ORDERS_PATH).remove();
+}
 
 // Define productsData with version control
 const productsDataDefault = [
-  {
-    id: 1,
+  { 
+    id: 1, 
     code: "101",
-    name: " علب مناديل خشبية",
-    price: 165,
-    discount: 0,
-    img: "https://i.postimg.cc/W4nRLDKp/photo.jpg",
-    category: "ادوات منزلية",
-    details: "علب مناديل خشبية",
+    name: " علب مناديل خشبية", 
+    price: 165, 
+    discount: 0, 
+    img: "https://i.postimg.cc/W4nRLDKp/photo.jpg", 
+    category: "ادوات منزلية", 
+    details: "علب مناديل خشبية", 
     images: [
       "https://i.postimg.cc/ydgThtFH/photo.jpg",
       "https://i.postimg.cc/pXGY7Pqb/photo.jpg",
@@ -60,18 +146,18 @@ const productsDataDefault = [
     video: null,
     available: true
   },
-  {
-    id: 2,
+  { 
+    id: 2, 
     code: "202",
-    name: " حامل موبايل",
-    price: 65,
-    discount: 0,
-    img: "https://i.postimg.cc/d1PvR7XP/photo-4.jpg",
-    category: "اكسسورات",
-    details: " حامل موبايل وتابلت  ",
+    name: " حامل موبايل", 
+    price: 65, 
+    discount: 0, 
+    img: "https://i.postimg.cc/d1PvR7XP/photo-4.jpg", 
+    category: "اكسسورات", 
+    details: " حامل موبايل وتابلت  ", 
     images: [
       "https://i.postimg.cc/QM6xpxD9/photo.jpg",
-      "https://i.postimg.cc/N0rBr8db/photo.jpg",
+      "https://i.postimg.cc/N0rBr8db/photo.jpg", 
       "https://i.postimg.cc/fb0D0783/photo-2.jpg",
       "https://i.postimg.cc/1zNsN0vc/photo-3.jpg",
       "https://i.postimg.cc/SsFqLXPr/photo.jpg",
@@ -99,15 +185,15 @@ const productsDataDefault = [
     video: null,
     available: true
   },
-  {
-    id: 3,
+  { 
+    id: 3, 
     code: "301",
-    name: "مقلمة",
-    price: 55,
-    discount: 0,
-    img: "https://i.postimg.cc/NFV7zcwj/photo.jpg",
-    category: "ادوات مكتبية",
-    details: "  مقلمة اطفال ",
+    name: "مقلمة", 
+    price: 55, 
+    discount: 0, 
+    img: "https://i.postimg.cc/NFV7zcwj/photo.jpg", 
+    category: "ادوات مكتبية", 
+    details: "  مقلمة اطفال ", 
     images: [
       "https://i.postimg.cc/FRLjkc4h/photo.jpg",
       "https://i.postimg.cc/KcJZgYZt/photo.jpg",
@@ -119,157 +205,157 @@ const productsDataDefault = [
     video: null,
     available: true
   },
-  {
-    id: 4,
+  { 
+    id: 4, 
     code: "XO004",
-    name: "لعبه x.o",
-    price: 99,
-    discount: 0,
-    img: "https://i.postimg.cc/gj9TCqCw/photo.jpg",
-    category: "العاب",
-    details: "حصان خشبي صغير مصنوع يدويًا، مثالي كهدية تذكارية.",
+    name: "لعبه x.o", 
+    price: 99, 
+    discount: 0, 
+    img: "https://i.postimg.cc/gj9TCqCw/photo.jpg", 
+    category: "العاب", 
+    details: "حصان خشبي صغير مصنوع يدويًا، مثالي كهدية تذكارية.", 
     images: ["https://i.postimg.cc/900jZxJw/photo-2025-09-05-02-44-18.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: "https://files.catbox.moe/hlznb6.mp4",
     available: true
   },
-  {
-    id: 5,
+  { 
+    id: 5, 
     code: "CS005",
-    name: "كوستر",
-    price: 30,
-    discount: 0,
-    img: "https://i.postimg.cc/1zwCpNns/photo-2025-09-04-22-39-53.jpg",
-    category: "ادوات منزلية",
-    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.",
+    name: "كوستر", 
+    price: 30, 
+    discount: 0, 
+    img: "https://i.postimg.cc/1zwCpNns/photo-2025-09-04-22-39-53.jpg", 
+    category: "ادوات منزلية", 
+    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.", 
     images: [
       "https://i.postimg.cc/1zwCpNns/photo-2025-09-04-22-39-53.jpg",
-      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg",
+      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg", 
       "https://i.postimg.cc/4nMS61K7/photo.jpg"
     ],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 6,
+  { 
+    id: 6, 
     code: "CS006",
-    name: "كوستر",
-    price: 30,
-    discount: 0,
-    img: "https://i.postimg.cc/rsfwL0Yx/photo-2025-09-05-02-41-16.jpg",
-    category: "ادوات منزلية",
-    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.",
+    name: "كوستر", 
+    price: 30, 
+    discount: 0, 
+    img: "https://i.postimg.cc/rsfwL0Yx/photo-2025-09-05-02-41-16.jpg", 
+    category: "ادوات منزلية", 
+    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.", 
     images: [
       "https://i.postimg.cc/rsfwL0Yx/photo-2025-09-05-02-41-16.jpg",
-      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg",
+      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg", 
       "https://i.postimg.cc/4nMS61K7/photo.jpg"
     ],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 7,
+  { 
+    id: 7, 
     code: "CS007",
-    name: "كوستر",
-    price: 30,
-    discount: 0,
-    img: "https://i.postimg.cc/pdKVL162/photo-2025-09-05-02-42-09.jpg",
-    category: "ادوات منزلية",
-    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.",
+    name: "كوستر", 
+    price: 30, 
+    discount: 0, 
+    img: "https://i.postimg.cc/pdKVL162/photo-2025-09-05-02-42-09.jpg", 
+    category: "ادوات منزلية", 
+    details: "مكعب خشبي مزخرف بتصميم فريد، مصنوع من خشب الصنوبر.", 
     images: [
       "https://i.postimg.cc/pdKVL162/photo-2025-09-05-02-42-09.jpg",
-      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg",
+      "https://i.postimg.cc/NFw0GMQn/photo-4.jpg", 
       "https://i.postimg.cc/4nMS61K7/photo.jpg"
     ],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 8,
+  { 
+    id: 8, 
     code: "DC008",
-    name: "ديكور خشبي علي شكل كف",
-    price: 75,
-    discount: 0,
-    img: "https://i.postimg.cc/0ND2gZ3m/photo-2025-09-04-22-20-43.jpg",
-    category: "ديكور",
-    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.",
+    name: "ديكور خشبي علي شكل كف", 
+    price: 75, 
+    discount: 0, 
+    img: "https://i.postimg.cc/0ND2gZ3m/photo-2025-09-04-22-20-43.jpg", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
     images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 9,
+  { 
+    id: 9, 
     code: "DC009",
-    name: "ديكور خشبي علي شكل كف",
-    price: 75,
-    discount: 0,
-    img: "https://i.postimg.cc/GmGkyMfN/photo-2025-09-07-05-29-55.jpg",
-    category: "ديكور",
-    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.",
+    name: "ديكور خشبي علي شكل كف", 
+    price: 75, 
+    discount: 0, 
+    img: "https://i.postimg.cc/GmGkyMfN/photo-2025-09-07-05-29-55.jpg", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
     images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 10,
+  { 
+    id: 10, 
     code: "CS010",
-    name: "كوستر 'Everyday is More Better'",
-    price: 55,
-    discount: 0,
-    img: "https://i.postimg.cc/bJV5mfTR/photo-2025-09-04-22-26-03.jpg",
-    category: "ادوات منزلية",
-    details: "لوحة خشبية تحمل عبارة ملهمة، بأبعاد 25x35 سم.",
+    name: "كوستر 'Everyday is More Better'", 
+    price: 55, 
+    discount: 0, 
+    img: "https://i.postimg.cc/bJV5mfTR/photo-2025-09-04-22-26-03.jpg", 
+    category: "ادوات منزلية", 
+    details: "لوحة خشبية تحمل عبارة ملهمة، بأبعاد 25x35 سم.", 
     images: [
       "https://i.postimg.cc/bJV5mfTR/photo-2025-09-04-22-26-03.jpg",
-      "https://postimg.cc/gallery/WFMk9kS",
+      "https://postimg.cc/gallery/WFMk9kS", 
       "https://i.postimg.cc//photo-2.jpg"
     ],
     dimensions: "25 × 35 سم",
     video: null,
     available: false
   },
-  {
-    id: 11,
+   { 
+    id: 11, 
     code: "DC009",
-    name: "ديكور خشبي علي شكل كف",
-    price: 75,
-    discount: 0,
-    img: "https://i.postimg.cc/GmGkyMfN/photo-2025-09-07-05-29-55.jpg",
-    category: "ديكور",
-    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.",
+    name: "ديكور خشبي علي شكل كف", 
+    price: 75, 
+    discount: 0, 
+    img: "https://i.postimg.cc/GmGkyMfN/photo-2025-09-07-05-29-55.jpg", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
     images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 12,
+  { 
+    id: 12, 
     code: "DC009",
-    name: "صانية",
-    price: 250,
-    discount: 0,
-    img: "https://i.postimg.cc/KjnrSKN9/6f3797fb-668f-4b86-b18c-9f677c9649a1.png",
-    category: "ديكور",
-    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.",
+    name: "صانية", 
+    price: 250, 
+    discount: 0, 
+    img: "https://i.postimg.cc/KjnrSKN9/6f3797fb-668f-4b86-b18c-9f677c9649a1.png", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
     images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: null,
     available: true
   },
-  {
-    id: 13,
+  { 
+    id: 13, 
     code: "DC009",
-    name: "اباجورة",
-    price: 450,
-    discount: 0,
-    img: "https://i.postimg.cc/Pxn0mDPJ/22.png",
-    category: "ديكور",
-    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.",
+    name: "اباجورة", 
+    price: 450, 
+    discount: 0, 
+    img: "https://i.postimg.cc/Pxn0mDPJ/22.png", 
+    category: "ديكور", 
+    details: "ديكور خشبي بتصميم عقاب، مثالي لعشاق الديكورات الفريدة.", 
     images: ["https://i.postimg.cc/QxfjwSKw/photo.jpg"],
     dimensions: "يختلف حسب الطلب",
     video: null,
@@ -307,7 +393,7 @@ function buildOrderRows() {
     });
     // if no product lines parsed, put whole details as a single row
     if (!rows.some(r => r.orderId === order.id)) {
-      rows.push({ orderId: order.id, date: order.date, productCode: '', productName: order.details.replace(/\n/g, ' '), quantity: '', unitPrice: '', total: '', status: order.status });
+      rows.push({ orderId: order.id, date: order.date, productCode: '', productName: order.details.replace(/\n/g, ' '), quantity: '', unitPrice: '', total: '' , status: order.status});
     }
   });
   return rows;
@@ -322,9 +408,9 @@ function exportOrdersToXLSX() {
   // build worksheet data
   // include brand header: first row = brand name + date, remove second row with logo URL to avoid hyperlink
   const todayStr = new Date().toLocaleDateString('ar-EG');
-  const headerRow1 = [`${BRAND_NAME} - سجل الطلبات`, `تاريخ: ${todayStr}`];
+  const headerRow1 = [ `${BRAND_NAME} - سجل الطلبات`, `تاريخ: ${todayStr}` ];
   // شيلنا headerRow2 خالص عشان مايبقاش فيه لينك
-  const ws_data = [headerRow1, [], ['م.', 'كودالطلب', 'التاريخ', 'كود المنتج', 'اسم المنتج', 'الكمية', 'سعر الوحدة', 'الإجمالي']];
+  const ws_data = [ headerRow1, [], ['م.','كودالطلب','التاريخ','كود المنتج','اسم المنتج','الكمية','سعر الوحدة','الإجمالي'] ];
   rows.forEach((r, idx) => ws_data.push([idx + 1, String(r.orderId), r.date, r.productCode, r.productName, r.quantity, r.unitPrice, r.total]));
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(ws_data);
@@ -358,7 +444,7 @@ function exportOrdersToXLSX() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `mahfour_orders_${new Date().toISOString().slice(0, 10)}.xlsx`;
+  a.download = `mahfour_orders_${new Date().toISOString().slice(0,10)}.xlsx`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -393,7 +479,7 @@ async function exportOrdersToPDF() {
   rows.forEach((r, i) => {
     const tr = document.createElement('tr');
     // values: serial, order code, date, code, name, qty, unitPrice, total
-    const values = [i + 1, r.orderId, r.date, r.productCode, r.productName, r.quantity, r.unitPrice, r.total];
+    const values = [ i + 1, r.orderId, r.date, r.productCode, r.productName, r.quantity, r.unitPrice, r.total];
     values.forEach((v) => {
       const td = document.createElement('td');
       td.textContent = v;
@@ -469,7 +555,7 @@ async function exportOrdersToPDF() {
   }
   const opt = {
     margin: 10,
-    filename: `mahfour_orders_${new Date().toISOString().slice(0, 10)}.pdf`,
+    filename: `mahfour_orders_${new Date().toISOString().slice(0,10)}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
@@ -488,13 +574,13 @@ function initializeProducts() {
   const cacheKey = 'mahfourProducts';
   const versionKey = 'mahfourDataVersion';
   const cacheTimestampKey = 'mahfourProductsTimestamp';
-
+  
   // Check if version changed or cache is older than 7 days
   const now = Date.now();
   const cacheTimestamp = parseInt(localStorage.getItem(cacheTimestampKey)) || 0;
   const cacheAge = now - cacheTimestamp;
   const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-
+  
   if (storedVersion !== DATA_VERSION || cacheAge > CACHE_DURATION) {
     // Version changed or cache expired - update cache
     productsData = productsDataDefault;
@@ -732,7 +818,7 @@ function addToCart(productId, quantity = 1) {
       timer: 2000
     });
     return;
-  }
+  } 
   const discountedPrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
   const existingItem = cartData.find(item => item.id === productId);
   if (existingItem) {
@@ -789,7 +875,7 @@ function showCustomerPoints(phone) {
     } else if (pts === null) {
       node.textContent = `رصيد النقاط: 0 نقطة`;
     } else {
-      const approx = (Math.floor(pts / 100) * 3).toFixed(2);
+      const approx = (Math.floor(pts/100)*3).toFixed(2);
       node.textContent = `رصيد النقاط: ${pts} نقطة — قيمة تقريبية: ${approx} جنيه`;
     }
   });
@@ -829,7 +915,7 @@ function sendNewOrderWhatsAppNotification(order) {
     notificationMessage += `💰 *الإجمالي:* ${orderData.total} جنيه\n`;
     notificationMessage += `\n📦 *المنتجات:*\n${orderData.products}\n`;
     notificationMessage += `\n⏰ *التاريخ:* ${order.date}\n`;
-
+    
     // Get admin page URL
     let adminUrl = window.location.origin;
     if (window.location.pathname.includes('admin.html')) {
@@ -838,10 +924,10 @@ function sendNewOrderWhatsAppNotification(order) {
       adminUrl += '/admin.html';
     }
     notificationMessage += `\n🔗 *رابط لوحة التحكم:* ${adminUrl}`;
-
+    
     const encodedMessage = encodeURIComponent(notificationMessage);
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
-
+    
     // This function should ideally send a notification without opening a new tab for the user.
     // The current implementation `window.open` will open a new tab, which is not the desired behavior for a silent notification.
     // For a true silent notification, a backend service (like Twilio, or a simple server with a WhatsApp API client) is required.
@@ -940,9 +1026,9 @@ function renderNewOrders() {
   const newOrders = allOrders.filter(order => order.status === 'قيد الانتظار');
   const container = document.getElementById('new-orders-container');
   const countBadge = document.getElementById('new-orders-count');
-
+  
   if (!container) return;
-
+  
   if (countBadge) {
     countBadge.textContent = newOrders.length;
     if (newOrders.length === 0) {
@@ -951,14 +1037,14 @@ function renderNewOrders() {
       countBadge.style.display = 'inline-block';
     }
   }
-
+  
   container.innerHTML = '';
-
+  
   if (newOrders.length === 0) {
     container.innerHTML = '<p style="text-align: center; padding: 40px; color: #999; font-size: 1.1em;">لا توجد طلبات جديدة حاليًا</p>';
     return;
   }
-
+  
   newOrders.forEach(order => {
     const orderData = extractOrderData(order.details);
     const card = document.createElement('div');
@@ -1010,7 +1096,7 @@ function renderNewOrders() {
     `;
     container.appendChild(card);
   });
-
+  
   // Add event listeners for confirm/reject buttons
   document.querySelectorAll('.btn-confirm-order').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -1018,7 +1104,7 @@ function renderNewOrders() {
       confirmOrder(orderId);
     });
   });
-
+  
   document.querySelectorAll('.btn-reject-order').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const orderId = parseInt(e.target.closest('.btn-reject-order').dataset.orderId);
@@ -1031,13 +1117,13 @@ function renderNewOrders() {
 function confirmOrder(orderId) {
   updateOrderStatusInRealtime(orderId, 'مكتمل')
     .then(() => {
-      Swal.fire({
-        icon: 'success',
-        title: 'تم تأكيد الطلب',
-        text: 'تم تأكيد الطلب بنجاح.',
-        timer: 2000,
-        showConfirmButton: false
-      });
+  Swal.fire({
+    icon: 'success',
+      title: 'تم تأكيد الطلب',
+      text: 'تم تأكيد الطلب بنجاح.',
+      timer: 2000,
+      showConfirmButton: false
+    });
     })
     .catch((error) => {
       console.error('Failed to confirm order:', error);
@@ -1064,13 +1150,13 @@ function rejectOrder(orderId) {
     if (result.isConfirmed) {
       updateOrderStatusInRealtime(orderId, 'ملغي')
         .then(() => {
-          Swal.fire({
-            icon: 'success',
-            title: 'تم رفض الطلب',
-            text: 'تم رفض الطلب بنجاح.',
-            timer: 2000,
-            showConfirmButton: false
-          });
+        Swal.fire({
+          icon: 'success',
+          title: 'تم رفض الطلب',
+          text: 'تم رفض الطلب بنجاح.',
+          timer: 2000,
+          showConfirmButton: false
+        });
         })
         .catch((error) => {
           console.error('Failed to reject order:', error);
@@ -1107,7 +1193,7 @@ function viewOrderDetails(orderId) {
   detailsHtml += `<p><strong>التاريخ:</strong> ${order.date}</p>`;
   detailsHtml += `<p><strong>الحالة:</strong> ${order.status}</p>`;
   detailsHtml += `</div>`;
-
+  
   Swal.fire({
     title: 'تفاصيل الطلب',
     html: detailsHtml,
@@ -1192,7 +1278,7 @@ function renderOrders(ordersToRender) {
       if (orderToPrint) {
         // Extract structured data
         const structuredOrderDetails = extractData(orderToPrint.details);
-
+        
         // Prepare data for URL parameters
         const params = new URLSearchParams();
         params.set('id', orderToPrint.id);
@@ -1227,11 +1313,11 @@ function clearOrders() {
     if (result.isConfirmed) {
       removeAllOrdersFromRealtime()
         .then(() => {
-          Swal.fire({
-            icon: 'success',
-            title: 'تم حذف الطلبات',
-            showConfirmButton: false,
-            timer: 1500
+      Swal.fire({
+        icon: 'success',
+        title: 'تم حذف الطلبات',
+        showConfirmButton: false,
+        timer: 1500
           });
         })
         .catch((error) => {
@@ -1241,7 +1327,7 @@ function clearOrders() {
             title: 'تعذر حذف الطلبات',
             text: 'حدث خطأ أثناء حذف الطلبات. حاول مرة أخرى.'
           });
-        });
+      });
     }
   });
 }
@@ -1250,11 +1336,11 @@ function clearOrders() {
 function forceClearOrders() {
   removeAllOrdersFromRealtime()
     .then(() => {
-      Swal.fire({
-        icon: 'success',
-        title: 'تم حذف الطلبات',
-        showConfirmButton: false,
-        timer: 1500
+  Swal.fire({
+    icon: 'success',
+    title: 'تم حذف الطلبات',
+    showConfirmButton: false,
+    timer: 1500
       });
     })
     .catch((error) => {
@@ -1264,7 +1350,7 @@ function forceClearOrders() {
         title: 'تعذر حذف الطلبات',
         text: 'حدث خطأ أثناء حذف الطلبات. حاول مرة أخرى.'
       });
-    });
+  });
 }
 
 // Prompt for password before clearing all orders
@@ -1798,7 +1884,6 @@ function setupImageGallery(images) {
 }
 
 // Setup rating system
-// Setup rating system
 function setupRatingSystem(productId) {
   let starsContainer = document.getElementById('rating-stars');
   const averageRatingEl = document.getElementById('average-rating');
@@ -1832,9 +1917,39 @@ function setupRatingSystem(productId) {
     localStorage.setItem('mahfourUserId', userId);
   }
 
-  // State for reviews and user selection
-  let reviews = [];
-  let selectedRating = 0;
+  // Load reviews (with migration from legacy storage if needed)
+  let reviews;
+  try {
+    reviews = JSON.parse(localStorage.getItem(`mahfourReviews_${productId}`) || '[]');
+  } catch (e) {
+    reviews = [];
+  }
+  if (!Array.isArray(reviews)) reviews = [];
+
+  if (!reviews.length) {
+    try {
+      const legacyRaw = localStorage.getItem(`user_ratings_${productId}`);
+      if (legacyRaw) {
+        const legacy = JSON.parse(legacyRaw);
+        if (legacy && typeof legacy === 'object') {
+          reviews = Object.entries(legacy)
+            .filter(([, rating]) => typeof rating === 'number' && rating >= 1 && rating <= 5)
+            .map(([legacyUserId, rating]) => ({
+              userId: legacyUserId,
+              rating,
+              comment: '',
+              timestamp: Date.now()
+            }));
+          if (reviews.length) {
+            localStorage.setItem(`mahfourReviews_${productId}`, JSON.stringify(reviews));
+          }
+        }
+        localStorage.removeItem(`user_ratings_${productId}`);
+      }
+    } catch (legacyError) {
+      console.warn('Failed to migrate legacy ratings', legacyError);
+    }
+  }
 
   const escapeHtml = (unsafe = '') => unsafe
     .replace(/&/g, '&amp;')
@@ -1878,9 +1993,19 @@ function setupRatingSystem(productId) {
     averageRatingEl.textContent = `متوسط التقييم: ${averageText} من 5 (${countText})`;
   };
 
+  let selectedRating = 0;
+  let existingIndex = reviews.findIndex(review => review.userId === userId);
+  if (existingIndex !== -1) {
+    const existing = reviews[existingIndex];
+    selectedRating = Number(existing.rating) || 0;
+    commentTextarea.value = existing.comment || '';
+  } else {
+    commentTextarea.value = '';
+  }
+
   const renderStarSelection = (hoverValue = null) => {
     const ratingToRender = typeof hoverValue === 'number' ? hoverValue : selectedRating;
-    stars.forEach(star => {
+  stars.forEach(star => {
       const starValue = Number(star.dataset.rating);
       const isSelected = ratingToRender > 0 && starValue <= ratingToRender;
       const isHovered = typeof hoverValue === 'number' && starValue <= hoverValue;
@@ -1888,6 +2013,10 @@ function setupRatingSystem(productId) {
       star.classList.toggle('hovered', isHovered);
       star.classList.toggle('active', isSelected || isHovered);
     });
+  };
+
+  const persistReviews = () => {
+    localStorage.setItem(`mahfourReviews_${productId}`, JSON.stringify(reviews));
   };
 
   const renderReviews = () => {
@@ -1928,32 +2057,6 @@ function setupRatingSystem(productId) {
     }
   };
 
-  const updateUIFromReviews = () => {
-    const existing = reviews.find(review => review.userId === userId);
-    if (existing) {
-      selectedRating = Number(existing.rating) || 0;
-      commentTextarea.value = existing.comment || '';
-      updateHint(`يمكنك تعديل تقييمك (${selectedRating} نجوم) وتحديث تعليقك في أي وقت.`);
-    } else {
-      if (selectedRating === 0) {
-        updateHint('اختر عدد النجوم ثم اكتب تعليقك.');
-      }
-    }
-    renderStarSelection();
-    updateAverageRatingDisplay();
-    renderReviews();
-  };
-
-  // Initialize Firebase Listener
-  if (typeof initRatingsListener === 'function') {
-    initRatingsListener(productId, (updatedReviews) => {
-      reviews = updatedReviews || [];
-      updateUIFromReviews();
-    });
-  } else {
-    console.error('initRatingsListener not found. Make sure firebase-manager.js is loaded.');
-  }
-
   stars.forEach(star => {
     const starValue = Number(star.dataset.rating);
     star.setAttribute('role', 'button');
@@ -1975,18 +2078,18 @@ function setupRatingSystem(productId) {
 
   submitButton.addEventListener('click', () => {
     if (!selectedRating) {
-      Swal.fire({
+        Swal.fire({
         icon: 'info',
         title: 'اختر التقييم',
         text: 'يرجى اختيار عدد النجوم قبل إرسال تقييمك.',
         timer: 2200,
         showConfirmButton: false
-      });
-      return;
-    }
+        });
+        return;
+      }
     const comment = (commentTextarea.value || '').trim();
     if (comment.length < 5) {
-      Swal.fire({
+        Swal.fire({
         icon: 'info',
         title: 'أضف تعليقك',
         text: 'يرجى كتابة تعليق قصير عن تجربتك (5 أحرف على الأقل).',
@@ -1995,37 +2098,42 @@ function setupRatingSystem(productId) {
       });
       return;
     }
-
     const newReview = {
       userId,
       rating: selectedRating,
       comment,
       timestamp: Date.now()
     };
-
-    if (typeof saveUserRating === 'function') {
-      saveUserRating(productId, userId, newReview)
-        .then(() => {
-          Swal.fire({
-            icon: 'success',
-            title: 'شكرًا لتقييمك!',
-            text: 'تم تسجيل رأيك بنجاح.',
-            timer: 1800,
-            showConfirmButton: false
-          });
-        })
-        .catch(err => {
-          console.error('Failed to save rating:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'خطأ',
-            text: 'حدث خطأ أثناء حفظ التقييم. حاول مرة أخرى.',
-          });
-        });
-    } else {
-      console.error('saveUserRating not found');
+    existingIndex = reviews.findIndex(review => review.userId === userId);
+    if (existingIndex !== -1) {
+      reviews[existingIndex] = newReview;
+      } else {
+      reviews.push(newReview);
+      existingIndex = reviews.length - 1;
     }
+    persistReviews();
+    renderStarSelection();
+    updateAverageRatingDisplay();
+    renderReviews();
+    updateHint('تم حفظ تقييمك، يمكنك تعديله في أي وقت.');
+        Swal.fire({
+          icon: 'success',
+      title: 'شكرًا لتقييمك!',
+      text: 'تم تسجيل رأيك بنجاح.',
+      timer: 1800,
+      showConfirmButton: false
+    });
   });
+
+  if (selectedRating) {
+    updateHint(`يمكنك تعديل تقييمك (${selectedRating} نجوم) وتحديث تعليقك في أي وقت.`);
+  } else {
+    updateHint('اختر عدد النجوم ثم اكتب تعليقك.');
+  }
+
+  renderStarSelection();
+  updateAverageRatingDisplay();
+  renderReviews();
 }
 
 // Render products management
@@ -2102,7 +2210,7 @@ function saveProduct() {
     available,
     rating: productsData.find(p => p.id === parseInt(id))?.rating || { total: 0, count: 0 }
   };
-
+  
   const existingIndex = productsData.findIndex(p => p.id === product.id);
   if (existingIndex !== -1) {
     productsData[existingIndex] = product;
@@ -2246,10 +2354,10 @@ function exportStatsReport() {
     'month': 'هذا الشهر',
     'year': 'هذه السنة'
   };
-
+  
   const allOrders = getOrdersCache();
   const orders = filterOrdersByPeriod(allOrders, period);
-
+  
   let totalSales = 0;
   const productCounts = {};
   orders.forEach(order => {
@@ -2273,9 +2381,9 @@ function exportStatsReport() {
       }
     });
   });
-
+  
   const avgOrderValue = orders.length > 0 ? (totalSales / orders.length).toFixed(2) : 0;
-
+  
   let topProductName = 'لا يوجد';
   if (Object.keys(productCounts).length > 0) {
     const topCode = Object.keys(productCounts).reduce((a, b) => productCounts[a] > productCounts[b] ? a : b);
@@ -2284,7 +2392,7 @@ function exportStatsReport() {
       topProductName = topProduct.name;
     }
   }
-
+  
   // Sort products by count
   const sortedProducts = Object.keys(productCounts)
     .map(code => {
@@ -2297,11 +2405,11 @@ function exportStatsReport() {
     })
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
-
+  
   const topProductsList = sortedProducts.length > 0
     ? sortedProducts.map((item, i) => `${i + 1}. ${item.name}: ${item.count} قطعة`).join('\n')
     : 'لا توجد منتجات';
-
+  
   const report = `
 تقرير الإحصائيات - ${periodNames[period]}
 تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}
@@ -2318,7 +2426,7 @@ ${topProductsList}
 ========================================
 تم التصدير من لوحة تحكم MAHFOOR CNC
   `.trim();
-
+  
   // Create and download file
   const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -2329,7 +2437,7 @@ ${topProductsList}
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-
+  
   Swal.fire({
     icon: 'success',
     title: 'تم التصدير بنجاح',
@@ -2342,13 +2450,13 @@ ${topProductsList}
 // Filter orders by period
 function filterOrdersByPeriod(orders, period) {
   if (period === 'all') return orders;
-
+  
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
+  
   return orders.filter(order => {
     if (!order.date && !order.ts) return false;
-
+    
     let orderDate;
     if (order.ts) {
       orderDate = new Date(order.ts);
@@ -2371,9 +2479,9 @@ function filterOrdersByPeriod(orders, period) {
         return false;
       }
     }
-
+    
     if (isNaN(orderDate.getTime())) return false;
-
+    
     switch (period) {
       case 'today':
         return orderDate >= today;
@@ -2399,7 +2507,7 @@ function updateStats(period = 'all') {
 
   const allOrders = getOrdersCache();
   const orders = filterOrdersByPeriod(allOrders, period);
-
+  
   // Filter for completed orders to calculate sales
   const completedOrders = orders.filter(order => order.status === 'مكتمل');
 
@@ -2408,7 +2516,7 @@ function updateStats(period = 'all') {
   const productCounts = {};
   const productRevenue = {}; // Track revenue per product
   const orderDates = []; // Track order dates for trend analysis
-
+  
   // Color palette for charts
   const chartColors = [
     'rgba(102, 126, 234, 0.8)',   // Purple-blue
@@ -2420,7 +2528,7 @@ function updateStats(period = 'all') {
     'rgba(255, 193, 7, 0.8)',    // Yellow
     'rgba(156, 39, 176, 0.8)'    // Purple
   ];
-
+  
   const gradientColors = [
     ['rgba(102, 126, 234, 0.6)', 'rgba(118, 75, 162, 0.6)'],
     ['rgba(245, 87, 108, 0.6)', 'rgba(240, 147, 251, 0.6)'],
@@ -2428,7 +2536,7 @@ function updateStats(period = 'all') {
     ['rgba(67, 233, 123, 0.6)', 'rgba(56, 249, 215, 0.6)'],
     ['rgba(250, 112, 154, 0.6)', 'rgba(254, 225, 64, 0.6)']
   ];
-
+  
   completedOrders.forEach(order => {
     const totalMatch = order.details.match(/\*الإجمالي:\* ([\d.]+) جنيه/);
     if (totalMatch) {
@@ -2456,16 +2564,16 @@ function updateStats(period = 'all') {
       }
     });
   });
-
+  
   totalSalesEl.textContent = totalSales.toFixed(2) + ' جنيه';
-
+  
   // Calculate average order value
   const avgOrderValue = completedOrders.length > 0 ? (totalSales / completedOrders.length).toFixed(2) : 0;
   const avgOrderEl = document.getElementById('avg-order-value');
   if (avgOrderEl) {
     avgOrderEl.textContent = avgOrderValue + ' جنيه';
   }
-
+  
   let topProductName = 'لا يوجد';
   if (Object.keys(productCounts).length > 0) {
     const topCode = Object.keys(productCounts).reduce((a, b) => productCounts[a] > productCounts[b] ? a : b);
@@ -2481,9 +2589,9 @@ function updateStats(period = 'all') {
   if (topProductsDetailedEl) {
     const arr = Object.keys(productCounts).map(code => {
       const prod = productsData.find(p => p.code === code);
-      return {
-        code,
-        count: productCounts[code],
+      return { 
+        code, 
+        count: productCounts[code], 
         name: prod ? prod.name : code,
         revenue: productRevenue[code] || 0,
         price: prod ? (prod.discount > 0 ? prod.price * (1 - prod.discount / 100) : prod.price) : 0
@@ -2517,7 +2625,7 @@ function updateStats(period = 'all') {
       });
     }
   }
-
+  
   // Populate top 5 products list (legacy support)
   const topProductsListEl = document.getElementById('top-products-list');
   if (topProductsListEl) {
@@ -2537,7 +2645,7 @@ function updateStats(period = 'all') {
       });
     }
   }
-
+  
   // Chart 1: Top Products Bar Chart (Colorful)
   try {
     const chartEl = document.getElementById('top-products-chart');
@@ -2552,7 +2660,7 @@ function updateStats(period = 'all') {
       const topCombined = combined.slice(0, 5);
       const chartLabels = topCombined.map(c => c.label);
       const chartData = topCombined.map(c => c.value);
-
+      
       if (!window._mahfourTopProductsChart) {
         const ctx = chartEl.getContext('2d');
         window._mahfourTopProductsChart = new Chart(ctx, {
@@ -2571,7 +2679,7 @@ function updateStats(period = 'all') {
           },
           options: {
             indexAxis: 'y',
-            plugins: {
+            plugins: { 
               legend: { display: false },
               tooltip: {
                 backgroundColor: 'rgba(0,0,0,0.8)',
@@ -2581,12 +2689,12 @@ function updateStats(period = 'all') {
               }
             },
             scales: {
-              x: {
+              x: { 
                 beginAtZero: true,
                 ticks: { color: '#666', font: { size: 12 } },
                 grid: { color: 'rgba(0,0,0,0.05)' }
               },
-              y: {
+              y: { 
                 ticks: { color: '#333', font: { size: 12, weight: 600 } },
                 grid: { display: false }
               }
@@ -2608,24 +2716,24 @@ function updateStats(period = 'all') {
   } catch (e) {
     console.warn('Top products chart failed', e);
   }
-
+  
   // Chart 2: Revenue Distribution Pie Chart
   try {
     const revenueChartEl = document.getElementById('revenue-chart');
     if (revenueChartEl && typeof Chart !== 'undefined') {
       const revenueArr = Object.keys(productRevenue).map(code => {
         const prod = productsData.find(p => p.code === code);
-        return {
-          code,
-          revenue: productRevenue[code],
-          name: prod ? prod.name : code
+        return { 
+          code, 
+          revenue: productRevenue[code], 
+          name: prod ? prod.name : code 
         };
       });
       revenueArr.sort((a, b) => b.revenue - a.revenue);
       const topRevenue = revenueArr.slice(0, 5);
       const revenueLabels = topRevenue.map(r => r.name);
       const revenueData = topRevenue.map(r => r.revenue);
-
+      
       if (!window._mahfourRevenueChart) {
         const ctx = revenueChartEl.getContext('2d');
         window._mahfourRevenueChart = new Chart(ctx, {
@@ -2652,7 +2760,7 @@ function updateStats(period = 'all') {
               },
               tooltip: {
                 callbacks: {
-                  label: function (context) {
+                  label: function(context) {
                     const label = context.label || '';
                     const value = context.parsed || 0;
                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -2678,7 +2786,7 @@ function updateStats(period = 'all') {
   } catch (e) {
     console.warn('Revenue chart failed', e);
   }
-
+  
   // Chart 3: Sales Trend (Last 7 Days)
   try {
     const trendChartEl = document.getElementById('sales-trend-chart');
@@ -2693,7 +2801,7 @@ function updateStats(period = 'all') {
           total: 0
         });
       }
-
+      
       orderDates.forEach(order => {
         if (order.ts) {
           const orderDate = new Date(order.ts);
@@ -2705,16 +2813,16 @@ function updateStats(period = 'all') {
           // Skip invalid dates
         }
       });
-
+      
       const trendLabels = last7Days.map(d => d.date);
       const trendData = last7Days.map(d => d.total);
-
+      
       if (!window._mahfourTrendChart) {
         const ctx = trendChartEl.getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
         gradient.addColorStop(1, 'rgba(102, 126, 234, 0.05)');
-
+        
         window._mahfourTrendChart = new Chart(ctx, {
           type: 'line',
           data: {
@@ -2741,7 +2849,7 @@ function updateStats(period = 'all') {
                 backgroundColor: 'rgba(0,0,0,0.8)',
                 padding: 12,
                 callbacks: {
-                  label: function (context) {
+                  label: function(context) {
                     return `المبيعات: ${context.parsed.y.toFixed(2)} جنيه`;
                   }
                 }
@@ -2750,9 +2858,9 @@ function updateStats(period = 'all') {
             scales: {
               y: {
                 beginAtZero: true,
-                ticks: {
+                ticks: { 
                   color: '#666',
-                  callback: function (value) {
+                  callback: function(value) {
                     return value.toFixed(0) + ' ج';
                   }
                 },
@@ -2778,16 +2886,16 @@ function updateStats(period = 'all') {
   } catch (e) {
     console.warn('Trend chart failed', e);
   }
-
+  
   // Chart 4: Monthly Sales
   try {
     const monthlyChartEl = document.getElementById('monthly-sales-chart');
     if (monthlyChartEl && typeof Chart !== 'undefined') {
       const now = new Date();
-      const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+      const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                     'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
       const monthlyData = new Array(12).fill(0);
-
+      
       orderDates.forEach(order => {
         if (order.ts) {
           const orderDate = new Date(order.ts);
@@ -2798,13 +2906,13 @@ function updateStats(period = 'all') {
           // Skip invalid dates
         }
       });
-
+      
       if (!window._mahfourMonthlyChart) {
         const ctx = monthlyChartEl.getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(245, 87, 108, 0.4)');
         gradient.addColorStop(1, 'rgba(245, 87, 108, 0.05)');
-
+        
         window._mahfourMonthlyChart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -2826,7 +2934,7 @@ function updateStats(period = 'all') {
                 backgroundColor: 'rgba(0,0,0,0.8)',
                 padding: 12,
                 callbacks: {
-                  label: function (context) {
+                  label: function(context) {
                     return `المبيعات: ${context.parsed.y.toFixed(2)} جنيه`;
                   }
                 }
@@ -2835,9 +2943,9 @@ function updateStats(period = 'all') {
             scales: {
               y: {
                 beginAtZero: true,
-                ticks: {
+                ticks: { 
                   color: '#666',
-                  callback: function (value) {
+                  callback: function(value) {
                     return value.toFixed(0) + ' ج';
                   }
                 },
@@ -2906,7 +3014,7 @@ function computeProductSalesStats() {
           const qty = parseInt(qtyMatch[1]);
           const price = parseFloat(qtyMatch[2]);
           const revenue = parseFloat(qtyMatch[3]);
-          if (!stats[currentCode]) stats[currentCode] = { totalQty: 0, totalRevenue: 0, monthlyQty: 0, monthlyRevenue: 0 };
+          if (!stats[currentCode]) stats[currentCode] = { totalQty:0, totalRevenue:0, monthlyQty:0, monthlyRevenue:0 };
           stats[currentCode].totalQty += qty;
           stats[currentCode].totalRevenue += revenue;
           // check if order is within the same month (use robust parser)
@@ -2958,8 +3066,7 @@ function renderAdminProducts() {
   });
 }
 
-// Points admin helpers - DISABLED
-/* POINTS SYSTEM DISABLED
+// Points admin helpers
 function renderPendingPointsList() {
   const container = document.getElementById('pending-points-list');
   if (!container) return;
@@ -2998,13 +3105,14 @@ function renderPointsBalances() {
     const div = document.createElement('div');
     div.className = 'points-balance';
     const pts = balances[phone];
+    // If we have names in balances stored as object { phone: { name, points } } support both formats
     let displayName = '';
     let actualPts = pts;
     if (typeof pts === 'object' && pts !== null) {
       displayName = pts.name ? ` - ${pts.name}` : '';
       actualPts = pts.points || 0;
     }
-    const approxValue = (Math.floor(actualPts / 100) * 3).toFixed(2);
+    const approxValue = (Math.floor(actualPts/100)*3).toFixed(2);
     div.innerHTML = `<strong>${phone}${displayName}</strong> — ${actualPts} نقطة — قيمة تقريبية: ${approxValue} جنيه`;
     container.appendChild(div);
   });
@@ -3032,6 +3140,7 @@ function confirmSelectedPoints() {
     Swal.fire({ icon: 'info', title: 'لا يوجد عناصر صالحة للتأكيد' });
     return;
   }
+  // Ask admin for password before applying points
   Swal.fire({
     title: 'أدخل كلمة المرور لتأكيد النقاط',
     input: 'password',
@@ -3047,17 +3156,21 @@ function confirmSelectedPoints() {
       Swal.fire({ icon: 'error', title: 'كلمة المرور غير صحيحة' });
       return;
     }
+    // apply points (preserve name)
     toConfirm.forEach(item => {
       const existing = balances[item.phone];
       if (existing && typeof existing === 'object') {
+        // object shape
         existing.points = (existing.points || 0) + item.points;
         if (item.name) existing.name = item.name;
         balances[item.phone] = existing;
       } else if (existing && typeof existing === 'number') {
+        // legacy number -> convert to object
         balances[item.phone] = { name: item.name || '', points: existing + item.points };
       } else {
         balances[item.phone] = { name: item.name || '', points: item.points };
       }
+      // remove from pending
       const idx = pending.findIndex(p => p.orderId === item.orderId);
       if (idx !== -1) pending.splice(idx, 1);
     });
@@ -3065,6 +3178,7 @@ function confirmSelectedPoints() {
     localStorage.setItem('mahfourPendingPoints', JSON.stringify(pending));
     renderPendingPointsList();
     renderPointsBalances();
+    // refresh customer points display in cart and order modals if open
     const phoneEl = document.getElementById('phone-number');
     const orderNowPhoneEl = document.getElementById('order-now-phone-number');
     if (phoneEl && phoneEl.value) showCustomerPoints(phoneEl.value.trim());
@@ -3077,19 +3191,19 @@ function openPointsAdminPanel() {
   const panel = document.getElementById('points-admin-panel');
   if (!panel) return;
   panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  // refresh lists when opened
   if (panel.style.display === 'block') {
     renderPendingPointsList();
     renderPointsBalances();
   }
 }
-*/
 
 // --- وظيفة زر العودة للأعلى ---
 function setupBackToTopButton() {
   const backToTopBtn = document.getElementById('back-to-top-btn');
   if (!backToTopBtn) return;
 
-  window.onscroll = function () {
+  window.onscroll = function() {
     if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
       backToTopBtn.style.display = "block";
     } else {
@@ -3097,7 +3211,7 @@ function setupBackToTopButton() {
     }
   };
 
-  backToTopBtn.addEventListener('click', function () {
+  backToTopBtn.addEventListener('click', function() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
@@ -3113,7 +3227,7 @@ function setupHeaderScroll() {
   let lastScrollTop = 0;
   const headerHeight = header.offsetHeight;
 
-  window.addEventListener('scroll', function () {
+  window.addEventListener('scroll', function() {
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
     if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
@@ -3145,7 +3259,7 @@ function setupFiltersSidebar() {
 
     // حساب المسافة من أعلى الـ container إلى الـ footer
     const distanceToFooter = footerRect.top - containerRect.top;
-
+    
     // إذا كان الـ footer مرئي، حدد الارتفاع بناءً على المسافة المتبقية
     if (footerRect.top < viewportHeight) {
       const availableHeight = distanceToFooter - headerHeight - bottomPadding;
@@ -3161,15 +3275,13 @@ function setupFiltersSidebar() {
   // تحديث الارتفاع عند التمرير وتغيير حجم النافذة
   window.addEventListener('scroll', updateSidebarHeight);
   window.addEventListener('resize', updateSidebarHeight);
-
+  
   // تحديث أولي
   setTimeout(updateSidebarHeight, 100);
   setTimeout(updateSidebarHeight, 500);
 }
 
-// --- نظام الدردشة المدمج - DISABLED ---
-// Chat system has been disabled per client request
-/* 
+// --- نظام الدردشة المدمج ---
 function setupLiveChat() {
     const chatContainer = document.createElement('div');
     chatContainer.id = 'live-chat-container';
@@ -3259,6 +3371,7 @@ function setupLiveChat() {
             readByAdmin: false
         };
 
+        // Optimistic UI update: Add the new message to the current list and render
         window.currentChatMessages = (window.currentChatMessages || []).concat(newMessage);
         const currentMessages = window.currentChatMessages;
         renderMessages(currentMessages);
@@ -3289,20 +3402,21 @@ function setupLiveChat() {
 
     closeBtn.addEventListener('click', () => chatWindow.classList.add('collapsed'));
     sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (е) => {
+    chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
 
+    // Listen for new messages from Firebase
     chatRef.on('value', snapshot => {
         const data = snapshot.val();
-        window.currentChatMessages = [];
+        window.currentChatMessages = []; // Reset for fresh data
         let messages = [];
         if (Array.isArray(data)) {
-            messages = data.filter(Boolean);
+            messages = data.filter(Boolean); // Filter out any null/undefined entries
         } else if (data && typeof data === 'object') {
             messages = Object.values(data).filter(Boolean);
         }
-        window.currentChatMessages = messages;
+        window.currentChatMessages = messages; // Store the latest messages
         const wasScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
         renderMessages(messages);
         if (wasScrolledToBottom) {
@@ -3313,212 +3427,207 @@ function setupLiveChat() {
         }
     });
 }
-*/
 
-/* ADMIN CHAT DISABLED
 function setupAdminChat() {
-  // This entire function has been commented out per client request
-  // The code is preserved for future reference if needed
-  const container = document.getElementById('admin-chat-interface');
-  if (!container || !hasRealtimeDb()) return;
+    const container = document.getElementById('admin-chat-interface');
+    if (!container || !hasRealtimeDb()) return;
 
-  const conversationsList = container.querySelector('#chat-conversations-list');
-  const chatBox = container.querySelector('#chat-messages-box');
-  const chatInput = container.querySelector('#admin-chat-input');
-  const chatSendBtn = container.querySelector('#admin-chat-send-btn');
-  const currentChatUserEl = container.querySelector('#current-chat-user');
-  const notificationBadge = document.getElementById('chat-notification-badge');
-  const backBtn = document.getElementById('admin-chat-back-btn');
-  const newMsgSound = new Audio('https://cdn.jsdelivr.net/gh/scottschiller/SoundManager2@master/demo/audio/nav_mouseover.mp3');
+    const conversationsList = container.querySelector('#chat-conversations-list');
+    const chatBox = container.querySelector('#chat-messages-box');
+    const chatInput = container.querySelector('#admin-chat-input');
+    const chatSendBtn = container.querySelector('#admin-chat-send-btn');
+    const currentChatUserEl = container.querySelector('#current-chat-user');
+    const notificationBadge = document.getElementById('chat-notification-badge');
+    const backBtn = document.getElementById('admin-chat-back-btn');
+    const newMsgSound = new Audio('https://cdn.jsdelivr.net/gh/scottschiller/SoundManager2@master/demo/audio/nav_mouseover.mp3');
 
-  let currentChatId = null;
-  let chatsData = {};
+    let currentChatId = null;
+    let chatsData = {};
 
-  const chatsRef = db.ref('chats');
+    const chatsRef = db.ref('chats');
 
-  const renderConversations = () => {
-    conversationsList.innerHTML = '';
-    const sortedChats = Object.entries(chatsData).sort(([, a], [, b]) => {
-      const lastMsgA = a[a.length - 1]?.timestamp || 0;
-      const lastMsgB = b[b.length - 1]?.timestamp || 0;
-      return lastMsgB - lastMsgA;
-    });
+    const renderConversations = () => {
+        conversationsList.innerHTML = '';
+        const sortedChats = Object.entries(chatsData).sort(([, a], [, b]) => {
+            const lastMsgA = a[a.length - 1]?.timestamp || 0;
+            const lastMsgB = b[b.length - 1]?.timestamp || 0;
+            return lastMsgB - lastMsgA;
+        });
 
-    if (sortedChats.length === 0) {
-      conversationsList.innerHTML = '<div class="no-conversations" style="padding: 20px; text-align: center; color: #888;">لا توجد محادثات حاليًا.</div>';
-      return;
-    }
+        if (sortedChats.length === 0) {
+            conversationsList.innerHTML = '<div class="no-conversations" style="padding: 20px; text-align: center; color: #888;">لا توجد محادثات حاليًا.</div>';
+            return;
+        }
 
-    let totalUnread = 0;
-    sortedChats.forEach(([userId, messages]) => {
-      const lastMessage = messages[messages.length - 1];
-      if (!lastMessage) return;
+        let totalUnread = 0;
+        sortedChats.forEach(([userId, messages]) => {
+            const lastMessage = messages[messages.length - 1];
+            if (!lastMessage) return;
 
-      const unreadCount = messages.filter(m => m.sender === 'user' && !m.readByAdmin).length;
-      if (unreadCount > 0) totalUnread++;
+            const unreadCount = messages.filter(m => m.sender === 'user' && !m.readByAdmin).length;
+            if (unreadCount > 0) totalUnread++;
 
-      const li = document.createElement('li');
-      li.className = 'conversation-item';
-      li.dataset.userId = userId;
-      if (userId === currentChatId) li.classList.add('active');
+            const li = document.createElement('li');
+            li.className = 'conversation-item';
+            li.dataset.userId = userId;
+            if (userId === currentChatId) li.classList.add('active');
 
-      li.innerHTML = `
+            li.innerHTML = `
                 <div class="convo-info">
                     <span class="convo-user"><i class="fas fa-user-circle"></i> ${userId.replace('user_', 'زائر ')}</span>
                     <p class="convo-preview">${escapeHtml(lastMessage.text)}</p>
                 </div>
                 ${unreadCount > 0 ? `<span class="chat-badge">${unreadCount}</span>` : ''}
             `;
-      li.addEventListener('click', () => openConversation(userId));
-      conversationsList.appendChild(li);
-    });
+            li.addEventListener('click', () => openConversation(userId));
+            conversationsList.appendChild(li);
+        });
 
-    if (notificationBadge) {
-      notificationBadge.textContent = totalUnread;
-      notificationBadge.style.display = totalUnread > 0 ? 'inline-block' : 'none';
-    }
-  };
-
-  const renderChatMessages = (userId) => {
-    const messages = chatsData[userId] || [];
-    chatBox.innerHTML = '';
-    messages.forEach(msg => {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `chat-message ${msg.sender}`;
-      msgDiv.innerHTML = `<p>${escapeHtml(msg.text)}</p><span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</span>`;
-      chatBox.appendChild(msgDiv);
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
-
-  const openConversation = (userId) => {
-    currentChatId = userId;
-    currentChatUserEl.textContent = userId.replace('user_', 'زائر ');
-    document.getElementById('admin-chat-input-area').style.display = 'flex';
-    renderChatMessages(userId);
-
-    // Mobile view: hide conversations, show chat panel
-    if (window.innerWidth <= 768) {
-      document.getElementById('chat-conversations').classList.add('chat-hidden-mobile');
-      document.getElementById('chat-main-panel').classList.remove('chat-hidden-mobile');
-      backBtn.style.display = 'inline-flex';
-    }
-
-    const updates = {};
-    let changed = false;
-    (chatsData[userId] || []).forEach((msg, index) => {
-      if (msg.sender === 'user' && !msg.readByAdmin) {
-        updates[index + '/readByAdmin'] = true;
-        changed = true;
-      }
-    });
-    if (changed) {
-      db.ref('chats/' + userId).update(updates);
-    }
-  };
-
-  const sendAdminMessage = () => {
-    const text = chatInput.value.trim();
-    if (!text || !currentChatId) return;
-
-    const newMessage = {
-      text,
-      sender: 'admin',
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      read: false
+        if (notificationBadge) {
+            notificationBadge.textContent = totalUnread;
+            notificationBadge.style.display = totalUnread > 0 ? 'inline-block' : 'none';
+        }
     };
 
-    // Use a transaction to safely append the new message
-    db.ref('chats/' + currentChatId).transaction(currentMessages => {
-      let messages = currentMessages || [];
-      if (!Array.isArray(messages)) {
-        messages = [];
-      }
-      messages.push(newMessage);
-      return messages;
-    }, (error, committed) => {
-      if (error) {
-        console.error('Admin send message transaction failed: ', error);
-      } else {
-        console.log('Admin message sent successfully.');
-      }
-    });
-    chatInput.value = '';
-  };
-
-  chatSendBtn.addEventListener('click', sendAdminMessage);
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendAdminMessage();
-  });
-
-  if (backBtn) {
-    backBtn.addEventListener('click', () => {
-      currentChatId = null;
-      document.getElementById('chat-conversations').classList.remove('chat-hidden-mobile');
-      document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
-      currentChatUserEl.textContent = 'اختر محادثة';
-      backBtn.style.display = 'none';
-    });
-  }
-
-  chatsRef.on('value', snapshot => {
-    const oldData = { ...chatsData };
-    const rawData = snapshot.val() || {};
-
-    // Ensure all conversations are arrays
-    chatsData = Object.entries(rawData).reduce((acc, [key, value]) => {
-      acc[key] = Array.isArray(value) ? value.filter(Boolean) : (value ? Object.values(value).filter(Boolean) : []);
-      return acc;
-    }, {});
-
-    // Check for new messages to play sound
-    let newMessagesArrived = false;
-    Object.keys(chatsData).forEach(userId => {
-      const newConversation = chatsData[userId] || [];
-      const oldConversation = oldData[userId] || [];
-      if (newConversation.length > oldConversation.length) {
-        const lastNewMsg = newConversation[newConversation.length - 1];
-        if (lastNewMsg && lastNewMsg.sender === 'user') {
-          newMessagesArrived = true;
-        }
-      }
-    });
-
-    if (newMessagesArrived) {
-      newMsgSound.play().catch(e => console.warn("Audio notification failed:", e));
-    }
-
-    renderConversations();
-    if (currentChatId) {
-      // Ensure the currently open chat is re-rendered with new messages
-      const wasScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
-      renderChatMessages(currentChatId);
-      if (wasScrolledToBottom) {
+    const renderChatMessages = (userId) => {
+        const messages = chatsData[userId] || [];
+        chatBox.innerHTML = '';
+        messages.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${msg.sender}`;
+            msgDiv.innerHTML = `<p>${escapeHtml(msg.text)}</p><span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</span>`;
+            chatBox.appendChild(msgDiv);
+        });
         chatBox.scrollTop = chatBox.scrollHeight;
-      }
+    };
+
+    const openConversation = (userId) => {
+        currentChatId = userId;
+        currentChatUserEl.textContent = userId.replace('user_', 'زائر ');
+        document.getElementById('admin-chat-input-area').style.display = 'flex';
+        renderChatMessages(userId);
+
+        // Mobile view: hide conversations, show chat panel
+        if (window.innerWidth <= 768) {
+            document.getElementById('chat-conversations').classList.add('chat-hidden-mobile');
+            document.getElementById('chat-main-panel').classList.remove('chat-hidden-mobile');
+            backBtn.style.display = 'inline-flex';
+        }
+
+        const updates = {};
+        let changed = false;
+        (chatsData[userId] || []).forEach((msg, index) => {
+            if (msg.sender === 'user' && !msg.readByAdmin) {
+                updates[index + '/readByAdmin'] = true;
+                changed = true;
+            }
+        });
+        if (changed) {
+            db.ref('chats/' + userId).update(updates);
+        }
+    };
+
+    const sendAdminMessage = () => {
+        const text = chatInput.value.trim();
+        if (!text || !currentChatId) return;
+
+        const newMessage = {
+            text,
+            sender: 'admin',
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            read: false
+        };
+
+        // Use a transaction to safely append the new message
+        db.ref('chats/' + currentChatId).transaction(currentMessages => {
+            let messages = currentMessages || [];
+            if (!Array.isArray(messages)) {
+                messages = [];
+            }
+            messages.push(newMessage);
+            return messages;
+        }, (error, committed) => {
+            if (error) {
+                console.error('Admin send message transaction failed: ', error);
+            } else {
+                console.log('Admin message sent successfully.');
+            }
+        });
+        chatInput.value = '';
+    };
+
+    chatSendBtn.addEventListener('click', sendAdminMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendAdminMessage();
+    });
+
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            currentChatId = null;
+            document.getElementById('chat-conversations').classList.remove('chat-hidden-mobile');
+            document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
+            currentChatUserEl.textContent = 'اختر محادثة';
+            backBtn.style.display = 'none';
+        });
     }
 
-    // Initial mobile view setup
-    if (window.innerWidth <= 768 && !currentChatId) {
-      document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
-    }
-  });
+    chatsRef.on('value', snapshot => {
+        const oldData = { ...chatsData };
+        const rawData = snapshot.val() || {};
+        
+        // Ensure all conversations are arrays
+        chatsData = Object.entries(rawData).reduce((acc, [key, value]) => {
+            acc[key] = Array.isArray(value) ? value.filter(Boolean) : (value ? Object.values(value).filter(Boolean) : []);
+            return acc;
+        }, {});
+
+        // Check for new messages to play sound
+        let newMessagesArrived = false;
+        Object.keys(chatsData).forEach(userId => {
+            const newConversation = chatsData[userId] || [];
+            const oldConversation = oldData[userId] || [];
+            if (newConversation.length > oldConversation.length) {
+                const lastNewMsg = newConversation[newConversation.length - 1];
+                if (lastNewMsg && lastNewMsg.sender === 'user') {
+                    newMessagesArrived = true;
+                }
+            }
+        });
+
+        if (newMessagesArrived) {
+            newMsgSound.play().catch(e => console.warn("Audio notification failed:", e));
+        }
+
+        renderConversations();
+        if (currentChatId) {
+            // Ensure the currently open chat is re-rendered with new messages
+            const wasScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
+            renderChatMessages(currentChatId);
+            if (wasScrolledToBottom) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // Initial mobile view setup
+        if (window.innerWidth <= 768 && !currentChatId) {
+            document.getElementById('chat-main-panel').classList.add('chat-hidden-mobile');
+        }
+    });
 }
-*/
 
 // Security: Enhanced HTML escaping for XSS protection
 function escapeHtml(unsafe) {
-  if (!unsafe) return '';
-  if (typeof unsafe !== 'string') {
-    unsafe = String(unsafe);
-  }
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
-    .replace(/\//g, "&#x2F;"); // Also escape forward slashes
+    if (!unsafe) return '';
+    if (typeof unsafe !== 'string') {
+      unsafe = String(unsafe);
+    }
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;")
+         .replace(/\//g, "&#x2F;"); // Also escape forward slashes
 }
 // Security: Comprehensive input sanitization
 
@@ -3567,7 +3676,7 @@ function initialize() {
   setupFiltersSidebar(); // تفعيل ضبط ارتفاع الـ sidebar
   // تفعيل الدردشة في الصفحة الرئيسية فقط
   const isHomePage = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('index.html');
-  // if (isHomePage) setupLiveChat(); // DISABLED - Chat removed per client request
+  if (isHomePage) setupLiveChat();
   showWelcomeMessage(); // إظهار رسالة الترحيب
   const cartBtn = document.getElementById('cart-btn');
   const favoritesBtn = document.getElementById('favorites-btn');
@@ -3608,7 +3717,7 @@ function initialize() {
   }
   // Admin page specific
   if (window.location.pathname.includes('admin.html')) {
-    const verifyPasswordBtn = document.getElementById('verify-password');
+  const verifyPasswordBtn = document.getElementById('verify-password');
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
@@ -3637,7 +3746,7 @@ function initialize() {
         });
       });
     }
-    // setupAdminChat(); // DISABLED - Chat removed per client request
+    setupAdminChat(); // تفعيل واجهة الدردشة للأدمن
     const saveProductBtn = document.getElementById('save-product');
     const cancelEditBtn = document.getElementById('cancel-edit');
     const clearOrdersBtn = document.getElementById('clear-orders');
@@ -3666,69 +3775,69 @@ function initialize() {
         promptClearOrders();
       });
     }
-    const exportXlsxBtn = document.getElementById('export-xlsx-btn');
-    const exportPdfBtn = document.getElementById('export-pdf-btn');
-    if (exportXlsxBtn) exportXlsxBtn.addEventListener('click', exportOrdersToXLSX);
-    if (exportPdfBtn) exportPdfBtn.addEventListener('click', exportOrdersToPDF);
+      const exportXlsxBtn = document.getElementById('export-xlsx-btn');
+      const exportPdfBtn = document.getElementById('export-pdf-btn');
+      if (exportXlsxBtn) exportXlsxBtn.addEventListener('click', exportOrdersToXLSX);
+      if (exportPdfBtn) exportPdfBtn.addEventListener('click', exportOrdersToPDF);
 
-    // --- إضافة جديدة لزر الفاتورة ---
-    const createInvoiceBtn = document.getElementById('create-invoice-btn');
-    if (createInvoiceBtn) {
-      createInvoiceBtn.addEventListener('click', () => {
-        window.open('invoice.html', '_blank');
-      });
-    }
-
-    // --- ميزات الإحصائيات ---
-    const statsPeriodSelect = document.getElementById('stats-period');
-    const refreshStatsBtn = document.getElementById('refresh-stats-btn');
-    const exportStatsBtn = document.getElementById('export-stats-btn');
-
-    if (statsPeriodSelect) {
-      statsPeriodSelect.addEventListener('change', (e) => {
-        const period = e.target.value;
-        updateStats(period);
-      });
-    }
-
-    if (refreshStatsBtn) {
-      refreshStatsBtn.addEventListener('click', () => {
-        const period = statsPeriodSelect ? statsPeriodSelect.value : 'all';
-        const icon = refreshStatsBtn.querySelector('i');
-        icon.style.animation = 'spin 0.6s linear';
-        setTimeout(() => {
+      // --- إضافة جديدة لزر الفاتورة ---
+      const createInvoiceBtn = document.getElementById('create-invoice-btn');
+      if (createInvoiceBtn) {
+        createInvoiceBtn.addEventListener('click', () => {
+          window.open('invoice.html', '_blank');
+        });
+      }
+      
+      // --- ميزات الإحصائيات ---
+      const statsPeriodSelect = document.getElementById('stats-period');
+      const refreshStatsBtn = document.getElementById('refresh-stats-btn');
+      const exportStatsBtn = document.getElementById('export-stats-btn');
+      
+      if (statsPeriodSelect) {
+        statsPeriodSelect.addEventListener('change', (e) => {
+          const period = e.target.value;
           updateStats(period);
-          icon.style.animation = '';
-        }, 300);
-      });
-    }
-
-    if (exportStatsBtn) {
-      exportStatsBtn.addEventListener('click', exportStatsReport);
-    }
-
-    // إضافة تفاعل عند النقر على بطاقات الإحصائيات
-    function setupStatCardsInteraction() {
-      document.querySelectorAll('.stat-card').forEach(card => {
-        // Check if already has listener
-        if (card.dataset.hasListener === 'true') return;
-        card.dataset.hasListener = 'true';
-
-        card.addEventListener('click', function () {
-          const title = this.querySelector('.stat-title').textContent;
-          const value = this.querySelector('.stat-value').textContent;
-          Swal.fire({
-            title: title,
-            html: `<div style="font-size: 2em; color: #13352f; font-weight: bold; margin: 20px 0;">${value}</div>`,
-            icon: 'info',
-            confirmButtonText: 'حسناً'
+        });
+      }
+      
+      if (refreshStatsBtn) {
+        refreshStatsBtn.addEventListener('click', () => {
+          const period = statsPeriodSelect ? statsPeriodSelect.value : 'all';
+          const icon = refreshStatsBtn.querySelector('i');
+          icon.style.animation = 'spin 0.6s linear';
+          setTimeout(() => {
+            updateStats(period);
+            icon.style.animation = '';
+          }, 300);
+        });
+      }
+      
+      if (exportStatsBtn) {
+        exportStatsBtn.addEventListener('click', exportStatsReport);
+      }
+      
+      // إضافة تفاعل عند النقر على بطاقات الإحصائيات
+      function setupStatCardsInteraction() {
+        document.querySelectorAll('.stat-card').forEach(card => {
+          // Check if already has listener
+          if (card.dataset.hasListener === 'true') return;
+          card.dataset.hasListener = 'true';
+          
+          card.addEventListener('click', function() {
+            const title = this.querySelector('.stat-title').textContent;
+            const value = this.querySelector('.stat-value').textContent;
+            Swal.fire({
+              title: title,
+              html: `<div style="font-size: 2em; color: #13352f; font-weight: bold; margin: 20px 0;">${value}</div>`,
+              icon: 'info',
+              confirmButtonText: 'حسناً'
+            });
           });
         });
-      });
-    }
-
-    // Setup initially after page loads
-    setTimeout(setupStatCardsInteraction, 1000);
+      }
+      
+      // Setup initially after page loads
+      setTimeout(setupStatCardsInteraction, 1000);
     // Render admin products list
     renderAdminProducts();
     // Toggle products panel
@@ -3750,13 +3859,13 @@ function initialize() {
         }
       });
     }
-    // Points admin wiring
-    const openPointsAdminBtn = document.getElementById('open-points-admin');
-    const confirmSelectedPointsBtn = document.getElementById('confirm-selected-points');
-    const refreshPointsListBtn = document.getElementById('refresh-points-list');
-    if (openPointsAdminBtn) openPointsAdminBtn.addEventListener('click', openPointsAdminPanel);
-    if (confirmSelectedPointsBtn) confirmSelectedPointsBtn.addEventListener('click', confirmSelectedPoints);
-    if (refreshPointsListBtn) refreshPointsListBtn.addEventListener('click', () => { renderPendingPointsList(); renderPointsBalances(); });
+  // Points admin wiring
+  const openPointsAdminBtn = document.getElementById('open-points-admin');
+  const confirmSelectedPointsBtn = document.getElementById('confirm-selected-points');
+  const refreshPointsListBtn = document.getElementById('refresh-points-list');
+  if (openPointsAdminBtn) openPointsAdminBtn.addEventListener('click', openPointsAdminPanel);
+  if (confirmSelectedPointsBtn) confirmSelectedPointsBtn.addEventListener('click', confirmSelectedPoints);
+  if (refreshPointsListBtn) refreshPointsListBtn.addEventListener('click', () => { renderPendingPointsList(); renderPointsBalances(); });
     // products management modal removed; skip wiring verifyProductsPassword
     if (addProductBtn) {
       addProductBtn.addEventListener('click', () => {
@@ -3856,7 +3965,7 @@ function initialize() {
     const deleteOrderBtn = e.target.closest('.delete-order');
     const editProductBtn = e.target.closest('.edit-product');
     const deleteProductBtn = e.target.closest('.delete-product');
-
+    
     // REMOVED: const printInvoiceBtn = e.target.closest('.print-invoice-btn');
     if (addToCartBtn) {
       const productId = parseInt(addToCartBtn.dataset.id);
@@ -4009,10 +4118,10 @@ function showAdminSection(sectionId) {
   if (activeNavItem) {
     activeNavItem.classList.add('active');
   }
-  // Special handling for chat section - DISABLED
-  // if (sectionId === 'admin-chat-section') {
-  //   setupAdminChat();
-  // }
+  // Special handling for chat section
+  if (sectionId === 'admin-chat-section') {
+    setupAdminChat();
+  }
 
   // Special handling for sections that need rendering on display
   if (sectionId === 'orders-section') {
@@ -4035,19 +4144,19 @@ if (window.location.pathname.includes('admin.html')) {
       orders.push({ id: child.key, ...child.val() });
     });
     ordersCache = orders.reverse();
-    try { renderNewOrders(); } catch (e) { }
-    try { renderOrders(ordersCache); } catch (e) { }
+    try { renderNewOrders(); } catch(e) {}
+    try { renderOrders(ordersCache); } catch(e) {}
   });
 }
 
 // ربط زر تأكيد الطلب
 document.getElementById('submit-order-now')?.addEventListener('click', submitOrderNow);
 
-function pushOrderToRealtime(order) {
-  return firebase.database().ref("orders").push(order);
+function pushOrderToRealtime(order){
+    return firebase.database().ref("orders").push(order);
 }
 
 // submit checkout binding
 
 const _submitCheckoutBtn = document.getElementById('submit-checkout');
-if (_submitCheckoutBtn) { _submitCheckoutBtn.addEventListener('click', submitOrderNow); } else { console.warn('submit-checkout button not found in DOM'); }
+if(_submitCheckoutBtn){ _submitCheckoutBtn.addEventListener('click', submitOrderNow); } else { console.warn('submit-checkout button not found in DOM'); }

@@ -1,0 +1,572 @@
+/* ===================================== */
+/* تصميم صفحة تفاصيل المنتج للموبايل - MAHFOOR CNC */
+/* الألوان: البني #7c5e42 | الأخضر الداكن #13352f | البيج #d9c8a9 */
+/* الخطوط: Cairo (رئيسي) | Amiri (عناوين) */
+/* ===================================== */
+
+@media (max-width: 768px) {
+
+    /* 1️⃣ الحاوية الرئيسية - تحسين الهوامش والعرض */
+    .product-details-container {
+        margin: 0;
+        padding: 16px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .product-details-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    /* 2️⃣ قسم الصورة الرئيسية - عرض كامل مع نسبة محفوظة */
+    .product-gallery {
+        width: 100%;
+        min-width: unset;
+        margin-bottom: 0;
+        order: 1;
+    }
+
+    .main-image {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+        /* الحفاظ على النسبة دون قص */
+        padding: 0;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        background: #f5f5f5;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 3️⃣ الصور المصغرة - scroll أفقي مع snap إجباري */
+    .thumbnail-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 8px 0;
+        margin-bottom: 16px;
+        scroll-snap-type: x mandatory;
+        /* snap إجباري أفقي */
+        -webkit-overflow-scrolling: touch;
+        /* تمرير سلس على iOS */
+        scrollbar-width: thin;
+        /* شريط تمرير رفيع */
+    }
+
+    /* تخصيص شريط التمرير */
+    .thumbnail-container::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .thumbnail-container::-webkit-scrollbar-track {
+        background: #e0e0e0;
+        border-radius: 10px;
+    }
+
+    .thumbnail-container::-webkit-scrollbar-thumb {
+        background: #7c5e42;
+        /* اللون البني */
+        border-radius: 10px;
+    }
+
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        object-fit: cover;
+        scroll-snap-align: start;
+        /* نقطة snap لكل صورة */
+    }
+
+    .thumbnail:hover,
+    .thumbnail.active {
+        border-color: #7c5e42;
+        /* البني */
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(124, 94, 66, 0.3);
+    }
+
+    /* 4️⃣ الفيديو - تحسين العرض */
+    .video-container {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+
+    .product-video {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 5️⃣ قسم المعلومات - ترتيب عمودي واضح */
+    .product-info {
+        width: 100%;
+        min-width: unset;
+        padding: 0;
+        order: 2;
+    }
+
+    /* 6️⃣ اسم المنتج - خط كبير وواضح */
+    .product-title {
+        font-family: 'Amiri', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #13352f;
+        /* الأخضر الداكن */
+        margin: 0 0 16px 0;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #7c5e42;
+        /* البني */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.4;
+    }
+
+    /* 7️⃣ السعر - خط كبير وواضح مع خصم */
+    .product-price {
+        font-family: 'Cairo', sans-serif;
+        font-size: 28px !important;
+        font-weight: 800;
+        color: #7c5e42;
+        /* البني */
+        margin: 16px 0;
+        display: block;
+    }
+
+    /* السعر القديم - مشطوب */
+    .product-discount {
+        font-size: 20px !important;
+        color: #999;
+        text-decoration: line-through;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* 8️⃣ الوصف - واضح ومريح للقراءة */
+    .product-description {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* 9️⃣ المواصفات - قائمة منظمة مع أيقونات */
+    .product-specs {
+        background: #f8f8f8;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    .specs-title {
+        font-family: 'Cairo', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #13352f;
+        /* الأخضر الداكن */
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .specs-title::before {
+        content: '📋';
+        font-size: 20px;
+    }
+
+    .specs-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .specs-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        color: #555;
+    }
+
+    .specs-list li:last-child {
+        border-bottom: none;
+    }
+
+    .specs-list li::before {
+        content: '✓';
+        color: #7c5e42;
+        /* البني */
+        font-weight: bold;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .specs-list li span:first-of-type {
+        font-weight: 700;
+        color: #13352f;
+        /* الأخضر الداكن */
+    }
+
+    /* 🔟 قسم التقييم - تحسين التصميم */
+    .rating-section {
+        margin-bottom: 20px;
+        padding: 16px;
+        background: #f8f8f8;
+        border-radius: 12px;
+    }
+
+    .rating-section h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #13352f;
+    }
+
+    .stars {
+        margin: 12px 0;
+    }
+
+    .stars i {
+        font-size: 28px;
+        margin: 0 4px;
+    }
+
+    #rating-comment {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+        font-family: 'Cairo', sans-serif;
+        resize: vertical;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+    }
+
+    /* 1️⃣1️⃣ التحكم في الكمية - حجم مناسب */
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin: 20px 0;
+        padding: 12px;
+        background: #f8f8f8;
+        border-radius: 12px;
+    }
+
+    .quantity-control button,
+    .qty-btn {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        min-height: 48px !important;
+        border-radius: 50%;
+        border: 2px solid #7c5e42;
+        /* البني */
+        background: white;
+        color: #7c5e42;
+        font-size: 24px !important;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-control button:active,
+    .qty-btn:active {
+        transform: scale(0.9);
+        background: #7c5e42;
+        /* البني */
+        color: white;
+    }
+
+    .quantity-control span,
+    #product-quantity {
+        font-size: 24px !important;
+        font-weight: bold;
+        color: #13352f;
+        /* الأخضر الداكن */
+        min-width: 40px;
+        text-align: center;
+    }
+
+    /* 1️⃣2️⃣ الأزرار الرئيسية - كبيرة وواضحة (56px ارتفاع على الأقل) */
+    .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .product-actions .btn {
+        width: 100%;
+        min-height: 56px;
+        /* ارتفاع كبير للمس السهل */
+        padding: 16px 20px;
+        font-size: 17px;
+        font-weight: 700;
+        font-family: 'Cairo', sans-serif;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* تأثير الضغط - scale واضح */
+    .product-actions .btn:active {
+        transform: scale(0.96);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* زر "أضف إلى السلة" - برتقالي */
+    .product-actions .add-to-cart {
+        background: linear-gradient(135deg, #ff9800 0%, #e68900 100%);
+        color: white;
+    }
+
+    .product-actions .add-to-cart:active {
+        background: linear-gradient(135deg, #e68900 0%, #cc7700 100%);
+    }
+
+    /* زر "اطلب الآن" - أخضر داكن */
+    .product-actions .order-now {
+        background: linear-gradient(135deg, #13352f 0%, #000f09 100%);
+        color: white;
+    }
+
+    .product-actions .order-now:active {
+        background: linear-gradient(135deg, #000f09 0%, #000 100%);
+    }
+
+    /* زر "أضف إلى المفضلة" - أحمر/وردي */
+    .product-actions .add-to-favorites {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+    }
+
+    .product-actions .add-to-favorites:active {
+        background: linear-gradient(135deg, #ee5a6f 0%, #cc4a5f 100%);
+    }
+
+    /* زر "عودة إلى الرئيسية" */
+    .product-actions .back-btn {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+        margin-top: 8px;
+    }
+
+    .product-actions .back-btn:active {
+        background: linear-gradient(135deg, #5a6268 0%, #4a5258 100%);
+    }
+
+    /* الأيقونات داخل الأزرار */
+    .product-actions .btn i {
+        font-size: 18px;
+        transition: transform 0.3s ease;
+    }
+
+    .product-actions .btn:active i {
+        transform: scale(1.2);
+    }
+
+    /* 1️⃣3️⃣ زر المشاركة - تصميم محسّن */
+    .share-dropdown {
+        position: relative;
+        width: 100%;
+    }
+
+    .share-toggle {
+        background: linear-gradient(135deg, #7c5e42 0%, #6a4e36 100%) !important;
+        /* البني */
+        color: white !important;
+    }
+
+    .share-toggle:active {
+        background: linear-gradient(135deg, #6a4e36 0%, #5a3e26 100%) !important;
+    }
+
+    .share-menu {
+        position: absolute;
+        bottom: 110%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        padding: 8px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .share-menu[hidden] {
+        display: none;
+    }
+
+    .share-menu-item {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 16px;
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        color: #13352f;
+        font-size: 16px;
+        font-family: 'Cairo', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .share-menu-item:active {
+        transform: scale(0.96);
+        background: #e8e8e8;
+    }
+
+    .share-menu-item i {
+        font-size: 18px;
+    }
+
+    /* ألوان خاصة لأزرار المشاركة */
+    .share-menu-item[data-channel="facebook"]:active {
+        background: #1877f2;
+        color: white;
+    }
+
+    .share-menu-item[data-channel="instagram"]:active {
+        background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+        color: white;
+    }
+
+    .share-menu-item[data-channel="copy"]:active {
+        background: #ff9800;
+        color: white;
+    }
+
+    /* 1️⃣4️⃣ إخفاء عناصر غير ضرورية على الموبايل */
+    .img-zoom-result,
+    .img-zoom-lens {
+        display: none !important;
+    }
+
+    /* 1️⃣5️⃣ Modal الطلب الآن - تحسين للموبايل */
+    .password-modal-content {
+        width: 95%;
+        max-width: 400px;
+        padding: 20px;
+        border-radius: 16px;
+        box-sizing: border-box;
+    }
+
+    .password-modal-content h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        text-align: center;
+        color: #13352f;
+    }
+
+    #order-now-form input {
+        width: 100%;
+        padding: 14px;
+        margin-bottom: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    #order-now-form .btn {
+        width: 100%;
+        min-height: 52px;
+        padding: 14px;
+        font-size: 16px;
+        margin: 8px 0;
+        border-radius: 8px;
+    }
+
+    /* 1️️6️⃣ Modal الصورة - عرض كامل */
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        border-radius: 8px;
+    }
+
+    /* 1️⃣7️⃣ إضافة مسافة تحت الصفحة للتمرير المريح */
+    .product-details-container::after {
+        content: '';
+        display: block;
+        height: 40px;
+    }
+
+    /* ✅ تأثيرات لمس إضافية للتفاعل */
+    @media (hover: none) and (pointer: coarse) {
+
+        /* للأجهزة التي تستخدم اللمس فقط */
+        .product-actions .btn {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    /* 📱 تحسينات إضافية للشاشات الصغيرة جداً (<400px) */
+    @media (max-width: 400px) {
+        .product-title {
+            font-size: 22px;
+        }
+
+        .product-price {
+            font-size: 24px !important;
+        }
+
+        .product-actions .btn {
+            min-height: 52px;
+            font-size: 16px;
+            padding: 14px 16px;
+        }
+
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+        }
+
+        .quantity-control button,
+        .qty-btn {
+            width: 44px !important;
+            height: 44px !important;
+            font-size: 20px !important;
+        }
+    }
+}

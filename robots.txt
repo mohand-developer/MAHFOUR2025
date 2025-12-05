@@ -1,0 +1,20 @@
+# robots.txt for MAHFOOR CNC Website
+
+User-agent: *
+Allow: /
+
+# Disallow admin pages from indexing
+Disallow: /admin.html
+Disallow: /invoice.html
+
+# Allow product pages
+Allow: /product-details.html
+Allow: /index.html
+Allow: /cart_indix.html
+Allow: /favorites.html
+
+# Sitemap location
+Sitemap: https://mahfoorcnc.com/sitemap.xml
+
+# Crawl delay (in seconds) - prevents overwhelming the server
+Crawl-delay: 1

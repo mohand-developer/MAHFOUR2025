@@ -1,0 +1,340 @@
+/* ===================================== */
+/* تصميم الفلاتر القابلة للطي للموبايل - MAHFOOR CNC */
+/* Collapsible Filters for Mobile - Professional Design */
+/* ===================================== */
+
+@media (max-width: 768px) {
+
+    /* 1️⃣ الفلاتر - التصميم الأساسي */
+    .filters {
+        width: 100%;
+        margin-bottom: 20px;
+        position: relative;
+        background: #7c5e42;
+        /* البني */
+        border-radius: 12px;
+        padding: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        order: 1;
+        /* تأكد من ظهور الفلاتر أولاً */
+    }
+
+    /* 2️⃣ حالة الفلاتر المطوية - ارتفاع 60px فقط */
+    .filters.collapsed {
+        max-height: 60px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 3️⃣ حالة الفلاتر المفتوحة - ارتفاع كبير */
+    .filters:not(.collapsed) {
+        max-height: 2000px;
+        /* ارتفاع كبير يكفي كل المحتوى */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 4️⃣ العنوان - قابل للضغط */
+    .filters h3 {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        margin: 0;
+        background: #7c5e42;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: 'Cairo', sans-serif;
+        border-radius: 12px;
+        position: relative;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: background 0.3s ease;
+    }
+
+    /* تأثير عند الضغط على العنوان */
+    .filters h3:active {
+        background: #6a4e36;
+        /* بني غامق شوية */
+    }
+
+    /* 5️⃣ أيقونة السهم - تتغير حسب الحالة */
+    .filters h3::after {
+        content: '\f078';
+        /* FontAwesome chevron-down */
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 16px;
+        color: #ffffff;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
+    }
+
+    /* السهم يدور 180 درجة لما تكون مطوية */
+    .filters.collapsed h3::after {
+        transform: rotate(-180deg);
+        /* السهم يصبح لفوق */
+    }
+
+    /* 6️⃣ عداد الفلاتر النشطة - يظهر بجانب العنوان */
+    .filter-count {
+        position: absolute;
+        top: 50%;
+        left: 50px;
+        /* مكانه بين العنوان والسهم */
+        transform: translateY(-50%);
+        background: #ff9800;
+        /* برتقالي */
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+        transition: opacity 0.3s ease;
+    }
+
+    /* 7️⃣ إخفاء المحتوى عند الطي */
+    .filters.collapsed .filter-group,
+    .filters.collapsed #reset-filters {
+        display: none !important;
+    }
+
+    /* عداد الفلاتر يظهر دايماً (مطوي أو مفتوح) */
+    .filters.collapsed .filter-count {
+        opacity: 1;
+        display: block;
+    }
+
+    /* 8️⃣ محتوى الفلاتر - الـ padding والمسافات */
+    .filter-group {
+        padding: 12px 20px;
+        margin: 0;
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .filter-group:last-of-type {
+        border-bottom: none;
+    }
+
+    /* 9️⃣ تصميم الـ label والـ inputs */
+    .filter-group label {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .filter-group label i {
+        margin-left: 6px;
+        opacity: 0.9;
+    }
+
+    .filter-group input[type="text"],
+    .filter-group input[type="number"],
+    .filter-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #333;
+        font-size: 15px;
+        font-family: 'Cairo', sans-serif;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #ff9800;
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+        background: white;
+    }
+
+    /* 🔟 نطاق السعر - تصميم خاص */
+    .price-range-inputs {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .price-field {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .price-field span {
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .filter-hint {
+        display: block;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 12px;
+        margin-top: 6px;
+        font-style: italic;
+    }
+
+    /* 1️⃣1️⃣ المنتجات المتوفرة - Toggle Switch */
+    .availability-toggle {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        position: relative;
+        padding: 8px 0;
+    }
+
+    .availability-toggle input[type="checkbox"] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+
+    .toggle-indicator {
+        width: 50px;
+        height: 26px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 13px;
+        position: relative;
+        transition: background 0.3s ease;
+    }
+
+    .toggle-indicator::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .availability-toggle input:checked+.toggle-indicator {
+        background: #ff9800;
+    }
+
+    .availability-toggle input:checked+.toggle-indicator::after {
+        transform: translateX(24px);
+    }
+
+    .toggle-text {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* 1️⃣2️⃣ زر إعادة التعيين */
+    #reset-filters {
+        width: calc(100% - 40px);
+        margin: 15px 20px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #ff9800 0%, #e68900 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: 'Cairo', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+    }
+
+    #reset-filters:active {
+        transform: scale(0.96);
+        background: linear-gradient(135deg, #e68900 0%, #cc7700 100%);
+    }
+
+    #reset-filters i {
+        font-size: 14px;
+    }
+
+    /* 1️⃣3️⃣ عداد المنتجات - في الأسفل */
+    .filter-count {
+        padding: 12px 20px;
+        margin: 0;
+        background: rgba(19, 53, 47, 0.9);
+        /* الأخضر الداكن */
+        color: white;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 0 0 12px 12px;
+        position: relative;
+    }
+
+    .filters.collapsed .filter-count {
+        display: none;
+    }
+
+    /* 1️⃣4️⃣ تأثيرات إضافية للتفاعل */
+    @media (hover: none) and (pointer: coarse) {
+
+        /* للأجهزة التي تستخدم اللمس فقط */
+        .filters h3 {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    /* 1️⃣5️⃣ أنيميشن سلس للظهور */
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .filters:not(.collapsed) .filter-group {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    /* 1️⃣6️⃣ المنتجات تظهر تحت الفلاتر */
+    .products {
+        order: 2;
+        width: 100%;
+    }
+
+    /* 1️⃣7️⃣ تحسينات إضافية للشاشات الصغيرة جداً */
+    @media (max-width: 400px) {
+        .filters h3 {
+            font-size: 16px;
+            padding: 16px 18px;
+        }
+
+        .filter-group {
+            padding: 10px 18px;
+        }
+
+        #reset-filters {
+            font-size: 15px;
+            padding: 10px 18px;
+        }
+    }
+}

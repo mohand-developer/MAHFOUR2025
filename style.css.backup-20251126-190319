@@ -6,15 +6,15 @@
 }
 
 :root {
-  --font-main: 'Cairo', 'Amiri', sans-serif;
-  --color-primary: #13352f;
-  --color-primary-dark: #000f09;
-  --color-primary-light: #395b55;
-  --color-primary-reverse: #dffffb;
-  --color-sidebar-bg: #7c5e42;
-  --color-sidebar-text: #ffffff;
-  --color-accent: #ff9800;
-  --color-accent-hover: #e68900;
+    --font-main: 'Cairo', 'Amiri', sans-serif;
+    --color-primary: #13352f;
+    --color-primary-dark: #000f09;
+    --color-primary-light: #395b55;
+    --color-primary-reverse: #dffffb;
+    --color-sidebar-bg: #7c5e42;
+    --color-sidebar-text: #ffffff;
+    --color-accent: #ff9800;
+    --color-accent-hover: #e68900;
   --color-whatsapp: #25D366;
   --color-whatsapp-dark: #1DA851;
 }
@@ -41,8 +41,7 @@ header {
   z-index: 1000;
   display: flex;
   align-items: center;
-  transition: top 0.4s ease-in-out;
-  /* لإخفاء الهيدر بسلاسة */
+  transition: top 0.4s ease-in-out; /* لإخفاء الهيدر بسلاسة */
   justify-content: space-between;
   flex-wrap: wrap;
   animation: slideInFromTop 0.8s ease-out;
@@ -58,14 +57,13 @@ header {
   margin-left: 10px;
   border-radius: 50%;
   background: var(--color-whatsapp);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   overflow: hidden;
 }
 
 /* كلاس لإخفاء الهيدر عند التمرير لأسفل */
 .header-hidden {
-  top: -100px;
-  /* إخفاء الهيدر خارج الشاشة */
+  top: -100px; /* إخفاء الهيدر خارج الشاشة */
 }
 
 .brand-logo img {
@@ -126,7 +124,7 @@ header #favorites-btn {
   border: none;
   background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
   color: #452808;
-  box-shadow:
+  box-shadow: 
     0 10px 30px rgba(0, 0, 0, 0.12),
     0 4px 8px rgba(0, 0, 0, 0.08),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
@@ -168,7 +166,7 @@ header #favorites-btn:hover::before {
 /* تأثيرات الهوفر */
 header #cart-btn:hover {
   transform: translateY(-8px) scale(1.15);
-  box-shadow:
+  box-shadow: 
     0 15px 40px rgba(255, 152, 0, 0.35),
     0 8px 16px rgba(255, 152, 0, 0.25),
     inset 0 2px 4px rgba(255, 255, 255, 1);
@@ -177,7 +175,7 @@ header #cart-btn:hover {
 
 header #favorites-btn:hover {
   transform: translateY(-8px) scale(1.15);
-  box-shadow:
+  box-shadow: 
     0 15px 40px rgba(255, 107, 107, 0.35),
     0 8px 16px rgba(255, 107, 107, 0.25),
     inset 0 2px 4px rgba(255, 255, 255, 1);
@@ -218,28 +216,21 @@ header #favorites-btn:hover .fas.fa-heart {
 
 /* أنيميشن متقدم للسلة */
 @keyframes cartShakeAdvanced {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1.25) rotate(-12deg);
   }
-
   15% {
     transform: scale(1.3) rotate(-18deg) translateY(-3px);
   }
-
   30% {
     transform: scale(1.35) rotate(-15deg) translateY(-5px);
   }
-
   45% {
     transform: scale(1.3) rotate(-20deg) translateY(-3px);
   }
-
   60% {
     transform: scale(1.32) rotate(-16deg) translateY(-4px);
   }
-
   75% {
     transform: scale(1.28) rotate(-14deg) translateY(-2px);
   }
@@ -250,43 +241,33 @@ header #favorites-btn:hover .fas.fa-heart {
   0% {
     transform: scale(1.25);
   }
-
   10% {
     transform: scale(1.35) rotate(-5deg);
   }
-
   20% {
     transform: scale(1.25) rotate(5deg);
   }
-
   30% {
     transform: scale(1.4) rotate(-3deg);
   }
-
   40% {
     transform: scale(1.25) rotate(3deg);
   }
-
   50% {
     transform: scale(1.38) rotate(-2deg);
   }
-
   60% {
     transform: scale(1.25) rotate(2deg);
   }
-
   70% {
     transform: scale(1.33) rotate(-1deg);
   }
-
   80% {
     transform: scale(1.25) rotate(1deg);
   }
-
   90% {
     transform: scale(1.3) rotate(0deg);
   }
-
   100% {
     transform: scale(1.25);
   }
@@ -308,12 +289,12 @@ header #favorites-count {
   justify-content: center;
   font-size: 12px;
   font-weight: 800;
-  box-shadow:
+  box-shadow: 
     0 4px 12px rgba(255, 68, 68, 0.5),
     0 2px 6px rgba(255, 68, 68, 0.3),
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
   border: 3px solid #ffffff;
-  /* Removed continuous animation for better performance */
+  animation: pulseAdvanced 2.5s ease-in-out infinite;
   z-index: 2;
   font-family: 'Cairo', sans-serif;
   letter-spacing: -0.5px;
@@ -321,32 +302,27 @@ header #favorites-count {
 
 /* أنيميشن نبض متطور للعداد */
 @keyframes pulseAdvanced {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
-    box-shadow:
+    box-shadow: 
       0 4px 12px rgba(255, 68, 68, 0.5),
       0 2px 6px rgba(255, 68, 68, 0.3);
   }
-
   25% {
     transform: scale(1.15);
-    box-shadow:
+    box-shadow: 
       0 6px 18px rgba(255, 68, 68, 0.6),
       0 3px 9px rgba(255, 68, 68, 0.4);
   }
-
   50% {
     transform: scale(1.05);
-    box-shadow:
+    box-shadow: 
       0 4px 12px rgba(255, 68, 68, 0.5),
       0 2px 6px rgba(255, 68, 68, 0.3);
   }
-
   75% {
     transform: scale(1.12);
-    box-shadow:
+    box-shadow: 
       0 6px 16px rgba(255, 68, 68, 0.55),
       0 3px 8px rgba(255, 68, 68, 0.35);
   }
@@ -355,7 +331,7 @@ header #favorites-count {
 /* عداد المفضلة بلون مختلف */
 header #favorites-count {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  box-shadow:
+  box-shadow: 
     0 4px 12px rgba(255, 107, 107, 0.5),
     0 2px 6px rgba(255, 107, 107, 0.3),
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
@@ -368,19 +344,21 @@ header #favorites-btn:hover #favorites-count {
   animation: none;
 }
 
+/* تأثير توهج خفيف */
+header #cart-btn:hover,
+header #favorites-btn:hover {
+  animation: gentleGlow 1.5s ease-in-out infinite;
+}
 
 @keyframes gentleGlow {
-
-  0%,
-  100% {
-    box-shadow:
+  0%, 100% {
+    box-shadow: 
       0 15px 40px rgba(255, 152, 0, 0.35),
       0 8px 16px rgba(255, 152, 0, 0.25),
       inset 0 2px 4px rgba(255, 255, 255, 1);
   }
-
   50% {
-    box-shadow:
+    box-shadow: 
       0 15px 45px rgba(255, 152, 0, 0.45),
       0 8px 20px rgba(255, 152, 0, 0.35),
       inset 0 2px 4px rgba(255, 255, 255, 1),
@@ -388,18 +366,19 @@ header #favorites-btn:hover #favorites-count {
   }
 }
 
-@keyframes gentleGlowPink {
+header #favorites-btn:hover {
+  animation: gentleGlowPink 1.5s ease-in-out infinite;
+}
 
-  0%,
-  100% {
-    box-shadow:
+@keyframes gentleGlowPink {
+  0%, 100% {
+    box-shadow: 
       0 15px 40px rgba(255, 107, 107, 0.35),
       0 8px 16px rgba(255, 107, 107, 0.25),
       inset 0 2px 4px rgba(255, 255, 255, 1);
   }
-
   50% {
-    box-shadow:
+    box-shadow: 
       0 15px 45px rgba(255, 107, 107, 0.45),
       0 8px 20px rgba(255, 107, 107, 0.35),
       inset 0 2px 4px rgba(255, 255, 255, 1),
@@ -489,35 +468,15 @@ header nav a:hover i {
 }
 
 @keyframes iconPulse {
-
-  0%,
-  100% {
-    transform: translateY(-5px) scale(1.1);
-  }
-
-  50% {
-    transform: translateY(-8px) scale(1.15);
-  }
+  0%, 100% { transform: translateY(-5px) scale(1.1); }
+  50% { transform: translateY(-8px) scale(1.15); }
 }
 
 @keyframes whatsappRing {
-
-  0%,
-  100% {
-    transform: translateY(-5px) scale(1.1) rotate(0deg);
-  }
-
-  25% {
-    transform: translateY(-5px) scale(1.15) rotate(-10deg);
-  }
-
-  50% {
-    transform: translateY(-8px) scale(1.15) rotate(0deg);
-  }
-
-  75% {
-    transform: translateY(-5px) scale(1.15) rotate(10deg);
-  }
+  0%, 100% { transform: translateY(-5px) scale(1.1) rotate(0deg); }
+  25% { transform: translateY(-5px) scale(1.15) rotate(-10deg); }
+  50% { transform: translateY(-8px) scale(1.15) rotate(0deg); }
+  75% { transform: translateY(-5px) scale(1.15) rotate(10deg); }
 }
 
 .nav-toggle {
@@ -530,12 +489,11 @@ header nav a:hover i {
   order: 3;
 }
 
-.header-icons {
+.header-icons { 
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-left: auto;
-  /* يدفعها إلى اليسار */
+  margin-left: auto; /* يدفعها إلى اليسار */
   order: 4;
 }
 
@@ -660,15 +618,8 @@ header nav a:hover i {
 }
 
 @keyframes bounceIcon {
-
-  0%,
-  100% {
-    transform: scale(1.2) rotate(-10deg);
-  }
-
-  50% {
-    transform: scale(1.3) rotate(-15deg);
-  }
+  0%, 100% { transform: scale(1.2) rotate(-10deg); }
+  50% { transform: scale(1.3) rotate(-15deg); }
 }
 
 .hero .whatsapp-btn {
@@ -686,35 +637,15 @@ header nav a:hover i {
 }
 
 @keyframes ringBell {
-
-  0%,
-  100% {
-    transform: rotate(0deg) scale(1.2);
-  }
-
-  25% {
-    transform: rotate(-15deg) scale(1.3);
-  }
-
-  50% {
-    transform: rotate(15deg) scale(1.3);
-  }
-
-  75% {
-    transform: rotate(-10deg) scale(1.3);
-  }
+  0%, 100% { transform: rotate(0deg) scale(1.2); }
+  25% { transform: rotate(-15deg) scale(1.3); }
+  50% { transform: rotate(15deg) scale(1.3); }
+  75% { transform: rotate(-10deg) scale(1.3); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 @keyframes cardFadeIn {
@@ -722,7 +653,6 @@ header nav a:hover i {
     opacity: 0;
     transform: translateY(40px) scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -730,98 +660,41 @@ header nav a:hover i {
 }
 
 @keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-100px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(100px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-
-  70% {
-    transform: scale(0.9);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes glow {
-
-  0%,
-  100% {
-    box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
-  }
-
-  50% {
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 152, 0, 0.6);
-  }
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 152, 0, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 152, 0, 0.6); }
 }
 
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes navPulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.15);
-  }
-
-  100% {
-    transform: scale(1.08);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1.08); }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .products-container {
@@ -946,7 +819,7 @@ header nav a:hover i {
   width: 48px;
   height: 26px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255,255,255,0.6);
   border: 1px solid rgba(109, 76, 65, 0.4);
   transition: all 0.3s ease;
 }
@@ -960,16 +833,16 @@ header nav a:hover i {
   height: 20px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
 
-.availability-toggle input:checked+.toggle-indicator {
+.availability-toggle input:checked + .toggle-indicator {
   background: linear-gradient(135deg, #1d8f6f 0%, #13352f 100%);
   border-color: rgba(19, 53, 47, 0.8);
 }
 
-.availability-toggle input:checked+.toggle-indicator::after {
+.availability-toggle input:checked + .toggle-indicator::after {
   transform: translateX(-22px);
 }
 
@@ -1061,209 +934,107 @@ header nav a:hover i {
   margin: 12px auto 0 auto;
   align-items: start;
 }
-
 .stat-card {
   background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0,0,0,0.06);
   padding: 14px;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(10, 10, 10, 0.06);
+  box-shadow: 0 6px 18px rgba(10,10,10,0.06);
   color: #222;
   min-width: 160px;
 }
-
 .stat-title {
   font-size: 14px;
   color: #666;
   margin-bottom: 8px;
   font-weight: 600;
 }
-
 .stat-value {
   font-size: 20px;
   color: var(--color-primary-dark);
   font-weight: 800;
 }
-
-.chart-card {
-  display: flex;
-  flex-direction: column;
-}
+.chart-card { display:flex; flex-direction:column; }
 
 /* Points admin panel styles */
-#points-admin-panel h3 {
-  font-size: 1.05rem;
-  color: var(--color-primary);
-}
-
-#points-admin-panel p {
-  color: #444;
-  margin: 4px 0 10px 0;
-}
-
-#points-admin-panel .pending-point-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-#points-admin-panel .pending-point-item:last-child {
-  border-bottom: none;
-}
-
-#points-admin-panel .pending-point-item .meta {
-  flex: 1;
-}
-
-#points-admin-panel .pending-point-item .meta .phone {
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-#points-admin-panel .pending-point-item .meta .info {
-  color: #666;
-  font-size: 0.95rem;
-}
-
-#points-admin-panel .pending-point-item input[type="checkbox"] {
-  transform: scale(1.15);
-  margin-top: 6px;
-}
-
-#points-admin-panel .points-balance {
-  padding: 6px 8px;
-  border-bottom: 1px dashed #eee;
-}
+#points-admin-panel h3 { font-size: 1.05rem; color: var(--color-primary); }
+#points-admin-panel p { color:#444; margin:4px 0 10px 0; }
+#points-admin-panel .pending-point-item { display:flex; align-items:flex-start; gap:8px; padding:8px; border-bottom:1px solid #f0f0f0; }
+#points-admin-panel .pending-point-item:last-child { border-bottom: none; }
+#points-admin-panel .pending-point-item .meta { flex:1; }
+#points-admin-panel .pending-point-item .meta .phone { font-weight:700; color:var(--color-primary); }
+#points-admin-panel .pending-point-item .meta .info { color:#666; font-size:0.95rem; }
+#points-admin-panel .pending-point-item input[type="checkbox"] { transform:scale(1.15); margin-top:6px; }
+#points-admin-panel .points-balance { padding:6px 8px; border-bottom:1px dashed #eee; }
 
 /* Customer points display in cart */
-.customer-points {
-  margin: 8px 0;
-  color: var(--color-primary);
-  font-weight: 700;
-}
-
-.customer-points small {
-  font-weight: 600;
-  color: #666;
-}
+.customer-points { margin:8px 0; color: var(--color-primary); font-weight:700; }
+.customer-points small { font-weight:600; color:#666; }
 
 @media (max-width: 800px) {
-  .stats-panel {
-    flex-direction: column;
-    padding: 0 12px;
-  }
-
-  .stat-card {
-    width: 100% !important;
-  }
+  .stats-panel { flex-direction: column; padding: 0 12px; }
+  .stat-card { width: 100% !important; }
 }
 
 /* Individual stat card decorations */
-.stat-orders {
-  position: relative;
-  overflow: hidden;
-}
-
+.stat-orders { position: relative; overflow: hidden; }
 .stat-orders::before {
-  content: '\f07a';
-  /* shopping bag icon (FontAwesome) */
+  content: '\f07a'; /* shopping bag icon (FontAwesome) */
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   position: absolute;
   left: 10px;
   top: 10px;
   font-size: 36px;
-  color: rgba(19, 53, 47, 0.08);
+  color: rgba(19,53,47,0.08);
 }
+.stat-orders { background: linear-gradient(135deg, #ffffff 0%, #f6fffb 100%); }
 
-.stat-orders {
-  background: linear-gradient(135deg, #ffffff 0%, #f6fffb 100%);
-}
-
-.stat-sales {
-  position: relative;
-  overflow: hidden;
-}
-
+.stat-sales { position: relative; overflow: hidden; }
 .stat-sales::before {
-  content: '\f155';
-  /* money/bill icon */
+  content: '\f155'; /* money/bill icon */
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   position: absolute;
   left: 12px;
   top: 10px;
   font-size: 36px;
-  color: rgba(34, 150, 80, 0.08);
+  color: rgba(34,150,80,0.08);
 }
+.stat-sales { background: linear-gradient(135deg, #fffaf6 0%, #fef9f3 100%); }
 
-.stat-sales {
-  background: linear-gradient(135deg, #fffaf6 0%, #fef9f3 100%);
-}
-
-.stat-top-product {
-  position: relative;
-  overflow: hidden;
-}
-
+.stat-top-product { position: relative; overflow: hidden; }
 .stat-top-product::before {
-  content: '\f091';
-  /* box icon */
+  content: '\f091'; /* box icon */
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   position: absolute;
   left: 12px;
   top: 10px;
   font-size: 32px;
-  color: rgba(99, 64, 45, 0.06);
+  color: rgba(99,64,45,0.06);
 }
+.stat-top-product { background: linear-gradient(135deg, #fff7f6 0%, #fffdfd 100%); }
 
-.stat-top-product {
-  background: linear-gradient(135deg, #fff7f6 0%, #fffdfd 100%);
-}
-
-.stat-top-list {
-  position: relative;
-  overflow: hidden;
-}
-
+.stat-top-list { position: relative; overflow: hidden; }
 .stat-top-list::before {
-  content: '\f02d';
-  /* list icon */
+  content: '\f02d'; /* list icon */
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   position: absolute;
   left: 12px;
   top: 10px;
   font-size: 30px;
-  color: rgba(61, 40, 20, 0.06);
+  color: rgba(61,40,20,0.06);
 }
-
-.stat-top-list {
-  background: linear-gradient(135deg, #ffffff 0%, #fbfbff 100%);
-}
+.stat-top-list { background: linear-gradient(135deg, #ffffff 0%, #fbfbff 100%); }
 
 /* improve list appearance */
-#top-products-list {
-  padding-left: 18px;
-  margin: 8px 0 0 0;
-  color: #333;
-}
-
-#top-products-list li {
-  margin-bottom: 6px;
-  font-weight: 600;
-}
+#top-products-list { padding-left: 18px; margin: 8px 0 0 0; color: #333; }
+#top-products-list li { margin-bottom: 6px; font-weight: 600; }
 
 /* show numeric badges in stat cards */
-.stat-card .stat-value {
-  display: inline-block;
-  padding: 6px 12px;
-  background: rgba(19, 53, 47, 0.06);
-  border-radius: 8px;
-}
+.stat-card .stat-value { display: inline-block; padding: 6px 12px; background: rgba(19,53,47,0.06); border-radius: 8px; }
 
 .product-card {
   border: 1px solid #d9c8a9;
@@ -1274,37 +1045,16 @@ header nav a:hover i {
   transition: transform 0.3s, box-shadow 0.3s;
   animation: cardFadeIn 0.5s ease-in-out forwards;
   opacity: 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  /* تمت إضافة ظل خفيف */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* تمت إضافة ظل خفيف */
 }
 
-.product-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.product-card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.product-card:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.product-card:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-.product-card:nth-child(5) {
-  animation-delay: 0.5s;
-}
-
-.product-card:nth-child(6) {
-  animation-delay: 0.6s;
-}
-
-.product-card:nth-child(7) {
-  animation-delay: 0.7s;
-}
+.product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-card:nth-child(2) { animation-delay: 0.2s; }
+.product-card:nth-child(3) { animation-delay: 0.3s; }
+.product-card:nth-child(4) { animation-delay: 0.4s; }
+.product-card:nth-child(5) { animation-delay: 0.5s; }
+.product-card:nth-child(6) { animation-delay: 0.6s; }
+.product-card:nth-child(7) { animation-delay: 0.7s; }
 
 .product-card:hover {
   transform: translateY(-5px);
@@ -1313,8 +1063,7 @@ header nav a:hover i {
 
 .product-card img {
   width: 100%;
-  height: auto;
-  /* Allow image to take its natural height */
+  height: auto; /* Allow image to take its natural height */
   object-fit: contain;
   border-radius: 8px;
 }
@@ -1330,14 +1079,12 @@ header nav a:hover i {
   font-size: 18px;
   margin: 10px 0;
   color: #452808;
-  font-family: 'Dubai', sans-serif;
-  /* تم تغيير الخط هنا */
+  font-family: 'Dubai', sans-serif; /* تم تغيير الخط هنا */
 }
 
 .product-card p {
   font-size: 16px;
-  color: #452808;
-  /* تم تغيير لون السعر */
+  color: #452808; /* تم تغيير لون السعر */
 }
 
 .product-card .buttons {
@@ -1427,8 +1174,7 @@ header nav a:hover i {
   color: white;
   padding: 12px;
   border-radius: 8px;
-  border: none;
-  /* تم إزالة border-top */
+  border: none; /* تم إزالة border-top */
   font-size: 16px;
   font-weight: 600;
   transition: all 0.25s ease-out;
@@ -1439,13 +1185,10 @@ header nav a:hover i {
   gap: 8px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow:
-    0 5px 15px rgba(0, 0, 0, 0.15),
-    /* ظل سفلي */
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    /* إضاءة داخلية علوية */
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-  /* ظل داخلي سفلي */
+  box-shadow: 
+    0 5px 15px rgba(0,0,0,0.15), /* ظل سفلي */
+    inset 0 1px 1px rgba(255,255,255,0.2), /* إضاءة داخلية علوية */
+    inset 0 -1px 1px rgba(0,0,0,0.2); /* ظل داخلي سفلي */
 }
 
 .btn::before {
@@ -1469,15 +1212,15 @@ header nav a:hover i {
 .btn:hover {
   background: linear-gradient(145deg, var(--color-accent), var(--color-accent-hover));
   transform: translateY(-3px);
-  box-shadow:
+  box-shadow: 
     0 8px 25px rgba(255, 152, 0, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+    inset 0 1px 1px rgba(255,255,255,0.3),
+    inset 0 -1px 1px rgba(0,0,0,0.3);
 }
 
 .btn:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .btn i {
@@ -1517,23 +1260,10 @@ header nav a:hover i {
 }
 
 @keyframes cartShake {
-
-  0%,
-  100% {
-    transform: translateX(0) scale(1);
-  }
-
-  25% {
-    transform: translateX(-5px) scale(1.1);
-  }
-
-  50% {
-    transform: translateX(5px) scale(1.1);
-  }
-
-  75% {
-    transform: translateX(-3px) scale(1.1);
-  }
+  0%, 100% { transform: translateX(0) scale(1); }
+  25% { transform: translateX(-5px) scale(1.1); }
+  50% { transform: translateX(5px) scale(1.1); }
+  75% { transform: translateX(-3px) scale(1.1); }
 }
 
 /* زر اطلب الآن */
@@ -1620,12 +1350,10 @@ header nav a:hover i {
     opacity: 0;
     transform: translateY(-50%) scale(0);
   }
-
   50% {
     opacity: 1;
     transform: translateY(-50%) scale(1.3);
   }
-
   100% {
     opacity: 1;
     transform: translateY(-50%) scale(1);
@@ -1644,23 +1372,13 @@ header nav a:hover i {
 
 /* تأثير نبض القلب */
 @keyframes heartBeat {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
   }
-
-  10%,
-  30% {
+  10%, 30% {
     transform: scale(0.9);
   }
-
-  20%,
-  40%,
-  50%,
-  60%,
-  70%,
-  80% {
+  20%, 40%, 50%, 60%, 70%, 80% {
     transform: scale(1.1);
   }
 }
@@ -1669,19 +1387,15 @@ header nav a:hover i {
   0% {
     transform: scale(1);
   }
-
   25% {
     transform: scale(1.3);
   }
-
   50% {
     transform: scale(1);
   }
-
   75% {
     transform: scale(1.2);
   }
-
   100% {
     transform: scale(1);
   }
@@ -1715,8 +1429,7 @@ header nav a:hover i {
   border-bottom: 2px solid #6d4c41;
   padding-bottom: 10px;
   font-family: var(--font-main);
-  font-family: 'Dubai', sans-serif;
-  /* تم تغيير الخط هنا */
+  font-family: 'Dubai', sans-serif; /* تم تغيير الخط هنا */
 }
 
 .favorites ul {
@@ -1748,8 +1461,7 @@ header nav a:hover i {
   cursor: pointer;
   color: var(--color-primary);
   text-decoration: underline;
-  font-family: 'Dubai', sans-serif;
-  /* تم تغيير الخط هنا */
+  font-family: 'Dubai', sans-serif; /* تم تغيير الخط هنا */
 }
 
 .favorites .qty-btn {
@@ -1824,7 +1536,7 @@ header nav a:hover i {
   margin-bottom: 10px;
 }
 
-.favorites:empty+.btn--outline-primary {
+.favorites:empty + .btn--outline-primary {
   border: 1px solid var(--color-primary);
   border-radius: 9999px;
   color: var(--color-primary);
@@ -1834,7 +1546,7 @@ header nav a:hover i {
   margin-top: 10px;
 }
 
-.favorites:empty+.btn--outline-primary:hover {
+.favorites:empty + .btn--outline-primary:hover {
   background: var(--color-primary-light);
   color: var(--color-primary-reverse);
 }
@@ -1984,11 +1696,13 @@ header nav a:hover i {
   inset: 0;
   background:
     linear-gradient(120deg, rgba(6, 14, 15, 0.92) 0%, rgba(6, 14, 15, 0.65) 48%, rgba(6, 14, 15, 0.55) 100%),
-    repeating-linear-gradient(135deg,
+    repeating-linear-gradient(
+      135deg,
       rgba(255, 255, 255, 0.04) 0,
       rgba(255, 255, 255, 0.04) 1px,
       transparent 1px,
-      transparent 26px);
+      transparent 26px
+    );
   mix-blend-mode: soft-light;
   pointer-events: none;
 }
@@ -2088,7 +1802,7 @@ header nav a:hover i {
   pointer-events: none;
 }
 
-.password-modal-content>* {
+.password-modal-content > * {
   position: relative;
   z-index: 1;
 }
@@ -2188,7 +1902,6 @@ header nav a:hover i {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
-
 /* --- تحسينات معرض الصور --- */
 
 /* حاوية الصورة الرئيسية لجعلها قابلة للتكبير */
@@ -2199,18 +1912,16 @@ header nav a:hover i {
 /* حاوية التكبير التي ستظهر بجانب الصورة */
 .img-zoom-result {
   position: absolute;
-  left: 105%;
-  /* تظهر على يسار الصورة الرئيسية */
+  left: 105%; /* تظهر على يسار الصورة الرئيسية */
   top: 0;
   width: 100%;
   height: 100%;
   border: 1px solid #ddd;
   background-repeat: no-repeat;
   z-index: 100;
-  display: none;
-  /* مخفية بشكل افتراضي */
+  display: none; /* مخفية بشكل افتراضي */
   background-color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   border-radius: 8px;
 }
 
@@ -2218,10 +1929,9 @@ header nav a:hover i {
 .img-zoom-lens {
   position: absolute;
   border: 1px solid #d4d4d4;
-  width: 80px;
-  /* حجم العدسة */
+  width: 80px; /* حجم العدسة */
   height: 80px;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255,255,255,0.4);
   cursor: crosshair;
 }
 
@@ -2234,8 +1944,7 @@ header nav a:hover i {
 .product-gallery {
   flex: 1;
   min-width: 300px;
-  position: relative;
-  /* ضروري لتحديد موضع نافذة التكبير */
+  position: relative; /* ضروري لتحديد موضع نافذة التكبير */
 }
 
 .main-image {
@@ -2262,18 +1971,14 @@ header nav a:hover i {
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
-  border: 3px solid transparent;
-  /* زيادة سمك الإطار */
-  transition: all 0.3s ease;
-  /* حركة أكثر سلاسة */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 3px solid transparent; /* زيادة سمك الإطار */
+  transition: all 0.3s ease; /* حركة أكثر سلاسة */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.thumbnail:hover,
-.thumbnail.active {
+.thumbnail:hover, .thumbnail.active {
   border-color: var(--color-accent);
-  transform: scale(1.05);
-  /* تكبير بسيط عند التمرير أو الاختيار */
+  transform: scale(1.05); /* تكبير بسيط عند التمرير أو الاختيار */
   box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
 }
 
@@ -2301,8 +2006,7 @@ header nav a:hover i {
   font-size: 28px;
   margin-bottom: 15px;
   color: #452808;
-  font-family: 'Dubai', sans-serif;
-  /* تم تغيير الخط هنا */
+  font-family: 'Dubai', sans-serif; /* تم تغيير الخط هنا */
   border-bottom: 2px solid #6d4c41;
   padding-bottom: 10px;
 }
@@ -2434,7 +2138,7 @@ header nav a:hover i {
 
 .share-dropdown.open .share-toggle::after {
   opacity: 1;
-  /* Removed infinite animation for better performance */
+  animation: shareToggleGlow 1.9s ease-out infinite;
 }
 
 .share-menu {
@@ -2593,12 +2297,10 @@ header nav a:hover i {
     opacity: 0;
     transform: translateY(-18px) scale(0.98);
   }
-
   70% {
     opacity: 1;
     transform: translateY(3px) scale(1.01);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -2610,12 +2312,10 @@ header nav a:hover i {
     opacity: 0;
     transform: translateY(18px) scale(0.98);
   }
-
   70% {
     opacity: 1;
     transform: translateY(-3px) scale(1.01);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -2623,13 +2323,11 @@ header nav a:hover i {
 }
 
 @keyframes shareToggleGlow {
-
   0%,
   100% {
     transform: scale(1);
     opacity: 0.85;
   }
-
   55% {
     transform: scale(1.12);
     opacity: 1;
@@ -2746,7 +2444,7 @@ header nav a:hover i {
 }
 
 .review-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 246, 240, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,246,240,0.95) 100%);
   border: 1px solid rgba(109, 76, 65, 0.15);
   border-radius: 12px;
   padding: 14px 16px;
@@ -2871,8 +2569,7 @@ footer .social-icon:hover {
 
 /* --- Social Icon Colors --- */
 footer .social-icon.facebook i {
-  color: #1877F2;
-  /* Facebook Blue */
+  color: #1877F2; /* Facebook Blue */
 }
 
 footer .social-icon.instagram i {
@@ -2886,13 +2583,11 @@ footer .social-icon.instagram i {
 }
 
 footer .social-icon.tiktok i {
-  color: #010101;
-  /* TikTok Black */
+  color: #010101; /* TikTok Black */
 }
 
 footer .social-icon.whatsapp i {
-  color: #25D366;
-  /* WhatsApp Green */
+  color: #25D366; /* WhatsApp Green */
 }
 
 /* Add a hover effect to make them pop */
@@ -2956,8 +2651,7 @@ footer #admin-access-btn {
   cursor: pointer;
 }
 
-.prev,
-.next {
+.prev, .next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -2982,8 +2676,7 @@ footer #admin-access-btn {
   color: #6d4c41;
 }
 
-.prev:hover,
-.next:hover {
+.prev:hover, .next:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -3016,8 +2709,7 @@ footer #admin-access-btn {
 }
 
 .discounted-price {
-  color: #452808;
-  /* تم تغيير لون السعر بعد الخصم */
+  color: #452808; /* تم تغيير لون السعر بعد الخصم */
   font-weight: bold;
   font-size: 18px;
   display: block;
@@ -3081,78 +2773,19 @@ footer #admin-access-btn {
 }
 
 /* Admin products list in admin page */
-.admin-products-section {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #d9c8a9;
-  border-radius: 10px;
-}
-
-.admin-products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.admin-product-card {
-  background: #fff;
-  padding: 12px;
-  border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.admin-product-card img {
-  width: 96px;
-  height: 96px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex: 0 0 96px;
-}
-
-.admin-product-info {
-  flex: 1;
-}
-
-.admin-product-info h4 {
-  margin-bottom: 6px;
-  color: #452808;
-  font-size: 18px;
-}
-
-.admin-product-meta {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.admin-product-stats {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.admin-stat {
-  background: #f5f5f5;
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-weight: 700;
-  color: #333;
-  font-size: 13px;
-}
+.admin-products-section { max-width:1200px; margin:20px auto; padding:20px; background:#d9c8a9; border-radius:10px; }
+.admin-products-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:16px; }
+.admin-product-card { background:#fff; padding:12px; border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.06); display:flex; gap:12px; align-items:flex-start; }
+.admin-product-card img { width:96px; height:96px; object-fit:cover; border-radius:8px; flex:0 0 96px; }
+.admin-product-info { flex:1; }
+.admin-product-info h4 { margin-bottom:6px; color:#452808; font-size:18px; }
+.admin-product-meta { font-size:13px; color:#666; margin-bottom:6px; }
+.admin-product-stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.admin-stat { background:#f5f5f5; padding:6px 8px; border-radius:6px; font-weight:700; color:#333; font-size:13px; }
 
 /* collapsible wrapper */
-.admin-products-wrap.collapsed {
-  max-height: 0 !important;
-}
-
-.admin-products-wrap.open {
-  max-height: 2000px;
-}
+.admin-products-wrap.collapsed { max-height: 0 !important; }
+.admin-products-wrap.open { max-height: 2000px; }
 
 .product-management-card {
   background: #fff;
@@ -3164,21 +2797,10 @@ footer #admin-access-btn {
   opacity: 0;
 }
 
-.product-management-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.product-management-card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.product-management-card:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.product-management-card:nth-child(4) {
-  animation-delay: 0.4s;
-}
+.product-management-card:nth-child(1) { animation-delay: 0.1s; }
+.product-management-card:nth-child(2) { animation-delay: 0.2s; }
+.product-management-card:nth-child(3) { animation-delay: 0.3s; }
+.product-management-card:nth-child(4) { animation-delay: 0.4s; }
 
 .product-management-card:hover {
   transform: translateY(-5px);
@@ -3214,8 +2836,7 @@ footer #admin-access-btn {
   font-size: 18px;
   margin-bottom: 10px;
   color: #452808;
-  font-family: 'Dubai', sans-serif;
-  /* تم تغيير الخط هنا */
+  font-family: 'Dubai', sans-serif; /* تم تغيير الخط هنا */
 }
 
 .card-content p {
@@ -3252,8 +2873,7 @@ footer #admin-access-btn {
   display: none;
   position: fixed;
   bottom: 30px;
-  left: 30px;
-  /* تم وضعه على اليسار لعدم التداخل مع عناصر أخرى */
+  left: 30px; /* تم وضعه على اليسار لعدم التداخل مع عناصر أخرى */
   z-index: 999;
   border: none;
   outline: none;
@@ -3264,9 +2884,8 @@ footer #admin-access-btn {
   width: 55px;
   height: 55px;
   border-radius: 50%;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
-  /* Removed infinite animation for better performance */
+  font-size: 22px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   animation: fadeInUp 0.3s ease;
 }
@@ -3292,8 +2911,7 @@ footer #admin-access-btn {
   bottom: 25px;
   right: 25px;
   z-index: 1001;
-  direction: ltr;
-  /* لضمان محاذاة العناصر بشكل صحيح */
+  direction: ltr; /* لضمان محاذاة العناصر بشكل صحيح */
 }
 
 /* زر فتح/إغلاق الدردشة */
@@ -3334,7 +2952,7 @@ footer #admin-access-btn {
   font-size: 12px;
   font-weight: bold;
   border: 2px solid white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* نافذة الدردشة */
@@ -3348,7 +2966,7 @@ footer #admin-access-btn {
   max-height: 70vh;
   background: #f9f9f9;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3402,8 +3020,7 @@ footer #admin-access-btn {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  direction: rtl;
-  /* لضمان ظهور شريط التمرير على اليسار */
+  direction: rtl; /* لضمان ظهور شريط التمرير على اليسار */
   background-color: #f4f7f6;
   background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
 }
@@ -3434,13 +3051,11 @@ footer #admin-access-btn {
 .chat-message.user {
   align-items: flex-end;
 }
-
 .chat-message.user p {
   background: var(--color-primary);
   color: white;
   border-bottom-right-radius: 5px;
 }
-
 .chat-message.user .timestamp {
   margin-right: 10px;
 }
@@ -3449,14 +3064,12 @@ footer #admin-access-btn {
 .chat-message.admin {
   align-items: flex-start;
 }
-
 .chat-message.admin p {
   background: #ffffff;
   color: #333;
   border: 1px solid #e5e5e5;
   border-bottom-left-radius: 5px;
 }
-
 .chat-message.admin .timestamp {
   margin-left: 10px;
 }
@@ -3548,8 +3161,7 @@ footer #admin-access-btn {
   position: relative;
 }
 
-.conversation-item:hover,
-.conversation-item.active {
+.conversation-item:hover, .conversation-item.active {
   background: var(--cream-bg);
 }
 
@@ -3557,24 +3169,9 @@ footer #admin-access-btn {
   border-right: 4px solid var(--admin-primary);
 }
 
-.convo-info {
-  flex: 1;
-}
-
-.convo-user {
-  font-weight: 600;
-  color: #333;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.convo-preview {
-  font-size: 0.9em;
-  color: #777;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.convo-info { flex: 1; }
+.convo-user { font-weight: 600; color: #333; display: block; margin-bottom: 4px; }
+.convo-preview { font-size: 0.9em; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 #chat-main {
   background: white;
@@ -3599,16 +3196,8 @@ footer #admin-access-btn {
   background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
 }
 
-.no-chat-selected {
-  text-align: center;
-  padding: 50px;
-  color: #999;
-}
-
-.no-chat-selected i {
-  font-size: 3em;
-  margin-bottom: 15px;
-}
+.no-chat-selected { text-align: center; padding: 50px; color: #999; }
+.no-chat-selected i { font-size: 3em; margin-bottom: 15px; }
 
 #admin-chat-input-area {
   padding: 15px;
@@ -3617,9 +3206,7 @@ footer #admin-access-btn {
   gap: 10px;
 }
 
-#admin-chat-input {
-  flex: 1;
-}
+#admin-chat-input { flex: 1; }
 
 .no-conversations {
   text-align: center;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +15,8 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.salla.network/fonts/dubai.css?v=2.0.5"/>
-  <link rel="stylesheet" href="https://cdn.salla.network/fonts/sallaicons.css?v=2.0.5"/>
+  <link rel="stylesheet" href="https://cdn.salla.network/fonts/dubai.css?v=2.0.5" />
+  <link rel="stylesheet" href="https://cdn.salla.network/fonts/sallaicons.css?v=2.0.5" />
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
   <style>
@@ -35,13 +36,15 @@
       --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
       --gradient-6: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
     }
+
     body {
       background: var(--admin-bg-solid);
-      background-image: 
+      background-image:
         radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
       min-height: 100vh;
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      overflow-x: hidden;
+      /* Prevent horizontal scroll */
     }
 
     .admin-main-header {
@@ -50,7 +53,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       z-index: 100;
       position: sticky;
       top: 0;
@@ -95,7 +98,8 @@
 
     .admin-page-layout {
       display: flex;
-      min-height: calc(100vh - 70px); /* Adjust based on header height */
+      min-height: calc(100vh - 70px);
+      /* Adjust based on header height */
     }
 
     .admin-sidebar {
@@ -103,7 +107,7 @@
       background: linear-gradient(180deg, var(--admin-primary) 0%, #0d2a25 100%);
       color: white;
       padding: 20px 0;
-      box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
       flex-shrink: 0;
     }
 
@@ -120,7 +124,7 @@
       gap: 15px;
       padding: 12px 15px;
       border-radius: 10px;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       font-size: 1.1em;
       transition: all 0.3s ease;
@@ -131,13 +135,13 @@
     }
 
     .admin-nav-item:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       color: white;
       transform: translateX(5px);
     }
 
     .admin-nav-item.active {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       color: white;
       font-weight: 700;
       border-right: 4px solid var(--admin-secondary);
@@ -150,30 +154,37 @@
     }
 
     #admin-content {
-      padding: 0; /* Remove padding here as it's handled by admin-main-content */
+      padding: 0;
+      /* Remove padding here as it's handled by admin-main-content */
       max-width: 100%;
       margin: 0;
     }
 
     .admin-container {
-      padding: 20px; /* Adjust padding for inner container */
-      max-width: 1400px; /* Max width for inner content */
-      margin: 0 auto; /* Center the content */
+      padding: 20px;
+      /* Adjust padding for inner container */
+      max-width: 1400px;
+      /* Max width for inner content */
+      margin: 0 auto;
+      /* Center the content */
     }
+
     .admin-section {
       background: var(--admin-card-bg);
       border-radius: 20px;
       padding: 30px;
       margin-bottom: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
-      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
     }
+
     .admin-section:hover {
-      box-shadow: 0 15px 50px rgba(0,0,0,0.12), 0 5px 15px rgba(0,0,0,0.06);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.06);
       transform: translateY(-2px);
     }
+
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -183,6 +194,7 @@
       border-bottom: 2px solid #f0f0f0;
       position: relative;
     }
+
     .section-header::after {
       content: '';
       position: absolute;
@@ -193,6 +205,7 @@
       background: var(--gradient-1);
       border-radius: 2px;
     }
+
     .section-header h2 {
       margin: 0;
       font-size: 1.9em;
@@ -205,25 +218,28 @@
       gap: 12px;
       font-weight: 700;
     }
+
     .stats-panel {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 25px;
       margin-bottom: 30px;
     }
+
     .stat-card {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       padding: 25px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       display: flex;
       align-items: center;
       gap: 18px;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
+
     .stat-card::before {
       content: '';
       position: absolute;
@@ -235,17 +251,32 @@
       transform: scaleX(0);
       transition: transform 0.4s ease;
     }
+
     .stat-card:hover::before {
       transform: scaleX(1);
     }
-    .stat-card:nth-child(1)::before { background: var(--gradient-1); }
-    .stat-card:nth-child(2)::before { background: var(--gradient-2); }
-    .stat-card:nth-child(3)::before { background: var(--gradient-3); }
-    .stat-card:nth-child(4)::before { background: var(--gradient-4); }
+
+    .stat-card:nth-child(1)::before {
+      background: var(--gradient-1);
+    }
+
+    .stat-card:nth-child(2)::before {
+      background: var(--gradient-2);
+    }
+
+    .stat-card:nth-child(3)::before {
+      background: var(--gradient-3);
+    }
+
+    .stat-card:nth-child(4)::before {
+      background: var(--gradient-4);
+    }
+
     .stat-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
+
     .stat-card .icon {
       font-size: 2.5em;
       width: 70px;
@@ -256,32 +287,38 @@
       position: relative;
       flex-shrink: 0;
     }
+
     .stat-card:nth-child(1) .icon {
       background: var(--gradient-1);
       color: white;
       box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
     }
+
     .stat-card:nth-child(2) .icon {
       background: var(--gradient-2);
       color: white;
       box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
     }
+
     .stat-card:nth-child(3) .icon {
       background: var(--gradient-3);
       color: white;
       box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
     }
+
     .stat-card:nth-child(4) .icon {
       background: var(--gradient-4);
       color: white;
       box-shadow: 0 8px 20px rgba(67, 233, 123, 0.3);
     }
+
     .stat-card .stat-title {
       font-size: 0.95em;
       color: var(--admin-text-light);
       margin-bottom: 6px;
       font-weight: 500;
     }
+
     .stat-card .stat-value {
       font-size: 1.6em;
       font-weight: 800;
@@ -290,47 +327,55 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+
     .stat-card:nth-child(1) .stat-value {
       background: var(--gradient-1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     .stat-card:nth-child(2) .stat-value {
       background: var(--gradient-2);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     .stat-card:nth-child(3) .stat-value {
       background: var(--gradient-3);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     .chart-card {
       grid-column: 1 / -1;
       padding: 25px;
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
+
     .charts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 25px;
       margin-top: 20px;
     }
+
     .chart-container {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       padding: 25px;
       border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       transition: all 0.3s ease;
     }
+
     .chart-container:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
+
     .chart-container h3 {
       margin: 0 0 20px 0;
       font-size: 1.3em;
@@ -343,67 +388,110 @@
       align-items: center;
       gap: 10px;
     }
+
     .chart-wrapper {
       position: relative;
       height: 300px;
       width: 100%;
     }
+
     @media (max-width: 768px) {
       .stats-panel {
         grid-template-columns: 1fr;
         gap: 15px;
       }
+
       .charts-grid {
         grid-template-columns: 1fr;
         gap: 20px;
       }
+
       .chart-wrapper {
         height: 250px;
       }
+
       .admin-section {
         padding: 20px;
         border-radius: 16px;
       }
+
       .section-header h2 {
         font-size: 1.5em;
       }
+
       .stat-card {
         padding: 20px;
       }
+
       .stat-card .icon {
         width: 60px;
         height: 60px;
         font-size: 2em;
       }
     }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
+
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
+
     .stat-card {
       animation: fadeInUp 0.6s ease-out;
     }
-    .stat-card:nth-child(1) { animation-delay: 0.1s; }
-    .stat-card:nth-child(2) { animation-delay: 0.2s; }
-    .stat-card:nth-child(3) { animation-delay: 0.3s; }
-    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .stat-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .stat-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .stat-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .stat-card:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
     .chart-container {
       animation: fadeInUp 0.6s ease-out;
     }
-    .chart-container:nth-child(1) { animation-delay: 0.2s; }
-    .chart-container:nth-child(2) { animation-delay: 0.3s; }
-    .chart-container:nth-child(3) { animation-delay: 0.4s; }
-    .chart-container:nth-child(4) { animation-delay: 0.5s; }
+
+    .chart-container:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .chart-container:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .chart-container:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .chart-container:nth-child(4) {
+      animation-delay: 0.5s;
+    }
+
     .orders-controls {
       display: flex;
       flex-wrap: wrap;
@@ -412,8 +500,9 @@
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       padding: 20px;
       border-radius: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     }
+
     .orders-controls input {
       flex-grow: 1;
       min-width: 200px;
@@ -424,11 +513,13 @@
       transition: all 0.3s ease;
       background: white;
     }
+
     .orders-controls input:focus {
       outline: none;
       border-color: rgba(102, 126, 234, 0.5);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
+
     .orders-controls .btn {
       background: var(--gradient-1);
       color: white;
@@ -439,19 +530,23 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
+
     .orders-controls .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
+
     .orders-controls .btn:active {
       transform: translateY(0);
     }
+
     .orders-table {
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
+
     .orders-table th {
       background: var(--gradient-1);
       color: white;
@@ -459,13 +554,16 @@
       font-weight: 600;
       text-align: right;
     }
+
     .orders-table td {
       padding: 12px 15px;
       border-bottom: 1px solid #f0f0f0;
     }
+
     .orders-table tr:hover {
       background: #f8f9fa;
     }
+
     .badge-count {
       background: #e74c3c;
       color: white;
@@ -475,10 +573,19 @@
       margin-right: 10px;
       animation: pulse 2s infinite;
     }
+
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
     }
+
     .new-order-card {
       background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
       border: 2px solid #e74c3c;
@@ -489,6 +596,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .new-order-card::before {
       content: '';
       position: absolute;
@@ -498,10 +606,12 @@
       height: 100%;
       background: #e74c3c;
     }
+
     .new-order-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 35px rgba(231, 76, 60, 0.25);
     }
+
     .new-order-header {
       display: flex;
       justify-content: space-between;
@@ -510,6 +620,7 @@
       padding-bottom: 15px;
       border-bottom: 2px solid #fee;
     }
+
     .new-order-header h3 {
       margin: 0;
       color: #e74c3c;
@@ -518,29 +629,34 @@
       align-items: center;
       gap: 10px;
     }
+
     .new-order-details {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
     }
+
     .new-order-detail-item {
       background: #f8f9fa;
       padding: 12px;
       border-radius: 8px;
       border-right: 3px solid #e74c3c;
     }
+
     .new-order-detail-item strong {
       display: block;
       color: #e74c3c;
       margin-bottom: 5px;
       font-size: 0.9em;
     }
+
     .new-order-detail-item span {
       color: #333;
       font-size: 1em;
       word-break: break-word;
     }
+
     .new-order-products {
       background: #f8f9fa;
       padding: 15px;
@@ -549,26 +665,31 @@
       max-height: 200px;
       overflow-y: auto;
     }
+
     .new-order-products strong {
       display: block;
       color: #e74c3c;
       margin-bottom: 10px;
     }
+
     .new-order-products ul {
       margin: 0;
       padding-right: 20px;
       list-style: none;
     }
+
     .new-order-products li {
       padding: 8px 0;
       border-bottom: 1px solid #ddd;
       color: #333;
     }
+
     .new-order-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
     .new-order-actions .btn {
       flex: 1;
       min-width: 120px;
@@ -579,68 +700,82 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .btn-confirm-order {
       background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
       color: white;
     }
+
     .btn-confirm-order:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
     }
+
     .btn-reject-order {
       background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
       color: white;
     }
+
     .btn-reject-order:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
     }
+
     .btn-view-details {
       background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
       color: white;
     }
+
     .btn-view-details:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
     }
+
     .admin-products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 20px;
     }
+
     .admin-product-card {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
+
     .admin-product-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
     }
+
     .admin-product-card .admin-product-stats {
       background: #f9f9f9;
       padding: 15px;
       margin-top: auto;
       border-top: 1px solid var(--admin-border);
     }
+
     .admin-product-card .admin-stat {
       font-size: 0.9em;
       color: var(--admin-text-light);
       margin-bottom: 5px;
     }
+
     .admin-product-card .admin-stat strong {
       color: var(--admin-primary);
     }
+
     .stats-controls {
       display: flex;
       gap: 10px;
       align-items: center;
     }
+
     .stats-period-select {
       padding: 10px 15px;
       border: 2px solid #e0e0e0;
@@ -652,12 +787,15 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .stats-period-select:focus {
       outline: none;
       border-color: rgba(102, 126, 234, 0.5);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    .btn-refresh-stats, .btn-export-stats {
+
+    .btn-refresh-stats,
+    .btn-export-stats {
       width: 45px;
       height: 45px;
       border-radius: 10px;
@@ -668,57 +806,68 @@
       font-size: 16px;
       transition: all 0.3s ease;
     }
+
     .btn-refresh-stats {
       background: var(--gradient-3);
       box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
     }
+
     .btn-refresh-stats:hover {
       transform: translateY(-2px) rotate(180deg);
       box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
     }
+
     .btn-export-stats {
       background: var(--gradient-4);
       box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
     }
+
     .btn-export-stats:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
     }
+
     .stat-card {
       cursor: pointer;
     }
+
     .stat-card:hover .stat-value {
       transform: scale(1.1);
     }
+
     .stat-card .stat-value {
       transition: transform 0.3s ease;
     }
+
     .top-products-section {
       margin: 30px 0;
       padding: 20px;
       background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.5);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
+
     .top-products-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 15px;
     }
+
     .top-product-item {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       padding: 18px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       display: flex;
       align-items: center;
       gap: 15px;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       position: relative;
       overflow: hidden;
     }
+
     .top-product-item::before {
       content: '';
       position: absolute;
@@ -730,34 +879,43 @@
       transform: scaleY(0);
       transition: transform 0.3s ease;
     }
+
     .top-product-item:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
+
     .top-product-item:hover::before {
       transform: scaleY(1);
     }
+
     .top-product-item:nth-child(1) {
       background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
       border: 2px solid #f39c12;
     }
+
     .top-product-item:nth-child(1)::before {
       background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
     }
+
     .top-product-item:nth-child(2) {
       background: linear-gradient(135deg, #e8f4f8 0%, #ffffff 100%);
       border: 2px solid #3498db;
     }
+
     .top-product-item:nth-child(2)::before {
       background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
     }
+
     .top-product-item:nth-child(3) {
       background: linear-gradient(135deg, #f0e8f5 0%, #ffffff 100%);
       border: 2px solid #9b59b6;
     }
+
     .top-product-item:nth-child(3)::before {
       background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
     }
+
     .top-product-rank {
       font-size: 1.8em;
       font-weight: 800;
@@ -772,70 +930,87 @@
       color: white;
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
+
     .top-product-item:nth-child(1) .top-product-rank {
       background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
       box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
     }
+
     .top-product-item:nth-child(2) .top-product-rank {
       background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
       box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
     }
+
     .top-product-item:nth-child(3) .top-product-rank {
       background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
       box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
     }
+
     .top-product-info {
       flex: 1;
     }
+
     .top-product-name {
       font-size: 1.1em;
       font-weight: 700;
       color: var(--admin-primary);
       margin-bottom: 6px;
     }
+
     .top-product-stats {
       display: flex;
       gap: 15px;
       font-size: 0.9em;
       color: var(--admin-text-light);
     }
+
     .top-product-stat {
       display: flex;
       align-items: center;
       gap: 5px;
     }
+
     .top-product-stat i {
       color: var(--admin-secondary);
     }
+
     .top-product-stat strong {
       color: var(--admin-primary);
       font-weight: 700;
     }
+
     @media (max-width: 768px) {
       .stats-controls {
         flex-wrap: wrap;
         gap: 8px;
       }
+
       .stats-period-select {
         flex: 1;
         min-width: 120px;
       }
-      .btn-refresh-stats, .btn-export-stats {
+
+      .btn-refresh-stats,
+      .btn-export-stats {
         width: 40px;
         height: 40px;
         font-size: 14px;
       }
+
       .top-products-list {
         grid-template-columns: 1fr;
       }
+
       .top-product-item {
         padding: 15px;
       }
+
       .top-product-rank {
         width: 45px;
         height: 45px;
         font-size: 1.5em;
       }
+
       .top-product-stats {
         flex-direction: column;
         gap: 8px;
@@ -912,7 +1087,7 @@
       .admin-sidebar {
         width: 100%;
         padding: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
       }
 
       .admin-nav {
@@ -958,6 +1133,7 @@
     }
   </style>
 </head>
+
 <body>
   <div id="password-modal" class="password-modal">
     <div class="password-brand-hero" aria-hidden="true">
@@ -979,7 +1155,8 @@
   <div id="admin-content" style="display: none;">
     <header class="admin-main-header">
       <div class="admin-header-left">
-        <a href="index.html" class="admin-logo"><img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg" alt="MAHFOOR CNC Logo"> MAHFOOR CNC</a>
+        <a href="index.html" class="admin-logo"><img src="https://i.postimg.cc/4NSrnTbt/photo-2025-09-26-07-00-26.jpg"
+            alt="MAHFOOR CNC Logo"> MAHFOOR CNC</a>
         <button class="admin-nav-toggle" aria-label="Toggle Navigation">
           <i class="fas fa-bars"></i>
         </button>
@@ -992,13 +1169,18 @@
     <div class="admin-page-layout">
       <aside class="admin-sidebar">
         <nav class="admin-nav">
-          <a href="#overview" class="admin-nav-item active" data-target="overview-section"><i class="fas fa-chart-line"></i> نظرة عامة</a>
-          <a href="#new-orders" class="admin-nav-item" data-target="new-orders-section"><i class="fas fa-bell"></i> الطلبات الجديدة</a>
-          <a href="#manage-orders" class="admin-nav-item" data-target="manage-orders-section"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a>
-          <a href="#product-overview" class="admin-nav-item" data-target="product-overview-section"><i class="fas fa-cubes"></i> نظرة على المنتجات</a>
-          <a href="#points-panel" class="admin-nav-item" data-target="points-admin-panel"><i class="fas fa-coins"></i> لوحة النقاط</a>
-          <a href="#admin-chat-section" class="admin-nav-item" data-target="admin-chat-section"><i class="fas fa-comments"></i> الدردشة <span id="chat-notification-badge" class="badge-count" style="display: none;">0</span></a>
-          <a href="#add-product" class="admin-nav-item" data-target="add-product-section"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</a>
+          <a href="#overview" class="admin-nav-item active" data-target="overview-section"><i
+              class="fas fa-chart-line"></i> نظرة عامة</a>
+          <a href="#new-orders" class="admin-nav-item" data-target="new-orders-section"><i class="fas fa-bell"></i>
+            الطلبات الجديدة</a>
+          <a href="#manage-orders" class="admin-nav-item" data-target="manage-orders-section"><i
+              class="fas fa-shopping-bag"></i> إدارة الطلبات</a>
+          <a href="#product-overview" class="admin-nav-item" data-target="product-overview-section"><i
+              class="fas fa-cubes"></i> نظرة على المنتجات</a>
+
+
+          <a href="#add-product" class="admin-nav-item" data-target="add-product-section"><i
+              class="fas fa-plus-circle"></i> إضافة منتج جديد</a>
         </nav>
       </aside>
 
@@ -1053,15 +1235,16 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- قائمة أكثر المنتجات مبيعًا -->
             <div class="top-products-section">
-              <h3 style="margin: 25px 0 15px 0; font-size: 1.4em; color: var(--admin-primary); display: flex; align-items: center; gap: 10px;">
+              <h3
+                style="margin: 25px 0 15px 0; font-size: 1.4em; color: var(--admin-primary); display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-trophy" style="color: #f39c12;"></i> أكثر المنتجات مبيعًا
               </h3>
               <div id="top-products-detailed" class="top-products-list"></div>
             </div>
-            
+
             <div class="charts-grid">
               <div class="chart-container">
                 <h3><i class="fas fa-chart-bar"></i> أعلى 5 منتجات مبيعًا</h3>
@@ -1069,21 +1252,21 @@
                   <canvas id="top-products-chart"></canvas>
                 </div>
               </div>
-              
+
               <div class="chart-container">
                 <h3><i class="fas fa-chart-pie"></i> توزيع الإيرادات</h3>
                 <div class="chart-wrapper">
                   <canvas id="revenue-chart"></canvas>
                 </div>
               </div>
-              
+
               <div class="chart-container">
                 <h3><i class="fas fa-chart-line"></i> المبيعات خلال آخر 7 أيام</h3>
                 <div class="chart-wrapper">
                   <canvas id="sales-trend-chart"></canvas>
                 </div>
               </div>
-              
+
               <div class="chart-container">
                 <h3><i class="fas fa-chart-area"></i> إجمالي المبيعات الشهرية</h3>
                 <div class="chart-wrapper">
@@ -1096,13 +1279,15 @@
           <!-- قسم الطلبات الجديدة -->
           <section class="admin-section" id="new-orders-section">
             <div class="section-header">
-              <h2><i class="fas fa-bell"></i> الطلبات الجديدة <span id="new-orders-count" class="badge-count">0</span></h2>
+              <h2><i class="fas fa-bell"></i> الطلبات الجديدة <span id="new-orders-count" class="badge-count">0</span>
+              </h2>
               <div style="display: flex; gap: 10px;">
                 <button class="btn" id="toggle-new-orders-btn"><i class="fas fa-chevron-down"></i> عرض الطلبات</button>
                 <button class="btn" id="refresh-new-orders-btn"><i class="fas fa-sync-alt"></i> تحديث</button>
               </div>
             </div>
-            <div id="new-orders-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
+            <div id="new-orders-wrap" class="admin-products-wrap collapsed"
+              style="overflow:hidden; transition:max-height 350ms ease;">
               <div id="new-orders-container" style="display: grid; gap: 20px;">
                 <!-- سيتم ملء الطلبات الجديدة هنا -->
               </div>
@@ -1114,14 +1299,17 @@
               <h2><i class="fas fa-shopping-bag"></i> إدارة الطلبات</h2>
               <button class="btn" id="toggle-orders-btn"><i class="fas fa-chevron-down"></i> عرض السجل</button>
             </div>
-            <div id="orders-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
+            <div id="orders-wrap" class="admin-products-wrap collapsed"
+              style="overflow:hidden; transition:max-height 350ms ease;">
               <div class="orders-controls">
                 <input type="text" id="search-orders" placeholder="ابحث بالرقم، الاسم، أو المنتج...">
                 <button class="btn" id="export-xlsx-btn"><i class="fas fa-file-excel"></i> تصدير إكسيل</button>
                 <button class="btn" id="export-pdf-btn"><i class="fas fa-file-pdf"></i> تصدير PDF</button>
-                <a href="invoice.html" class="btn" id="create-invoice-btn" style="background-color: #27ae60;"><i class="fas fa-file-invoice"></i> إنشاء فاتورة</a>
-                <button class="btn" id="open-points-admin"><i class="fas fa-coins"></i> لوحة النقاط</button>
-                <button class="btn" id="clear-all-orders-btn" style="background-color: #c0392b;"><i class="fas fa-trash-alt"></i> مسح جميع الطلبات</button>
+                <a href="invoice.html" class="btn" id="create-invoice-btn" style="background-color: #27ae60;"><i
+                    class="fas fa-file-invoice"></i> إنشاء فاتورة</a>
+
+                <button class="btn" id="clear-all-orders-btn" style="background-color: #c0392b;"><i
+                    class="fas fa-trash-alt"></i> مسح جميع الطلبات</button>
               </div>
               <table class="orders-table">
                 <thead>
@@ -1144,8 +1332,10 @@
               <h2><i class="fas fa-cubes"></i> نظرة على المنتجات</h2>
               <button id="toggle-admin-products" class="btn"><i class="fas fa-chevron-down"></i> عرض المنتجات</button>
             </div>
-            <div id="admin-products-wrap" class="admin-products-wrap collapsed" style="overflow:hidden; transition:max-height 350ms ease;">
-              <p style="text-align:center; color: var(--admin-text-light); margin:12px 0;">قائمة بكل المنتجات مع إحصائيات المبيعات.</p>
+            <div id="admin-products-wrap" class="admin-products-wrap collapsed"
+              style="overflow:hidden; transition:max-height 350ms ease;">
+              <p style="text-align:center; color: var(--admin-text-light); margin:12px 0;">قائمة بكل المنتجات مع
+                إحصائيات المبيعات.</p>
               <div id="admin-products-grid" class="admin-products-grid"></div>
             </div>
           </section>
@@ -1208,60 +1398,17 @@
                 <input type="checkbox" id="product-available" checked>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn" id="save-product" style="background-color: #27ae60;"><i class="fas fa-save"></i> حفظ المنتج</button>
-                <button type="button" class="btn" id="cancel-edit" style="background-color: #95a5a6;"><i class="fas fa-times"></i> إلغاء</button>
+                <button type="submit" class="btn" id="save-product" style="background-color: #27ae60;"><i
+                    class="fas fa-save"></i> حفظ المنتج</button>
+                <button type="button" class="btn" id="cancel-edit" style="background-color: #95a5a6;"><i
+                    class="fas fa-times"></i> إلغاء</button>
               </div>
             </form>
           </section>
 
-          <!-- Points pending list (hidden by default, toggled via admin button) -->
-          <div id="points-admin-panel" class="admin-section" style="display:none;">
-            <div class="section-header">
-              <h2><i class="fas fa-user-check"></i> نقاط العملاء (قيد الانتظار)</h2>
-            </div>
-            <p style="margin:6px 0 12px 0;">قانون التحويل: كل 1 جنيه = 1 نقطة. كل 100 نقطة = 3 جنيه.</p>
-            <div id="pending-points-list" style="max-height:260px; overflow:auto; border:1px solid #eee; padding:8px; border-radius:6px; margin-bottom: 15px;"></div>
-            <div style="margin-top:8px; display:flex; gap:8px;">
-              <button id="confirm-selected-points" class="btn success" style="background-color: var(--success);">تأكيد النقاط المحددة</button>
-              <button id="refresh-points-list" class="btn">تحديث القائمة</button>
-            </div>
-            <h4 style="margin-top:20px; border-top: 1px solid #eee; padding-top: 15px;">أرصدة النقاط للعملاء</h4>
-            <div id="points-balances" style="max-height:200px; overflow:auto; border:1px solid #fafafa; padding:8px; border-radius:6px;"></div>
-          </div>
 
-          <!-- قسم الدردشة مع العملاء -->
-          <section class="admin-section" id="admin-chat-section" style="display: none;">
-            <div class="section-header">
-              <h2><i class="fas fa-comments"></i> الدردشة مع العملاء</h2>
-            </div>
-            <div id="admin-chat-interface" style="display: flex; height: 60vh; border: 1px solid var(--admin-border); border-radius: 12px; overflow: hidden;">
-              <!-- قائمة المحادثات -->
-              <div id="chat-conversations" style="width: 300px; border-left: 1px solid var(--admin-border); background: #f8f9fa; overflow-y: auto;">
-                <div style="padding: 15px; border-bottom: 1px solid var(--admin-border); font-weight: 600; color: var(--admin-primary);">المحادثات</div>
-                <ul id="chat-conversations-list" style="list-style: none; padding: 0; margin: 0;">
-                  <!-- سيتم ملء المحادثات هنا -->
-                </ul>
-              </div>
-              <!-- صندوق الدردشة -->
-              <div id="chat-main-panel" style="flex: 1; display: flex; flex-direction: column;">
-                <div id="chat-messages-header" style="padding: 15px; border-bottom: 1px solid var(--admin-border); background: #f1f3f5; display: flex; align-items: center; gap: 10px;">
-                  <button id="admin-chat-back-btn" class="btn" style="display: none; min-width: 40px; padding: 8px; background: var(--admin-secondary);">
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                  <i class="fas fa-user-circle" style="color: var(--admin-secondary);"></i>
-                  <span id="current-chat-user" style="font-weight: 600; color: var(--admin-primary);">اختر محادثة</span>
-                </div>
-                <div id="chat-messages-box" style="flex: 1; padding: 20px; overflow-y: auto; background: #fff;">
-                  <!-- سيتم عرض الرسائل هنا -->
-                  <div style="text-align: center; color: #999; margin-top: 50px;">الرجاء اختيار محادثة من القائمة لعرض الرسائل.</div>
-                </div>
-                <div id="admin-chat-input-area" style="display: none; padding: 15px; border-top: 1px solid var(--admin-border); background: #f8f9fa; display: flex; gap: 10px;">
-                  <input type="text" id="admin-chat-input" placeholder="اكتب ردك هنا..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
-                  <button id="admin-chat-send-btn" class="btn" style="background: var(--admin-primary); color: white;"><i class="fas fa-paper-plane"></i> إرسال</button>
-                </div>
-              </div>
-            </div>
-          </section>
+
+
 
         </div>
       </main>
@@ -1271,10 +1418,14 @@
       <p><a href="index.html">©</a> 2025 MAHFOOR CNC. جميع الحقوق محفوظة.</p>
       <p>created by Mohand Eldrandale web developer</p>
       <div class="social-links">
-        <a href="https://www.facebook.com/profile.php?id=61579586090483&mibextid=ZbWKwL" target="_blank" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/ma7foorat_cnc?igsh=cXE4OHJ5Nmw3NTFy" target="_blank" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@mahfour0?is_from_webapp=1&sender_device=pc" target="_blank" class="social-icon tiktok"><i class="fab fa-tiktok"></i></a>
-        <a href="https://wa.me/201033662370" target="_blank" class="social-icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61579586090483&mibextid=ZbWKwL" target="_blank"
+          class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/ma7foorat_cnc?igsh=cXE4OHJ5Nmw3NTFy" target="_blank"
+          class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@mahfour0?is_from_webapp=1&sender_device=pc" target="_blank"
+          class="social-icon tiktok"><i class="fab fa-tiktok"></i></a>
+        <a href="https://wa.me/201033662370" target="_blank" class="social-icon whatsapp"><i
+            class="fab fa-whatsapp"></i></a>
       </div>
     </footer>
   </div>
@@ -1284,21 +1435,24 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
   <!-- jsPDF and autotable for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"
+    defer></script>
   <!-- html2pdf (uses html2canvas + jsPDF) for better Arabic rendering from DOM -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js" defer></script>
-  
-    
-    
-    
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="firebase-init.js"></script>
-<script src="script.js" defer></script>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="js/firebase-manager.js"></script>
+  <script src="script.js" defer></script>
 
   <!-- زر العودة للأعلى -->
   <button id="back-to-top-btn" title="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
 </body>
+
 </html>
